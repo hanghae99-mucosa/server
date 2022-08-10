@@ -24,6 +24,7 @@ import java.util.List;
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int PAGEABLE_SIZE = 12;
     private final JPAQueryFactory queryFactory;
+
     QProduct product = QProduct.product;
 
     @Override

@@ -32,13 +32,13 @@ dependencies {
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+//    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+//    testImplementation 'org.springframework.security:spring-security-test'
 
     // 테스트 코드를 위한 Lombok 라이브러리
     testCompileOnly 'org.projectlombok:lombok:1.18.12'

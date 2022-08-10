@@ -19,7 +19,9 @@ public class ProductController {
 
     @GetMapping("/api/search")
     public ResponseEntity<List<SearchResponseDto>> getProducts(SearchRequestDto searchRequestDto){
+    
         Page<SearchResponseDto> searchResponseDtoList = productService.getProducts(searchRequestDto);
+        
         return new ResponseEntity(searchResponseDtoList, HttpStatus.OK);
     }
 }

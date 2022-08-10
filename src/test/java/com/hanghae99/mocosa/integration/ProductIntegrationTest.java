@@ -57,7 +57,7 @@ public class ProductIntegrationTest {
                 "image.png"
                 ,responseBody.get(0).thumbnail);
         assertEquals(
-                "무신사 스탠다드"
+                "무신사 무탠다드"
                 ,responseBody.get(0).brandName);
         assertEquals(
                 "상의"
@@ -112,7 +112,7 @@ public class ProductIntegrationTest {
                 "image.png"
                 ,responseBody.get(0).thumbnail);
         assertEquals(
-                "무신사 스탠다드"
+                "무신사 무탠다드"
                 ,responseBody.get(0).brandName);
         assertEquals(
                 "상의"

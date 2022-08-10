@@ -38,7 +38,7 @@ public class ProductIntegrationTest {
     @DisplayName("검색에 성공한 경우")
     void test1() throws JsonProcessingException {
         // given
-        String queryParam = "page=0&sort='리뷰'&category_filter=&min_price_filter=&max_price_filter=&review_filter=&keyword='무탠다드'";
+        String queryParam = "page=0&sort=리뷰순&categoryFilter=&minPriceFilter=&maxPriceFilter=&reviewFilter=&keyword=티셔츠";
         HttpEntity<String> request = new HttpEntity<>("", headers);
         // when
         ResponseEntity<ResultDto> response = restTemplate.exchange(
@@ -55,7 +55,7 @@ public class ProductIntegrationTest {
         List<ProductResponseDto> content = resultDto.content;
 
         assertNotNull(resultDto);
-        assertEquals(content.size(), 12);
+        assertEquals(3, content.size());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ProductIntegrationTest {
     @DisplayName("검색 결과가 존재하지 않는 경우")
     void test2() throws JsonProcessingException {
         // given
-        String queryParam = "page=0&sort='리뷰'&category_filter=&min_price_filter=1000000&max_price_filter=&review_filter=&keyword='김치'";
+        String queryParam = "page=0&sort=리뷰순&categoryFilter=&minPriceFilter=1000000&maxPriceFilter=&reviewFilter=&keyword=김치";
         HttpEntity<String> request = new HttpEntity<>("", headers);
         // when
         ResponseEntity<ResultDto> response = restTemplate.exchange(
@@ -74,12 +74,12 @@ public class ProductIntegrationTest {
         );
 
         // then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
         ResultDto resultDto = response.getBody();
 
         assertNotNull(resultDto);
-        assertEquals(resultDto.msg, "상품이 존재하지 않습니다.");
+        assertEquals("상품이 존재하지 않습니다.", resultDto.message);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class ProductIntegrationTest {
     @DisplayName("찾는 키워드가 공란인 경우")
     void test3() throws JsonProcessingException {
         // given
-        String queryParam = "page=0&sort='리뷰'&category_filter=&min_price_filter=1000000&max_price_filter=&review_filter=&keyword=";
+        String queryParam = "page=0&sort=리뷰순&categoryFilter=&minPriceFilter=1000000&maxPriceFilter=&reviewFilter=&keyword=";
         HttpEntity<String> request = new HttpEntity<>("", headers);
         // when
         ResponseEntity<ResultDto> response = restTemplate.exchange(
@@ -98,44 +98,19 @@ public class ProductIntegrationTest {
         );
 
         // then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
         ResultDto resultDto = response.getBody();
 
         assertNotNull(resultDto);
-        assertEquals(resultDto.msg, "키워드를 입력해주세요.");
-    }
-
-    @Test
-    @Order(4)
-    @DisplayName("찾는 키워드가 공란인 경우")
-    void test4() throws JsonProcessingException {
-        // given
-        String queryParam = "page=1000&sort='리뷰'&category_filter=&min_price_filter=1000000&max_price_filter=&review_filter=&keyword=";
-        HttpEntity<String> request = new HttpEntity<>("", headers);
-
-        // when
-        ResponseEntity<ResultDto> response = restTemplate.exchange(
-                "/api/search?"+queryParam,
-                HttpMethod.GET,
-                request,
-                ResultDto.class
-        );
-
-        // then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        ResultDto resultDto = response.getBody();
-
-        assertNotNull(resultDto);
-        assertEquals(resultDto.msg, "잘못된 접근입니다");
+        assertEquals("키워드를 입력해주세요", resultDto.message);
     }
 
     @Getter
     @Setter
     @Builder
     static class ResultDto {
-        String msg;
+        String message;
         private List<ProductResponseDto> content;
     }
 

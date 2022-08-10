@@ -1,6 +1,5 @@
 package com.hanghae99.mocosa.layer.dto.product;
 
-import com.hanghae99.mocosa.layer.model.Category;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ public class SearchResponseDto {
     String name;
     String thumnail;
     String brandName;
-    Category category;
+    String category;
     int price;
     int amount;
     int reviewNum;

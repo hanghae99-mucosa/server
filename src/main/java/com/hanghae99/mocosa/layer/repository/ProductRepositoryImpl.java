@@ -23,6 +23,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
+    private static final int PAGEABLE_SIZE = 12;
     private final JPAQueryFactory queryFactory;
     QProduct product = QProduct.product;
 
@@ -55,18 +56,18 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanBuilder keywordContains(String keyword) {
-        if (keyword == null){
-            return null;
+        if (keyword.equals("")){
+            throw new SearchException(ErrorCode.SEARCH_BLANK_KEYWORD);
         }
         BooleanBuilder builder = new BooleanBuilder();
         builder
-                .and(product.name.contains(keyword))
-                .and(product.brand.name.contains(keyword));
+                .or(product.name.contains(keyword))
+                .or(product.brand.name.contains(keyword));
         return builder;
     }
 
     private BooleanExpression reviewAvgGt(Float reviewAvg) {
-        return product.reviewAvg.gt(reviewAvg);
+        return reviewAvg==null ? null : product.reviewAvg.gt(reviewAvg);
     }
 
     private BooleanExpression priceBetween(Integer minPriceFilter, Integer maxPriceFilter) {
@@ -77,18 +78,18 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanExpression categoryEq(String category) {
-        return category==null ? null : product.category.category.eq(category);
+        return category.equals("") ? null : product.category.category.eq(category);
     }
 
     private OrderSpecifier orderBySort(String sort){
         if (sort.equals("저가순")){
-            product.price.asc();
+            return product.price.asc();
         }
         if (sort.equals("고가순")){
-            product.price.desc();
+            return product.price.desc();
         }
-        if (sort.equals("리뷰순") || sort==null){
-            product.reviewAvg.desc();
+        if (sort.equals("리뷰순") || sort.equals("")){
+            return product.reviewAvg.desc();
         }
         //ErrorCode에 SEARCH_ETC로 해야할듯함
         throw new SearchException(ErrorCode.SEARCH_NO_PAGE);

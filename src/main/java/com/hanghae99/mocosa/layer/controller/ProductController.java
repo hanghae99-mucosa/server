@@ -19,7 +19,9 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/api/search")
-    public ResponseEntity<List<SearchResponseDto>> getProducts(@RequestParam SearchRequestDto searchRequestDto){
+    public ResponseEntity<List<SearchResponseDto>> getProducts(SearchRequestDto searchRequestDto){
+        System.out.println("here :  ");
+        System.out.println(searchRequestDto.toString());
         Slice<SearchResponseDto> searchResponseDtoList = productService.getProducts(searchRequestDto);
         return new ResponseEntity(searchResponseDtoList, HttpStatus.OK);
     }

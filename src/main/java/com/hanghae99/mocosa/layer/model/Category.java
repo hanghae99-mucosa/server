@@ -22,5 +22,5 @@ public class Category {
     private String category;
 
     @Column
-    private long parentCategory;
+    private Long parentCategory;
 }

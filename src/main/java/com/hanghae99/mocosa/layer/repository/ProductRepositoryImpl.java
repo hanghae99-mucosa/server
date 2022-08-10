@@ -15,9 +15,8 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     QProduct product = QProduct.product;
 
     @Override
-    public Slice<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
+    public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
         List<SearchResponseDto> returnPost = queryFactory.select(Projections.fields(
                         SearchResponseDto.class,
                         product.product_id.as("productId"),
@@ -52,7 +51,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        return new SliceImpl<>(returnPost, pageable, returnPost.iterator().hasNext());
+        return new PageImpl<>(returnPost, pageable, returnPost.size());
     }
 
     private BooleanBuilder keywordContains(String keyword) {
@@ -93,6 +92,5 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
         //ErrorCode에 SEARCH_ETC로 해야할듯함
         throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
-
     }
 }

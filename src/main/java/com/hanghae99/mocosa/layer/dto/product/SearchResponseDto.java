@@ -1,18 +1,20 @@
 package com.hanghae99.mocosa.layer.dto.product;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SearchResponseDto {
-    Long productId;
-    String name;
-    String thumnail;
-    String brandName;
-    String category;
-    int price;
-    int amount;
-    int reviewNum;
-    float reviewAvg;
+    private Long productId;
+    private String name;
+    private String thumbnail;
+    private String brandName;
+    private String category;
+    private int price;
+    private int amount;
+    private int reviewNum;
+    private float reviewAvg;
 }

@@ -70,7 +70,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanExpression categoryEq(String category) {
-        return category.equals("") ? null : product.category.category.eq(category);
+        return category==null ? null : product.category.category.eq(category);
     }
 
     private OrderSpecifier<Integer> orderBySort(String sort){

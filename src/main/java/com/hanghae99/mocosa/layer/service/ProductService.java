@@ -30,7 +30,7 @@ public class ProductService {
         int requestPage = searchResponseDtos.getTotalPages();
         int totalPage = searchRequestDto.getPage();
 
-        validatePage(totalPage, requestPage);
+        validatePage(requestPage,totalPage);
 
         long totalElements = searchResponseDtos.getTotalElements();
 
@@ -42,12 +42,6 @@ public class ProductService {
     private void validateSort(SearchRequestDto searchRequestDto) {
         // 유효하지 않은 정렬조건이 넘어온 경우
         String sort = searchRequestDto.getSort();
-
-        if(sort == null) {
-            searchRequestDto.defaultSort();
-
-            return;
-        }
 
         if(sort.equals("리뷰순") || sort.equals("저가순") || sort.equals("고가순")) {
             return;

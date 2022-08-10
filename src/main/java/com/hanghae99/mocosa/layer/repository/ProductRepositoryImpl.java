@@ -2,29 +2,33 @@ package com.hanghae99.mocosa.layer.repository;
 
 import com.hanghae99.mocosa.config.exception.ErrorCode;
 import com.hanghae99.mocosa.config.exception.SearchException;
+import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.model.QProduct;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
-
+    private static final int PAGEABLE_SIZE = 12;
     private final JPAQueryFactory queryFactory;
-
-    private QProduct product = QProduct.product;
+    QProduct product = QProduct.product;
 
     @Override
-    public Page<SearchResponseDto> findAllByKeywordAndFilter(Pageable pageable, String sort, String categoryFilter, int minPriceFilter, int maxPriceFilter, float reviewFilter, String keyword) {
-        List<SearchResponseDto> returnSearch = queryFactory.select(Projections.fields(
+    public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
+        List<SearchResponseDto> returnPost = queryFactory.select(Projections.fields(
                         SearchResponseDto.class,
                         product.product_id.as("productId"),
                         product.name,
@@ -37,32 +41,56 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.reviewAvg
                 ))
                 .from(product)
-                .where(categoryContains(categoryFilter))
-                .where(product.price.between(minPriceFilter, maxPriceFilter))
-                .where(product.name.contains(keyword).or(product.brand.name.contains(keyword)))
-                .where(product.reviewAvg.goe(reviewFilter))
-                .orderBy(sortContains(sort))
+                .where(
+                        keywordContains(searchRequestDto.getKeyword()),
+                        categoryEq(searchRequestDto.getCategoryFilter()),
+                        priceBetween(searchRequestDto.getMinPriceFilter(),searchRequestDto.getMaxPriceFilter()),
+                        reviewAvgGt(searchRequestDto.getReviewFilter())
+                )
+                .orderBy(orderBySort(searchRequestDto.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-
-        return new PageImpl<>(returnSearch, pageable, returnSearch.size());
+        return new PageImpl<>(returnPost, pageable, returnPost.size());
     }
 
-    private BooleanExpression categoryContains(String categoryFilter) {
-        return categoryFilter.equals("전체") ? null : product.category.category.eq(categoryFilter);
+    private BooleanBuilder keywordContains(String keyword) {
+        if (keyword.equals("")){
+            throw new SearchException(ErrorCode.SEARCH_BLANK_KEYWORD);
+        }
+        BooleanBuilder builder = new BooleanBuilder();
+        builder
+                .or(product.name.contains(keyword))
+                .or(product.brand.name.contains(keyword));
+        return builder;
     }
 
-    private OrderSpecifier<Integer> sortContains(String sort) {
-        if(sort.equals("리뷰순")){
-            return product.reviewNum.desc();
+    private BooleanExpression reviewAvgGt(Float reviewAvg) {
+        return reviewAvg==null ? null : product.reviewAvg.gt(reviewAvg);
+    }
+
+    private BooleanExpression priceBetween(Integer minPriceFilter, Integer maxPriceFilter) {
+        if (minPriceFilter == null && maxPriceFilter==null) {
+            return null;
         }
-        if(sort.equals("고가순")){
-            return product.price.desc();
-        }
-        if(sort.equals("저가순")){
+        return product.price.between(minPriceFilter, maxPriceFilter);
+    }
+
+    private BooleanExpression categoryEq(String category) {
+        return category.equals("") ? null : product.category.category.eq(category);
+    }
+
+    private OrderSpecifier orderBySort(String sort){
+        if (sort.equals("저가순")){
             return product.price.asc();
         }
-        throw new SearchException(ErrorCode.SING_ECT);
+        if (sort.equals("고가순")){
+            return product.price.desc();
+        }
+        if (sort.equals("리뷰순") || sort.equals("")){
+            return product.reviewAvg.desc();
+        }
+        //ErrorCode에 SEARCH_ETC로 해야할듯함
+        throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
     }
 }

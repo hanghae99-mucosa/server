@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Getter
@@ -22,5 +21,5 @@ public class Category {
     private String category;
 
     @Column
-    private long parentCategory;
+    private Long parentCategory;
 }

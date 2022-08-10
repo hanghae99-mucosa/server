@@ -1,9 +1,10 @@
 package com.hanghae99.mocosa.layer.repository;
 
-import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
+import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
+import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProductRepositoryCustom {
-    Page<ProductResponseDto> searchItems(Pageable pageable, String categoryFilter, int minPriceFilter, int maxPriceFilter, int reviewFilter, String keyWord);
+    Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable);
 }

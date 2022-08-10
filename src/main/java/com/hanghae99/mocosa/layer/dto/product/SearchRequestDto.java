@@ -1,12 +1,15 @@
 package com.hanghae99.mocosa.layer.dto.product;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 
 @Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SearchRequestDto implements Serializable {
     int page;
     String sort;
@@ -16,16 +19,7 @@ public class SearchRequestDto implements Serializable {
     Float reviewFilter;
     String keyword;
 
-    @Override
-    public String toString() {
-        return "SearchRequestDto{" +
-                "page=" + page +
-                ", sort='" + sort + '\'' +
-                ", categoryFilter='" + categoryFilter + '\'' +
-                ", minPriceFilter=" + minPriceFilter +
-                ", maxPriceFilter=" + maxPriceFilter +
-                ", reviewFilter=" + reviewFilter +
-                ", keyword='" + keyword + '\'' +
-                '}';
+    public void defaultSort() {
+        this.sort = "리뷰순";
     }
 }

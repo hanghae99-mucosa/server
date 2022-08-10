@@ -33,8 +33,8 @@ public class RestApiExceptionHandler {
     }
 
     //SingupException 이 발생할 경우 처리할 Handler
-    @ExceptionHandler(value = { SingupException.class })
-    public ResponseEntity<ErrorResponseDto> handleSingupException(SingupException ex) {
+    @ExceptionHandler(value = { SignupException.class })
+    public ResponseEntity<ErrorResponseDto> handleSignupException(SignupException ex) {
         /**
          * Exception
          * -> ex.getErrorCode (에러 코드를 가져옴)

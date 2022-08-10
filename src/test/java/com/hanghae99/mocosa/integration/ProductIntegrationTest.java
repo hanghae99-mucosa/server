@@ -188,7 +188,7 @@ public class ProductIntegrationTest {
 
         assert responseBody != null;
         assertEquals(HttpStatus.BAD_REQUEST.value(), responseBody.getStatus());
-        assertEquals("키워드를 입력해주세요", responseBody.getMessage());
+        assertEquals("키워드를 입력해주세요.", responseBody.getMessage());
     }
 
     @Test

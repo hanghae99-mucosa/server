@@ -24,7 +24,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
         List<SearchResponseDto> returnPost = queryFactory.select(Projections.fields(
                         SearchResponseDto.class,
-                        product.product_id.as("productId"),
+                        product.productId,
                         product.name,
                         product.thumbnail,
                         product.brand.name.as("brandName"),

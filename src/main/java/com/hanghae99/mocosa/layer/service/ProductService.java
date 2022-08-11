@@ -1,7 +1,7 @@
 package com.hanghae99.mocosa.layer.service;
 
-import com.hanghae99.mocosa.config.exception.ErrorCode;
-import com.hanghae99.mocosa.config.exception.SearchException;
+import com.hanghae99.mocosa.config.exception.code.ErrorCode;
+import com.hanghae99.mocosa.config.exception.custom.SearchException;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.repository.ProductRepositoryImpl;

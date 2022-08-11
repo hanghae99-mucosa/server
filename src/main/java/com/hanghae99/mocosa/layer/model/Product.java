@@ -16,7 +16,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long product_id;
+    private Long productId;
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
@@ -35,9 +35,7 @@ public class Product {
 
     private int amount;
 
-    @Column(name = "review_num", nullable = false)
     private int reviewNum;
 
-    @Column(name = "review_avg", nullable = false)
     private float reviewAvg;
 }

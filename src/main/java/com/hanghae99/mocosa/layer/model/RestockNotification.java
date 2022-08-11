@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Getter
@@ -11,14 +12,22 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_email", columnNames = { "email" })})
-public class User {
+public class RestockNotification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long restockId;
 
-    private String email;
 
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+
+    private Boolean alarmFlag;
 }

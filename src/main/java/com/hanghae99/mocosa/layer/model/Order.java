@@ -12,16 +12,26 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(uniqueConstraints = {@UniqueConstraint(name = "unique_brandName", columnNames = { "name" })})
-public class Brand {
+@Table(name = "orders")
+public class Order extends TimeStamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long brandId;
-
-    private String name;
+    private Long orderId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+
+    private int amount;
+
+
+    private int totalPrice;
+
 }

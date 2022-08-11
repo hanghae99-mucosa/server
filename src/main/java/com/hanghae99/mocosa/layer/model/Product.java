@@ -38,4 +38,12 @@ public class Product {
     private int reviewNum;
 
     private float reviewAvg;
+
+    public String getBrandName() {
+        return this.brand.getName();
+    }
+
+    public String getCategoryName() {
+        return this.category.getCategory();
+    }
 }

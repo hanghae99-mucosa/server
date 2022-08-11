@@ -1,15 +1,22 @@
 package com.hanghae99.mocosa.layer.service;
 
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
+import com.hanghae99.mocosa.config.exception.custom.ProductException;
 import com.hanghae99.mocosa.config.exception.custom.SearchException;
+import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
+import com.hanghae99.mocosa.layer.model.Product;
+import com.hanghae99.mocosa.layer.repository.ProductRepository;
 import com.hanghae99.mocosa.layer.repository.ProductRepositoryImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +24,7 @@ public class ProductService {
 
     private static final int PAGEABLE_SIZE = 12;
     private final ProductRepositoryImpl productRepository;
+    private final ProductRepository repository;
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
         validateSort(searchRequestDto);
@@ -68,5 +76,39 @@ public class ProductService {
         if(totalElements == 0){
             throw new SearchException(ErrorCode.SEARCH_NO_PRODUCT);
         }
+    }
+
+    public ProductResponseDto getProductDetail(Long productId) {
+        // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
+        ProductResponseDto productResponseDto = null;
+        try {
+            productResponseDto = getProductResponseDto(productId);
+        } catch (Exception exception) {
+            if (!Objects.equals(exception.getClass(), ProductException.class)) {
+                throw new ProductException(ErrorCode.DETAIL_ETC);
+            }
+        } finally {
+            return productResponseDto;
+        }
+    }
+
+    private ProductResponseDto getProductResponseDto(Long productId) throws Exception {
+        Optional<Product> result = repository.findById(productId);
+        if (result.isEmpty()) {
+            throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
+        }
+
+        Product product = result.orElseThrow(Exception::new);
+
+        return new ProductResponseDto(product.getProductId(),
+                product.getName(),
+                product.getThumbnail(),
+                product.getBrandName(),
+                product.getCategoryName(),
+                product.getPrice(),
+                product.getAmount(),
+                product.getReviewNum(),
+                product.getReviewAvg()
+        );
     }
 }

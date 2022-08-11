@@ -1,6 +1,7 @@
 package com.hanghae99.mocosa.config.exception;
 
 
+import com.hanghae99.mocosa.config.exception.code.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

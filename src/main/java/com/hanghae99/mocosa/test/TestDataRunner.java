@@ -1,13 +1,7 @@
 package com.hanghae99.mocosa.test;
 
-import com.hanghae99.mocosa.layer.model.Brand;
-import com.hanghae99.mocosa.layer.model.Category;
-import com.hanghae99.mocosa.layer.model.Product;
-import com.hanghae99.mocosa.layer.model.User;
-import com.hanghae99.mocosa.layer.repository.BrandRepository;
-import com.hanghae99.mocosa.layer.repository.CategoryRepository;
-import com.hanghae99.mocosa.layer.repository.ProductRepository;
-import com.hanghae99.mocosa.layer.repository.UserRepository;
+import com.hanghae99.mocosa.layer.model.*;
+import com.hanghae99.mocosa.layer.repository.*;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -32,6 +26,9 @@ public class TestDataRunner implements ApplicationRunner {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    OrderRepository orderRepository;
+
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -39,9 +36,11 @@ public class TestDataRunner implements ApplicationRunner {
         User testUser1 = new User(1L,"test1@test.com", "1234");
         User testUser2 = new User(2L,"test2@test.com", "1234");
         User testUser3 = new User(3L,"test3@test.com", "1234");
+        User testUser4 = new User(4L,"test4@test.com", "1234");
         userRepository.save(testUser1);
         userRepository.save(testUser2);
         userRepository.save(testUser3);
+        userRepository.save(testUser4);
 
         // Brand 생성
         Brand testBrand1 = new Brand(1L, "무신사 무탠다드", testUser1);
@@ -88,5 +87,9 @@ public class TestDataRunner implements ApplicationRunner {
         productRepository.save(testProduct5);
         productRepository.save(testProduct6);
         productRepository.save(testProduct7);
+
+        Order testOrder1 = new Order(1L, testUser4, testProduct1, 100, 1069000);
+
+        orderRepository.save(testOrder1);
     }
 }

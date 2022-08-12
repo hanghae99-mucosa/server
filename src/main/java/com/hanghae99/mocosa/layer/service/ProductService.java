@@ -100,7 +100,8 @@ public class ProductService {
 
         ProductResponseDto productResponseDto;
         try {
-            productResponseDto = new ProductResponseDto(product.getProductId(),
+            productResponseDto = new ProductResponseDto(
+                    product.getProductId(),
                     product.getName(),
                     product.getThumbnail(),
                     product.getBrandName(),
@@ -145,7 +146,12 @@ public class ProductService {
 
 
         // 상품의 수량이 문제 없이 깍였다면 Order 새로운 Order을 생성하고 저장한다.
-        Order order = new Order(userDetails, product, orderAmount, totalPrice);
+        Order order = Order.builder()
+                .product(product)
+                .user(userDetails)
+                .totalPrice(totalPrice)
+                .amount(orderAmount)
+                .build();
         orderRepository.save(order);
 
         result = "주문에 성공하셨습니다.";

@@ -1,8 +1,10 @@
 package com.hanghae99.mocosa.layer.dto.product;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class ProductResponseDto {
     private final Long product_id;
     private final String name;

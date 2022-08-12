@@ -1,16 +1,23 @@
 package com.hanghae99.mocosa.config;
 
+import com.hanghae99.mocosa.config.jwt.JwtAuthenticationFilter;
+import com.hanghae99.mocosa.config.jwt.JwtAuthorizationFilter;
+import com.hanghae99.mocosa.layer.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private UserRepository userRepository;
     @Override
     public void configure(WebSecurity web) {
         web
@@ -20,9 +27,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .formLogin().disable()
+                .httpBasic().disable();
 
-        http.authorizeRequests()
-                .antMatchers("/api/*").permitAll();
+        http
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
+                .authorizeRequests()
+                .antMatchers("/api/signup","/api/signin").permitAll()
+                .anyRequest().authenticated();
     }
 }

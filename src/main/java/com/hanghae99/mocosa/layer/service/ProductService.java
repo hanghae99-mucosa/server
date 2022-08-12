@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -84,23 +85,18 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto getProductDetail(Long productId) throws ProductException {
+    public ProductResponseDto getProductDetail(Long productId){
 
         // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
-        ProductResponseDto productResponseDto = null;
-        try {
-            productResponseDto = getProductResponseDto(productId);
-        } catch (Exception exception) {
-            if (!Objects.equals(exception.getClass(), ProductException.class)) {
-                throw new ProductException(ErrorCode.DETAIL_ETC);
-            }
-        }
-        return productResponseDto;
+        return getProductResponseDto(productId);
     }
 
-    private ProductResponseDto getProductResponseDto(Long productId) throws ProductException {
-        Product product = repository.findById(productId)
-                .orElseThrow(() -> new ProductException(ErrorCode.DETAIL_NO_PRODUCT));
+    private ProductResponseDto getProductResponseDto(Long productId){
+        Optional<Product> productByProductId = repository.findProductByProductId(productId);
+        if (productByProductId.isEmpty()) {
+            throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
+        }
+        Product product = productByProductId.orElseThrow(() -> new ProductException(ErrorCode.DETAIL_ETC));
 
         ProductResponseDto productResponseDto;
         try {
@@ -122,25 +118,24 @@ public class ProductService {
     @Transactional
     public String createOrder(Long productId, Integer orderAmount, User userDetails) {
         // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
-        String result = null;
-        try {
-            result = createOrderAndReduceProduct(productId, orderAmount, userDetails);
-        } catch (Exception exception) {
-            if (!Objects.equals(exception.getClass(), OrderException.class)) {
-                throw new OrderException(ErrorCode.ORDER_ETC);
-            }
-        }
-        return result;
+
+        return createOrderAndReduceProduct(productId, orderAmount, userDetails);
     }
 
     private String createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
-        String result = null;
-        Product product = repository.findById(productId)
-                .orElseThrow(() -> new ProductException(ErrorCode.DETAIL_NO_PRODUCT));
+        String result;
+        Optional<Product> optional = repository.findById(productId);
+
+        if (optional.isEmpty()) {
+            throw new SearchException(ErrorCode.SEARCH_NO_PRODUCT);
+        }
+
+        Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
+
 
         // 가져온 상품의 수량과 사용자가 원하는 상품의 수량을 입력하게 한다.
         // throw new OrderException(ErrorCode.ORDER_NO_STOCK);
-        if (orderAmount >= product.getAmount()) {
+        if (orderAmount > product.getAmount()) {
             throw new OrderException(ErrorCode.ORDER_NO_STOCK);
         }
 
@@ -153,7 +148,8 @@ public class ProductService {
         Order order = new Order(userDetails, product, orderAmount, totalPrice);
         orderRepository.save(order);
 
-        result = "주문에 성공하셨습니다";
+        result = "주문에 성공하셨습니다.";
+
         return result;
     }
 }

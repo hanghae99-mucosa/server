@@ -26,7 +26,7 @@ public class RestockNotificationApiController {
     public ResponseEntity<NotifyResponseDto> createNotify(@RequestBody NotifyRequestDto notifyRequestDto) {
         
         //JWT 를 대체한 User 생성
-        User userDetails = new User(4L,"test4@test.com", "1234");
+        User userDetails = userRepository.findById(4L).orElseThrow(() -> new AlarmException(ErrorCode.ALARM_ETC));
         NotifyResponseDto result = restockNotificationService.createNotify(notifyRequestDto, userDetails);
         return new ResponseEntity(result, HttpStatus.OK);
     }

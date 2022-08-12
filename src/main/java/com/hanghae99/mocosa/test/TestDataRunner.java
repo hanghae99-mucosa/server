@@ -39,9 +39,11 @@ public class TestDataRunner implements ApplicationRunner {
         User testUser1 = new User(1L,"test1@test.com", "1234");
         User testUser2 = new User(2L,"test2@test.com", "1234");
         User testUser3 = new User(3L,"test3@test.com", "1234");
+        User testUser4 = new User(4L,"test4@test.com", "1234");
         userRepository.save(testUser1);
         userRepository.save(testUser2);
         userRepository.save(testUser3);
+        userRepository.save(testUser4);
 
         // Brand 생성
         Brand testBrand1 = new Brand(1L, "무신사 무탠다드", testUser1);

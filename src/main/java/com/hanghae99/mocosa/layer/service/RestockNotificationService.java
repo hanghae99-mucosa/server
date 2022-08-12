@@ -44,10 +44,12 @@ public class RestockNotificationService {
     }
 
     private NotifyResponseDto createNotify(User userDetails, Product product) {
-        Optional<RestockNotification> optionalRestockNotification = restockNotificationRepository
-                .findRestockNotificationByUser_UserIdAndProduct_ProductId(userDetails.getUserId(), product.getProductId());
+        Optional<RestockNotification> notificationByUserUserId = restockNotificationRepository
+                                                                    .findRestockNotificationByUser_UserId(userDetails.getUserId());
+        Optional<RestockNotification> restockNotificationByProductProductId = restockNotificationRepository
+                                                                    .findRestockNotificationByProduct_ProductId(product.getProductId());
 
-        if (optionalRestockNotification.isPresent()) {
+        if (notificationByUserUserId.isPresent() && restockNotificationByProductProductId.isPresent()) {
             throw new AlarmException(ErrorCode.ALARM_ALREADY_REQUEST);
         }
 
@@ -72,14 +74,16 @@ public class RestockNotificationService {
     }
 
     private NotifyResponseDto deleteNotify(User userDetails, Product product) {
-        Optional<RestockNotification> optionalRestockNotification = restockNotificationRepository
-                .findRestockNotificationByUser_UserIdAndProduct_ProductId(product.getProductId(), userDetails.getUserId());
+        Optional<RestockNotification> notificationByUserUserId = restockNotificationRepository
+                .findRestockNotificationByUser_UserId(userDetails.getUserId());
+        Optional<RestockNotification> restockNotificationByProductProductId = restockNotificationRepository
+                .findRestockNotificationByProduct_ProductId(product.getProductId());
 
-        if (optionalRestockNotification.isEmpty()) {
+        if (notificationByUserUserId.isEmpty() && restockNotificationByProductProductId.isEmpty()) {
             throw new AlarmException(ErrorCode.ALARM_ALREADY_REQUEST);
         }
 
-        RestockNotification restockNotification = optionalRestockNotification.orElseThrow(() -> new AlarmException(ErrorCode.ALARM_ETC));
+        RestockNotification restockNotification = notificationByUserUserId.orElseThrow(() -> new AlarmException(ErrorCode.ALARM_ETC));
         restockNotificationRepository.deleteById(restockNotification.getRestockId());
         return new NotifyResponseDto("재입고 알림 삭제를 성공했습니다.");
     }

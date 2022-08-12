@@ -1,6 +1,7 @@
 package com.hanghae99.mocosa.layer.controller;
 
 import com.hanghae99.mocosa.layer.dto.order.OrderRequestDto;
+import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
@@ -39,8 +40,8 @@ public class ProductApiController {
     }
 
     @PostMapping("/api/products/{productId}")
-    public String createOrder(@PathVariable Long productId,
-                              @RequestBody OrderRequestDto orderRequestDto
+    public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
+                                                        @RequestBody OrderRequestDto orderRequestDto
 //                             ,@AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
 
@@ -48,7 +49,7 @@ public class ProductApiController {
         User userDetails = new User(4L,"test4@test.com", "1234");
         userRepository.save(userDetails);
 
-        String order = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails);
-        return order;
+        OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails);
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 }

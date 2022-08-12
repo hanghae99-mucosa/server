@@ -4,6 +4,7 @@ import com.hanghae99.mocosa.config.exception.code.ErrorCode;
 import com.hanghae99.mocosa.config.exception.custom.OrderException;
 import com.hanghae99.mocosa.config.exception.custom.ProductException;
 import com.hanghae99.mocosa.config.exception.custom.SearchException;
+import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
@@ -117,13 +118,13 @@ public class ProductService {
     }
 
     @Transactional
-    public String createOrder(Long productId, Integer orderAmount, User userDetails) {
+    public OrderResponseDto createOrder(Long productId, Integer orderAmount, User userDetails) {
         // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
 
         return createOrderAndReduceProduct(productId, orderAmount, userDetails);
     }
 
-    private String createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
+    private OrderResponseDto createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
         String result;
         Optional<Product> optional = repository.findById(productId);
 
@@ -152,10 +153,10 @@ public class ProductService {
                 .totalPrice(totalPrice)
                 .amount(orderAmount)
                 .build();
+
         orderRepository.save(order);
 
         result = "주문에 성공하셨습니다.";
-
-        return result;
+        return new OrderResponseDto(result);
     }
 }

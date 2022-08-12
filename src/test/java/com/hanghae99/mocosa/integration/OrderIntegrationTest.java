@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.mocosa.config.exception.ErrorResponseDto;
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
 import com.hanghae99.mocosa.layer.dto.order.OrderRequestDto;
+import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,14 +105,14 @@ public class OrderIntegrationTest {
         HttpEntity<OrderRequestDto> entity = new HttpEntity<>(requestDto, headers);
 
 
-        ResponseEntity<String> response = restTemplate
-                .postForEntity("/api/products/" + productId, entity, String.class);
+        ResponseEntity<OrderResponseDto> response = restTemplate
+                .postForEntity("/api/products/" + productId, entity, OrderResponseDto.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        String result = response.getBody();
+        OrderResponseDto result = response.getBody();
 
-        assertThat(result).isEqualTo("주문에 성공하셨습니다.");
+        assertThat(result.getMessage()).isEqualTo("주문에 성공하셨습니다.");
     }
 
     @Test

@@ -81,6 +81,7 @@ public enum ErrorCode {
      */
 
     MYPAGE_NO_DATA(HttpStatus.BAD_REQUEST, "가져올 데이터가 없습니다."),
+    MYPAGE_NO_PAGE(HttpStatus.BAD_REQUEST, "존재하지 않는 페이지입니다."),
     MYPAGE_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**

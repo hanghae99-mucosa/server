@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -125,11 +124,10 @@ public class ProductService {
     }
 
     private OrderResponseDto createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
-        String result;
         Optional<Product> optional = repository.findById(productId);
 
         if (optional.isEmpty()) {
-            throw new SearchException(ErrorCode.SEARCH_NO_PRODUCT);
+            throw new OrderException(ErrorCode.ORDER_ETC);
         }
 
         Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
@@ -155,8 +153,6 @@ public class ProductService {
                 .build();
 
         orderRepository.save(order);
-
-        result = "주문에 성공하셨습니다.";
-        return new OrderResponseDto(result);
+        return new OrderResponseDto("주문에 성공하셨습니다.");
     }
 }

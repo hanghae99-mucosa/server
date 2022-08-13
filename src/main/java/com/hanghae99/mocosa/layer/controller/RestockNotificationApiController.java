@@ -26,7 +26,7 @@ public class RestockNotificationApiController {
 
     @PostMapping("/api/notification")
     public ResponseEntity<NotifyResponseDto> createNotify(@RequestBody NotifyRequestDto notifyRequestDto ,
-                                                          @AuthenticationPrincipal UserDetails userDetails) {
+                                                          @AuthenticationPrincipal UserDetailsImpl  userDetails) {
 
         NotifyResponseDto result = restockNotificationService.createNotify(notifyRequestDto, userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);
@@ -34,7 +34,7 @@ public class RestockNotificationApiController {
 
     @DeleteMapping("/api/notification")
     public ResponseEntity<NotifyResponseDto> deleteNotify(@RequestBody NotifyRequestDto notifyRequestDto,
-                                                          @AuthenticationPrincipal UserDetails userDetails) {
+                                                          @AuthenticationPrincipal UserDetailsImpl  userDetails) {
 
         NotifyResponseDto result = restockNotificationService.deleteNotify(notifyRequestDto, userDetails.getUser());
 

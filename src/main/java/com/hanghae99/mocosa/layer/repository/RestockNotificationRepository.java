@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface RestockNotificationRepository extends JpaRepository<RestockNotification, Long> {
-    Optional<RestockNotification> findRestockNotificationByUser_UserId(Long userId);
-    Optional<RestockNotification> findRestockNotificationByProduct_ProductId(Long productId);
+
+    @Query("select rn from RestockNotification rn join fetch rn.user u where u.userId = :userId")
+    Optional<RestockNotification> findRestockNotificationByUser_UserId(@Param("userId") Long userId);
+    @Query("select rn from RestockNotification rn join fetch rn.product p where p.productId = :productId")
+    Optional<RestockNotification> findRestockNotificationByProduct_ProductId(@Param("productId")Long productId);
 }

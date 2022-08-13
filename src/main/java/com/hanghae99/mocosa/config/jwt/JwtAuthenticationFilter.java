@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,13 +29,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         // request에 있는 username과 password를 파싱해서 자바 Object로 받기
-        ObjectMapper mapper = new ObjectMapper();
-        SigninRequestDto signinRequestdto = null;
-        try {
-            signinRequestdto = mapper.readValue(request.getInputStream(), SigninRequestDto.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SigninRequestDto signinRequestdto = getSigninRequestDto(request);
 
         // 유저네임패스워드 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -60,10 +53,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
         JSONObject responseJson = new JSONObject();
+        response.setContentType("application/json;charset=UTF-8");
         responseJson.put("token", JwtProperties.TOKEN_PREFIX + jwtToken);
         responseJson.put("email", userDetails.getUsername());
         response.getWriter().print(responseJson);
     }
 
 
+    private SigninRequestDto getSigninRequestDto(HttpServletRequest request) {
+        ObjectMapper mapper = new ObjectMapper();
+        SigninRequestDto signinRequestdto = null;
+        try {
+            signinRequestdto = mapper.readValue(request.getInputStream(), SigninRequestDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return signinRequestdto;
+    }
 }

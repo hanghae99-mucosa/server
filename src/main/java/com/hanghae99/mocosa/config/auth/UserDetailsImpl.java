@@ -1,7 +1,9 @@
 package com.hanghae99.mocosa.config.auth;
 
 import com.hanghae99.mocosa.layer.model.User;
+import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -18,7 +20,13 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
+        UserRoleEnum role = user.getRole();
+        String authority = role.getAuthority();
+
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(simpleGrantedAuthority);
+
         return authorities;
     }
 

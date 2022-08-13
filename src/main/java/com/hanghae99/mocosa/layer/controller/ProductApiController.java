@@ -43,7 +43,7 @@ public class ProductApiController {
     @PostMapping("/api/products/{productId}")
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
                                                         @RequestBody OrderRequestDto orderRequestDto
-                             ,@AuthenticationPrincipal UserDetails userDetails
+                             ,@AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);

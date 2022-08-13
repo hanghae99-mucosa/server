@@ -23,7 +23,7 @@ public class RestockNotificationIntegrationTest {
     //@PostMapping("/api/notification")
     @Test
     @DisplayName("Case 1 : 재입고 알림 등록 신청를 성공한 경우 ⇒ 성공")
-    public void Todo_Product_Id를_넘겼을_경우_Notify_를_넘긴다() {
+    public void Todo_Product_Id를_넘겼을_경우_Result_Notify_를_넘긴다() {
         //given
         NotifyRequestDto requestDto = new NotifyRequestDto(1L);
 
@@ -45,7 +45,7 @@ public class RestockNotificationIntegrationTest {
 
     @Test
     @DisplayName("Case 2 : 재입고 알림 등록 요청이 여러번 들어오는 경우 ⇒ 실패")
-    public void Todo_같은_Notify_를_던졌을_경우_Exception_를_던진다() {
+    public void Todo_같은_Notify_를_던졌을_경우_Result_Exception_를_던진다() {
         //given
         NotifyRequestDto requestDto = new NotifyRequestDto(1L);
 
@@ -74,7 +74,7 @@ public class RestockNotificationIntegrationTest {
 
     @Test
     @DisplayName("Case 1 : 재입고 알림 삭제 신청를 성공한 경우 ⇒ 성공")
-    public void Todo_Product_Id를_넘겼을_경우_Notify_를_삭제한다() {
+    public void Todo_Product_Id를_넘겼을_경우_Result_Notify_를_삭제한다() {
         //given
         NotifyRequestDto requestDto = new NotifyRequestDto(1L);
 
@@ -102,7 +102,7 @@ public class RestockNotificationIntegrationTest {
 
     @Test
     @DisplayName("Case 2 : 재입고 알림 삭제 신청 요청이 여러번 들어오는 경우 ⇒ 실패")
-    public void Todo_여러_개의_Notify_를_던지면_Exception_를_던진다() {
+    public void Todo_여러_개의_Notify_를_던지면_Result_Exception_를_던진다() {
         //given
         NotifyRequestDto requestDto = new NotifyRequestDto(1L);
 

@@ -47,7 +47,7 @@ public class ProductService {
             return;
         }
 
-        throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
+        throw new SearchException(ErrorCode.SEARCH_BAD_REQUEST);
     }
 
     private void validateBlankKeyword(String keyword) {
@@ -59,7 +59,7 @@ public class ProductService {
     private void validatePage(int totalPage, int requestPage) {
         // 마지막 페이지 이상의 값이 들어갈 경우
         if(totalPage < requestPage){
-            throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
+            throw new SearchException(ErrorCode.SEARCH_BAD_REQUEST);
         }
     }
 

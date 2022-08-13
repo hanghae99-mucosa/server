@@ -10,6 +10,8 @@ import com.hanghae99.mocosa.layer.service.RestockNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,19 +25,18 @@ public class RestockNotificationApiController {
     private final UserRepository userRepository;
 
     @PostMapping("/api/notification")
-    public ResponseEntity<NotifyResponseDto> createNotify(@RequestBody NotifyRequestDto notifyRequestDto) {
-        
-        //JWT 를 대체한 User 생성
-        User userDetails = userRepository.findById(4L).orElseThrow(() -> new AlarmException(ErrorCode.ALARM_ETC));
-        NotifyResponseDto result = restockNotificationService.createNotify(notifyRequestDto, userDetails);
+    public ResponseEntity<NotifyResponseDto> createNotify(@RequestBody NotifyRequestDto notifyRequestDto ,
+                                                          @AuthenticationPrincipal UserDetails userDetails) {
+
+        NotifyResponseDto result = restockNotificationService.createNotify(notifyRequestDto, userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/notification")
-    public ResponseEntity<NotifyResponseDto> deleteNotify(@RequestBody NotifyRequestDto notifyRequestDto) {
+    public ResponseEntity<NotifyResponseDto> deleteNotify(@RequestBody NotifyRequestDto notifyRequestDto,
+                                                          @AuthenticationPrincipal UserDetails userDetails) {
 
-        User userDetails = userRepository.findById(4L).orElseThrow(() -> new AlarmException(ErrorCode.ALARM_ETC));
-        NotifyResponseDto result = restockNotificationService.deleteNotify(notifyRequestDto, userDetails);
+        NotifyResponseDto result = restockNotificationService.deleteNotify(notifyRequestDto, userDetails.getUser());
 
         return new ResponseEntity(result, HttpStatus.OK);
     }

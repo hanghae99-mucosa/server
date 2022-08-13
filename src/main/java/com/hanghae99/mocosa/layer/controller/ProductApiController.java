@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +23,6 @@ import java.util.List;
 public class ProductApiController {
 
     private final ProductService productService;
-    private final UserRepository userRepository;
 
     @GetMapping("/api/search")
     public ResponseEntity<List<SearchResponseDto>> getProducts(SearchRequestDto searchRequestDto) {
@@ -42,14 +43,9 @@ public class ProductApiController {
     @PostMapping("/api/products/{productId}")
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
                                                         @RequestBody OrderRequestDto orderRequestDto
-//                             ,@AuthenticationPrincipal UserDetailsImpl userDetails
+                             ,@AuthenticationPrincipal UserDetails userDetails
     ) {
-
-        // 아직 스프링 Security 가 완성이 안됬기 때문에 테스트 하기 위한 User 을 생성
-        User userDetails = new User(4L,"test4@test.com", "1234");
-        userRepository.save(userDetails);
-
-        OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails);
+        OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);
     }
 }

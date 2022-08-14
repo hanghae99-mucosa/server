@@ -59,7 +59,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanExpression reviewAvgGt(Float reviewAvg) {
-        return reviewAvg==null ? null : product.reviewAvg.goe(reviewAvg);
+        return reviewAvg == null ? null : product.reviewAvg.goe(reviewAvg);
     }
 
     private BooleanExpression priceBetween(Integer minPriceFilter, Integer maxPriceFilter) {
@@ -70,7 +70,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanExpression categoryEq(String category) {
-        return category==null ? null : product.category.category.eq(category);
+        return category == null ? null : product.category.category.eq(category);
     }
 
     private OrderSpecifier<Integer> orderBySort(String sort){

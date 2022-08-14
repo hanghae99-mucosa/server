@@ -1,5 +1,6 @@
 package com.hanghae99.mocosa.layer.controller;
 
+import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
 import com.hanghae99.mocosa.config.exception.custom.AlarmException;
 import com.hanghae99.mocosa.layer.dto.notify.NotifyRequestDto;
@@ -34,7 +35,7 @@ public class RestockNotificationApiController {
 
     @DeleteMapping("/api/notification")
     public ResponseEntity<NotifyResponseDto> deleteNotify(@RequestBody NotifyRequestDto notifyRequestDto,
-                                                          @AuthenticationPrincipal UserDetailsImpl  userDetails) {
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         NotifyResponseDto result = restockNotificationService.deleteNotify(notifyRequestDto, userDetails.getUser());
 

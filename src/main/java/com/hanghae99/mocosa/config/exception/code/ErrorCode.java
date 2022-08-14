@@ -37,6 +37,7 @@ public enum ErrorCode {
      * 로그인
      *
      * SIGNIN_FAIL => 아이디 또는 비밀번호가 맞지 않는 경우
+     * SIGNIN_NO_DATA => 회원가입이 되어있지 않은 경우
      * SIGNIN_ETC => 그 외 실패 시 따로 메세지를 세팅
      */
     SIGNIN_FAIL(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 확인해 주세요."),

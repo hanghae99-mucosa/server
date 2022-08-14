@@ -6,15 +6,14 @@ import com.hanghae99.mocosa.config.exception.ErrorResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -36,35 +35,41 @@ public class SellerMyPageIntegrationTest {
     private HttpHeaders headers;
     private ObjectMapper mapper = new ObjectMapper();
 
+    @BeforeEach
+    public void setup() {
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
     @Test
     @DisplayName("재입고 가능 상품 목록을 성공적으로 가져온 경우")
     public void case1(){
         //given
 
         //when
-        ResponseEntity<RestockResponseDto[]> response = restTemplate
+        ResponseEntity<RestockListResponseDto[]> response = restTemplate
                 .getForEntity(
                         "/api/users/restock",
-                        RestockResponseDto[].class
+                        RestockListResponseDto[].class
                 );
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<RestockResponseDto> responseBody = Arrays.asList(response.getBody());
+        List<RestockListResponseDto> responseBody = Arrays.asList(response.getBody());
         assertNotNull(responseBody);
 
         assertEquals(
-                2L
+                8L
                 ,responseBody.get(0).productId);
         assertEquals(
-                "K87 워크웨어 포켓 반팔티셔츠 (20colors)"
+                "[쿨탠다드] 우먼즈 스트레이트 히든 밴딩 슬랙스 [블랙]"
                 ,responseBody.get(0).productName);
 
         assertEquals(
-                8L
+                2L
                 ,responseBody.get(1).productId);
         assertEquals(
-                "[쿨탠다드] 우먼즈 스트레이트 히든 밴딩 슬랙스 [블랙]"
+                "K87 워크웨어 포켓 반팔티셔츠 (20colors)"
                 ,responseBody.get(1).productName);
     }
 
@@ -99,21 +104,22 @@ public class SellerMyPageIntegrationTest {
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
         //when
-        ResponseEntity<String> response = restTemplate
-                .postForEntity(
+        ResponseEntity<RestockResponseDto> response = restTemplate
+                .exchange(
                         "/api/users/restock",
+                        HttpMethod.PUT,
                         request,
-                        String.class
+                        RestockResponseDto.class
                 );
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        String responseBody = response.getBody();
+        RestockResponseDto responseBody = response.getBody();
         assertNotNull(responseBody);
 
         assertEquals(
                 "재입고 등록이 완료되었습니다."
-                ,responseBody);
+                ,responseBody.getMessage());
     }
 
     @Test
@@ -127,8 +133,9 @@ public class SellerMyPageIntegrationTest {
 
         //when
         ResponseEntity<ErrorResponseDto> response = restTemplate
-                .postForEntity(
+                .exchange(
                         "/api/users/restock",
+                        HttpMethod.PUT,
                         request,
                         ErrorResponseDto.class
                 );
@@ -143,6 +150,13 @@ public class SellerMyPageIntegrationTest {
     }
 
     @Getter
+    @Builder
+    static class RestockListResponseDto {
+        private Long productId;
+        private String productName;
+    }
+
+    @Getter
     @AllArgsConstructor
     @Builder
     static class RestockRequestDto {
@@ -151,10 +165,9 @@ public class SellerMyPageIntegrationTest {
     }
 
     @Getter
-    @Builder
+    @NoArgsConstructor
     static class RestockResponseDto {
-        private Long productId;
-        private String productName;
+        private String message;
     }
 
     @Getter

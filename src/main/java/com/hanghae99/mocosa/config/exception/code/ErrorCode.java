@@ -87,11 +87,11 @@ public enum ErrorCode {
     /**
      * 재입고 등록
      *
-     * RESTOCK_BAD_REQUEST => 수량을 0개인 상품이 없는 경우
+     * RESTOCK_BAD_REQUEST => 수량을 0개로 요청하는 경우
      * RESTOCK_ETC => 그 외 실패 시
      */
 
-    RESTOCK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "재입고 가능한 상품이 없습니다."),
+    RESTOCK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "재입고 등록은 1개 이상부터 가능합니다."),
     RESTOCK_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다.");
 
 

@@ -1,6 +1,5 @@
 package com.hanghae99.mocosa.integration;
 
-import com.hanghae99.mocosa.config.exception.ErrorResponseDto;
 import lombok.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ public class UserMyPageIntegrationTest {
     @DisplayName("주문 데이터 가져오기에 성공한 케이스")
     public void case1(){
         //given
-        int page = 1;
+        int page = 0;
 
         //when
         ResponseEntity<OrderHistoryResponseDtoList> response = restTemplate
@@ -74,7 +73,7 @@ public class UserMyPageIntegrationTest {
     @DisplayName("주문 데이터가 없는 경우")
     public void case2(){
         //given
-        int page = 1;
+        int page = 0;
 
         //when
         ResponseEntity<ExceptionResponseDto> response = restTemplate
@@ -88,8 +87,8 @@ public class UserMyPageIntegrationTest {
         ExceptionResponseDto responseBody = response.getBody();
         assertNotNull(responseBody);
 
-        assertEquals(MYPAGE_NO_DATA, responseBody.getCode());
-        assertEquals("주문 내역에 없습니다.", responseBody.getMessage());
+        assertEquals(MYPAGE_NO_DATA.toString(), responseBody.getCode());
+        assertEquals("가져올 데이터가 없습니다.", responseBody.getMessage());
     }
 
     @Test
@@ -110,7 +109,7 @@ public class UserMyPageIntegrationTest {
         ExceptionResponseDto responseBody = response.getBody();
         assertNotNull(responseBody);
 
-        assertEquals(MYPAGE_NO_PAGE, responseBody.getCode());
+        assertEquals(MYPAGE_NO_PAGE.toString(), responseBody.getCode());
         assertEquals("존재하지 않는 페이지입니다.", responseBody.getMessage());
     }
 
@@ -123,9 +122,9 @@ public class UserMyPageIntegrationTest {
 
     @Getter
     @Builder
-    static class OrderHistoryResponseDto{
+    static class OrderHistoryResponseDto {
         private Long orderId;
-        private LocalDateTime createdAt;
+        private String createdAt;
         private String productName;
         private String thumbnail;
         private String brandName;

@@ -37,9 +37,11 @@ public enum ErrorCode {
      * 로그인
      *
      * SIGNIN_FAIL => 아이디 또는 비밀번호가 맞지 않는 경우
+     * SIGNIN_NO_DATA => 회원가입이 되어있지 않은 경우
      * SIGNIN_ETC => 그 외 실패 시 따로 메세지를 세팅
      */
     SIGNIN_FAIL(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 확인해 주세요."),
+    SIGNIN_NO_DATA(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 확인해 주세요."),
     SIGNIN_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**
@@ -81,16 +83,17 @@ public enum ErrorCode {
      */
 
     MYPAGE_NO_DATA(HttpStatus.BAD_REQUEST, "가져올 데이터가 없습니다."),
+    MYPAGE_NO_PAGE(HttpStatus.BAD_REQUEST, "존재하지 않는 페이지입니다."),
     MYPAGE_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**
      * 재입고 등록
      *
-     * RESTOCK_BAD_REQUEST => 수량을 0개인 상품이 없는 경우
+     * RESTOCK_BAD_REQUEST => 수량을 0개로 요청하는 경우
      * RESTOCK_ETC => 그 외 실패 시
      */
 
-    RESTOCK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "재입고 가능한 상품이 없습니다."),
+    RESTOCK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "재입고 등록은 1개 이상부터 가능합니다."),
     RESTOCK_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다.");
 
 

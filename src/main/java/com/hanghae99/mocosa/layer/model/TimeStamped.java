@@ -15,5 +15,4 @@ public abstract class TimeStamped {
 
     @CreatedDate
     private LocalDateTime createdAt;
-
 }

@@ -40,7 +40,21 @@ public class Product {
 
     private float reviewAvg;
 
+    public String getBrandName() {
+        return this.brand.getName();
+    }
+
+    public String getCategoryName() {
+        return this.category.getCategory();
+    }
+
+    public Integer orderProduct(int amount) {
+        Integer sum = price * amount;
+        this.amount -= amount;
+        return sum;
+        
     public void update(int amount) {
         this.amount = amount;
+        
     }
 }

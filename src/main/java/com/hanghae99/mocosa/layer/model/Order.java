@@ -31,7 +31,12 @@ public class Order extends TimeStamped{
 
     private int amount;
 
-
     private int totalPrice;
 
+    public Order(User user, Product product, int amount, int totalPrice) {
+        this.user = user;
+        this.product = product;
+        this.amount = amount;
+        this.totalPrice = totalPrice;
+    }
 }

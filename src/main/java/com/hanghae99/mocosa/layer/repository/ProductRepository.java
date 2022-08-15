@@ -10,7 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
+
     @Query("select p from Product p join fetch p.brand b join fetch p.category c where p.productId= :id")
     Optional<Product> findProductByProductId(@Param("id") Long id);
-
+    
 }

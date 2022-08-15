@@ -12,6 +12,12 @@ import com.hanghae99.mocosa.layer.model.Order;
 import com.hanghae99.mocosa.layer.model.Product;
 import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.OrderRepository;
+import com.hanghae99.mocosa.config.exception.custom.MyPageException;
+import com.hanghae99.mocosa.config.exception.custom.SearchException;
+import com.hanghae99.mocosa.layer.dto.product.*;
+import com.hanghae99.mocosa.layer.model.Brand;
+import com.hanghae99.mocosa.layer.model.Product;
+import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
 import com.hanghae99.mocosa.layer.repository.ProductRepositoryImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +29,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final ProductRepositoryImpl productRepositoryImpl;
+    private final ProductRepository productRepository;
     private static final int PAGEABLE_SIZE = 12;
-    private final ProductRepositoryImpl productRepository;
-    private final ProductRepository repository;
     private final OrderRepository orderRepository;
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
@@ -39,7 +47,7 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(searchRequestDto.getPage(), PAGEABLE_SIZE);
 
-        Page<SearchResponseDto> searchResponseDtos = productRepository.findBySearchRequestDto(searchRequestDto, pageable);
+        Page<SearchResponseDto> searchResponseDtos = productRepositoryImpl.findBySearchRequestDto(searchRequestDto, pageable);
 
         int requestPage = searchResponseDtos.getTotalPages();
         int totalPage = searchRequestDto.getPage();
@@ -61,7 +69,7 @@ public class ProductService {
             return;
         }
 
-        throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
+        throw new SearchException(ErrorCode.SEARCH_BAD_REQUEST);
     }
 
     private void validateBlankKeyword(String keyword) {
@@ -72,8 +80,8 @@ public class ProductService {
 
     private void validatePage(int totalPage, int requestPage) {
         // 마지막 페이지 이상의 값이 들어갈 경우
-        if (totalPage < requestPage) {
-            throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
+        if(totalPage < requestPage){
+            throw new SearchException(ErrorCode.SEARCH_BAD_REQUEST);
         }
     }
 
@@ -154,5 +162,53 @@ public class ProductService {
 
         orderRepository.save(order);
         return new OrderResponseDto("주문에 성공하셨습니다.");
+        
+    public List<RestockListResponseDto> getRestockList(UserDetailsImpl userDetails) {
+
+        User user = userDetails.getUser();
+
+        List<RestockListResponseDto> restockList = productRepositoryImpl.findBySeller(user);
+
+        validateNoRestockList(restockList);
+
+        return restockList;
+    }
+
+//    public List<RestockListResponseDto> getRestockList() {
+//
+//        User user = new User(1L, "test1@test.com", "1234");
+//
+//        List<RestockListResponseDto> restockList = productRepositoryImpl.findBySeller(user);
+//
+//        validateNoRestockList(restockList);
+//
+//        return restockList;
+//    }
+
+    private void validateNoRestockList(List<RestockListResponseDto> restockList) {
+        // 수량이 0개인 상품이 없는 경우
+        if(restockList.size() == 0){
+            throw new MyPageException(ErrorCode.MYPAGE_NO_DATA);
+        }
+    }
+
+    public RestockResponseDto restock(RestockRequestDto restockRequestDto) {
+        Long productId = restockRequestDto.getProductId();
+        int amount = restockRequestDto.getAmount();
+
+        validateAmount(amount);
+
+        Product product = productRepository.findById(productId).get();
+
+        product.update(amount);
+
+        return new RestockResponseDto("재입고 등록이 완료되었습니다.");
+    }
+
+    private void validateAmount(int amount) {
+        // 재입고 수량을 0으로 요청하는 경우
+        if(amount == 0) {
+            throw new MyPageException(ErrorCode.RESTOCK_BAD_REQUEST);
+        }
     }
 }

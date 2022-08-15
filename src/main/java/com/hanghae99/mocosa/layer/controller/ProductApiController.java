@@ -8,6 +8,7 @@ import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.UserRepository;
+import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -32,6 +32,7 @@ public class ProductApiController {
 
         return new ResponseEntity(searchResponseDtoList, HttpStatus.OK);
     }
+
 
     // 상품 상세 페이지
     //상품 데이터 가져오기
@@ -49,5 +50,26 @@ public class ProductApiController {
     ) {
         OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);
+
+    @GetMapping("/api/users/restock")
+    public ResponseEntity<List<RestockListResponseDto>> getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<RestockListResponseDto> restockList = productService.getRestockList(userDetails);
+
+        return new ResponseEntity<>(restockList, HttpStatus.OK);
+    }
+
+//    @GetMapping("/api/users/restock")
+//    public ResponseEntity<List<RestockListResponseDto>> getRestockList() {
+//        List<RestockListResponseDto> restockList = productService.getRestockList();
+//
+//        return new ResponseEntity<>(restockList, HttpStatus.OK);
+//    }
+
+    @PutMapping("/api/users/restock")
+    public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto) {
+        RestockResponseDto restockResponseDto = productService.restock(restockRequestDto);
+
+        return new ResponseEntity<>(restockResponseDto, HttpStatus.OK);
+
     }
 }

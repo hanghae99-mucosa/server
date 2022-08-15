@@ -1,8 +1,10 @@
 package com.hanghae99.mocosa.layer.repository;
 
+import com.hanghae99.mocosa.layer.dto.product.RestockListResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.model.QProduct;
+import com.hanghae99.mocosa.layer.model.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -84,5 +86,20 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         // default 정렬조건 "리뷰순"
         return product.reviewNum.desc();
+    }
+
+    @Override
+    public List<RestockListResponseDto> findBySeller(User user) {
+        return queryFactory.select(Projections.fields(
+                        RestockListResponseDto.class,
+                        product.productId,
+                        product.name.as("productName")
+                ))
+                .from(product)
+                .where(
+                        product.brand.user.userId.eq(user.getUserId()),
+                        product.amount.eq(0)
+                )
+                .fetch();
     }
 }

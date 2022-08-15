@@ -16,7 +16,7 @@ public enum ErrorCode {
      */
     SEARCH_NO_PRODUCT(HttpStatus.BAD_REQUEST, "상품이 존재하지 않습니다."),
     SEARCH_BLANK_KEYWORD(HttpStatus.BAD_REQUEST, "키워드를 입력해주세요."),
-    SEARCH_NO_PAGE(HttpStatus.BAD_REQUEST, "잘못된 접근입니다."),
+    SEARCH_BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 접근입니다."),
     SEARCH_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**
@@ -83,16 +83,17 @@ public enum ErrorCode {
      */
 
     MYPAGE_NO_DATA(HttpStatus.BAD_REQUEST, "가져올 데이터가 없습니다."),
+    MYPAGE_NO_PAGE(HttpStatus.BAD_REQUEST, "존재하지 않는 페이지입니다."),
     MYPAGE_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**
      * 재입고 등록
      *
-     * RESTOCK_BAD_REQUEST => 수량을 0개인 상품이 없는 경우
+     * RESTOCK_BAD_REQUEST => 수량을 0개로 요청하는 경우
      * RESTOCK_ETC => 그 외 실패 시
      */
 
-    RESTOCK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "재입고 가능한 상품이 없습니다."),
+    RESTOCK_BAD_REQUEST(HttpStatus.BAD_REQUEST, "재입고 등록은 1개 이상부터 가능합니다."),
     RESTOCK_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다.");
 
 

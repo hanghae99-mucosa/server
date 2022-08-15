@@ -3,7 +3,7 @@ package com.hanghae99.mocosa.layer.controller;
 import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.layer.dto.order.OrderRequestDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
-import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
+import com.hanghae99.mocosa.layer.dto.product.ProductDetailResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.*;
@@ -34,9 +34,9 @@ public class ProductApiController {
     // 상품 상세 페이지
     //상품 데이터 가져오기
     @GetMapping("/api/products/{productId}")
-    public ResponseEntity<ProductResponseDto> getProductDetail(@PathVariable Long productId,
-                                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ProductResponseDto result = productService.getProductDetail(productId);
+    public ResponseEntity<ProductDetailResponseDto> getProductDetail(@PathVariable Long productId,
+                                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        ProductDetailResponseDto result = productService.getProductDetail(productId);
         return new ResponseEntity(result, HttpStatus.OK);
     }
 

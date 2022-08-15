@@ -16,12 +16,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
+import static com.hanghae99.mocosa.config.exception.code.ErrorCode.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class ProductIntegrationTest {
+public class SearchIntegrationTest {
 
     static final double TOLERANCE = 0.001;
 
@@ -157,7 +158,7 @@ public class ProductIntegrationTest {
         ErrorResponseDto responseBody = response.getBody();
 
         assert responseBody != null;
-        assertEquals(HttpStatus.BAD_REQUEST.value(), responseBody.getStatus());
+        assertEquals(SEARCH_NO_PRODUCT.toString(), responseBody.getCode());
         assertEquals("상품이 존재하지 않습니다.", responseBody.getMessage());
     }
 
@@ -187,7 +188,7 @@ public class ProductIntegrationTest {
         ErrorResponseDto responseBody = response.getBody();
 
         assert responseBody != null;
-        assertEquals(HttpStatus.BAD_REQUEST.value(), responseBody.getStatus());
+        assertEquals(SEARCH_BLANK_KEYWORD.toString(), responseBody.getCode());
         assertEquals("키워드를 입력해주세요.", responseBody.getMessage());
     }
 
@@ -217,7 +218,7 @@ public class ProductIntegrationTest {
         ErrorResponseDto responseBody = response.getBody();
 
         assert responseBody != null;
-        assertEquals(HttpStatus.BAD_REQUEST.value(), responseBody.getStatus());
+        assertEquals(SEARCH_BAD_REQUEST.toString(), responseBody.getCode());
         assertEquals("잘못된 접근입니다.", responseBody.getMessage());
     }
 

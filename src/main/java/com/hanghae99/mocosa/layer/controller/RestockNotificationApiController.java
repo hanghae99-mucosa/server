@@ -38,7 +38,6 @@ public class RestockNotificationApiController {
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         NotifyResponseDto result = restockNotificationService.deleteNotify(notifyRequestDto, userDetails.getUser());
-
         return new ResponseEntity(result, HttpStatus.OK);
     }
 }

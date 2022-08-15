@@ -13,16 +13,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-public class ProductApiController {
+public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/api/search")
+    @GetMapping("/search")
     public ResponseEntity<List<SearchResponseDto>> getProducts(SearchRequestDto searchRequestDto) {
 
         Page<SearchResponseDto> searchResponseDtoList = productService.getProducts(searchRequestDto);
@@ -33,14 +34,14 @@ public class ProductApiController {
 
     // 상품 상세 페이지
     //상품 데이터 가져오기
-    @GetMapping("/api/products/{productId}")
+    @GetMapping("/products/{productId}")
     public ResponseEntity<ProductDetailResponseDto> getProductDetail(@PathVariable Long productId,
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ProductDetailResponseDto result = productService.getProductDetail(productId);
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    @PostMapping("/api/products/{productId}")
+    @PostMapping("/products/{productId}")
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
                                                         @RequestBody OrderRequestDto orderRequestDto
                                                         ,@AuthenticationPrincipal UserDetailsImpl userDetails
@@ -49,7 +50,7 @@ public class ProductApiController {
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    @GetMapping("/api/users/restock")
+    @GetMapping("/users/restock")
     public ResponseEntity<List<RestockListResponseDto>> getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<RestockListResponseDto> restockList = productService.getRestockList(userDetails);
 
@@ -57,7 +58,7 @@ public class ProductApiController {
     }
 
 
-    @PutMapping("/api/users/restock")
+    @PutMapping("/users/restock")
     public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto) {
         RestockResponseDto restockResponseDto = productService.restock(restockRequestDto);
 

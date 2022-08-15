@@ -41,18 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .authorizeRequests()
-                .antMatchers("/api/signup","/api/signin").permitAll()
+                .antMatchers("/signup","/signin").permitAll()
 
-                .antMatchers(HttpMethod.GET,"/api/search", "/api/products/**")
+                .antMatchers(HttpMethod.GET,"/search", "/products/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 
-                .antMatchers("/api/notification","/api/users/orders")
+                .antMatchers("/notification","/users/orders")
                 .access("hasRole('ROLE_USER')")
 
-                .antMatchers(HttpMethod.POST,"/api/products/**")
+                .antMatchers(HttpMethod.POST,"/products/**")
                 .access("hasRole('ROLE_USER')")
 
-                .antMatchers("/api/users/restock")
+                .antMatchers("/users/restock")
                 .access("hasRole('ROLE_ADMIN')")
 
                 .anyRequest().authenticated();

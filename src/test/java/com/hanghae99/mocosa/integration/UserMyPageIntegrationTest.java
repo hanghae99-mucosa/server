@@ -34,7 +34,7 @@ public class UserMyPageIntegrationTest {
         //when
         ResponseEntity<OrderHistoryResponseDtoList> response = restTemplate
                 .getForEntity(
-                        "/api/users/orders?page=" + page,
+                        "/users/orders?page=" + page,
                         OrderHistoryResponseDtoList.class
                 );
 
@@ -78,7 +78,7 @@ public class UserMyPageIntegrationTest {
         //when
         ResponseEntity<ExceptionResponseDto> response = restTemplate
                 .getForEntity(
-                        "/api/users/orders?page=" + page,
+                        "/users/orders?page=" + page,
                         ExceptionResponseDto.class
                 );
 
@@ -100,7 +100,7 @@ public class UserMyPageIntegrationTest {
         //when
         ResponseEntity<ExceptionResponseDto> response = restTemplate
                 .getForEntity(
-                        "/api/users/orders?page=" + page,
+                        "/users/orders?page=" + page,
                         ExceptionResponseDto.class
                 );
 

@@ -67,7 +67,7 @@ public class OrderIntegrationTest {
 
         // when
         ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
-                "/api/signin",
+                "/signin",
                 request,
                 UserIntegrationTest.SigninResponseDto.class
         );
@@ -99,7 +99,7 @@ public class OrderIntegrationTest {
 //                        ,entity);
 
         ResponseEntity<ProductDetailResponseDto> response = restTemplate.exchange(
-                "/api/products/" + productId,
+                "/products/" + productId,
                 HttpMethod.GET,
                 entity,
                 ProductDetailResponseDto.class
@@ -125,7 +125,7 @@ public class OrderIntegrationTest {
 //        ResponseEntity<ErrorResponseDto> response = restTemplate
 //                .getForEntity("/api/products/" + productId,ErrorResponseDto.class);
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(
-                "/api/products/" + productId,
+                "/products/" + productId,
                 HttpMethod.GET,
                 entity,
                 ErrorResponseDto.class
@@ -161,7 +161,7 @@ public class OrderIntegrationTest {
 
 
         ResponseEntity<OrderResponseDto> response = restTemplate
-                .postForEntity("/api/products/" + productId, entity, OrderResponseDto.class);
+                .postForEntity("/products/" + productId, entity, OrderResponseDto.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -185,7 +185,7 @@ public class OrderIntegrationTest {
 
 
         ResponseEntity<ErrorResponseDto> response = restTemplate
-                .postForEntity("/api/products/" + productId, entity, ErrorResponseDto.class);
+                .postForEntity("/products/" + productId, entity, ErrorResponseDto.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

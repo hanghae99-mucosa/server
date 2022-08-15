@@ -92,7 +92,7 @@ public class SearchIntegrationTest {
         //when
         ResponseEntity<SearchResponseDtoList> response = restTemplate
                 .getForEntity(
-                        "/api/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
+                        "/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
                                 + "&minPriceFilter=" + minPriceFilter + "&maxPriceFilter=" + maxPriceFilter
                                 + "&reviewFilter=" + reviewFilter + "&keyword=" + keyword,
                         SearchResponseDtoList.class
@@ -147,7 +147,7 @@ public class SearchIntegrationTest {
         //when
         ResponseEntity<ErrorResponseDto> response = restTemplate
                 .getForEntity(
-                        "/api/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
+                        "/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
                                 + "&minPriceFilter=" + minPriceFilter + "&maxPriceFilter=" + maxPriceFilter
                                 + "&reviewFilter=" + reviewFilter + "&keyword=" + keyword,
                         ErrorResponseDto.class
@@ -177,7 +177,7 @@ public class SearchIntegrationTest {
         //when
         ResponseEntity<ErrorResponseDto> response = restTemplate
                 .getForEntity(
-                        "/api/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
+                        "/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
                                 + "&minPriceFilter=" + minPriceFilter + "&maxPriceFilter=" + maxPriceFilter
                                 + "&reviewFilter=" + reviewFilter + "&keyword=" + keyword,
                         ErrorResponseDto.class
@@ -207,7 +207,7 @@ public class SearchIntegrationTest {
         //when
         ResponseEntity<ErrorResponseDto> response = restTemplate
                 .getForEntity(
-                        "/api/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
+                        "/search?page=" + page + "&sort=" + sort + "&categoryFilter=" + categoryFilter
                                 + "&minPriceFilter=" + minPriceFilter + "&maxPriceFilter=" + maxPriceFilter
                                 + "&reviewFilter=" + reviewFilter + "&keyword=" + keyword,
                         ErrorResponseDto.class

@@ -58,7 +58,7 @@ public class SellerMyPageIntegrationTest {
 
         // when
         ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
-                "/api/signin",
+                "/signin",
                 request,
                 UserIntegrationTest.SigninResponseDto.class
         );
@@ -83,7 +83,7 @@ public class SellerMyPageIntegrationTest {
         headers.set("Authorization", userToken1);
         ResponseEntity<RestockListResponseDto[]> response = restTemplate
                 .getForEntity(
-                        "/api/users/restock",
+                        "/users/restock",
                         RestockListResponseDto[].class
                 );
 
@@ -115,7 +115,7 @@ public class SellerMyPageIntegrationTest {
         //when
         ResponseEntity<ExceptionResponseDto> response = restTemplate
                 .getForEntity(
-                        "/api/users/restock",
+                        "/users/restock",
                         ExceptionResponseDto.class
                 );
 
@@ -140,7 +140,7 @@ public class SellerMyPageIntegrationTest {
         //when
         ResponseEntity<RestockResponseDto> response = restTemplate
                 .exchange(
-                        "/api/users/restock",
+                        "/users/restock",
                         HttpMethod.PUT,
                         request,
                         RestockResponseDto.class
@@ -168,7 +168,7 @@ public class SellerMyPageIntegrationTest {
         //when
         ResponseEntity<ErrorResponseDto> response = restTemplate
                 .exchange(
-                        "/api/users/restock",
+                        "/users/restock",
                         HttpMethod.PUT,
                         request,
                         ErrorResponseDto.class

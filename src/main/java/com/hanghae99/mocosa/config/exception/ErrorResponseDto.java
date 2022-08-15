@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ErrorResponseDto {
     private final LocalDateTime timestamp = LocalDateTime.now();
-    private final int status;
     private final String error;
     private final String code;
     private final String message;
@@ -22,7 +21,6 @@ public class ErrorResponseDto {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
                 .body(ErrorResponseDto.builder()
-                        .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.name())
                         .message(errorCode.getErrorMessage())

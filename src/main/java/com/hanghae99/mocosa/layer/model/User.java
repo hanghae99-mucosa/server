@@ -21,4 +21,22 @@ public class User {
     private String email;
 
     private String password;
+
+    private UserRoleEnum role;
+
+    public User(String email, String password, UserRoleEnum role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        if (role.equals("셀러")) {
+            this.role = UserRoleEnum.ADMIN;
+        }else {
+            this.role = UserRoleEnum.USER;
+        }
+    }
 }

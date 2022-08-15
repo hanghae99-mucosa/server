@@ -2,6 +2,12 @@ package com.hanghae99.mocosa.test;
 
 import com.hanghae99.mocosa.layer.model.*;
 import com.hanghae99.mocosa.layer.repository.*;
+import com.hanghae99.mocosa.config.jwt.PasswordEncoder;
+import com.hanghae99.mocosa.layer.model.*;
+import com.hanghae99.mocosa.layer.repository.BrandRepository;
+import com.hanghae99.mocosa.layer.repository.CategoryRepository;
+import com.hanghae99.mocosa.layer.repository.ProductRepository;
+import com.hanghae99.mocosa.layer.repository.UserRepository;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -29,14 +35,16 @@ public class TestDataRunner implements ApplicationRunner {
     @Autowired
     OrderRepository orderRepository;
 
+    PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        User testUser1 = new User(1L,"test1@test.com", "1234");
-        User testUser2 = new User(2L,"test2@test.com", "1234");
-        User testUser3 = new User(3L,"test3@test.com", "1234");
-        User testUser4 = new User(4L,"test4@test.com", "1234");
+        User testUser1 = new User("test1@test.com", passwordEncoder.encode("abc123123*"), UserRoleEnum.USER);
+        User testUser2 = new User("test2@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.USER);
+        User testUser3 = new User("test3@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
+        User testUser4 = new User("test4@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
+
         userRepository.save(testUser1);
         userRepository.save(testUser2);
         userRepository.save(testUser3);

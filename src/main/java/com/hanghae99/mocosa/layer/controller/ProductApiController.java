@@ -36,7 +36,8 @@ public class ProductApiController {
     // 상품 상세 페이지
     //상품 데이터 가져오기
     @GetMapping("/api/products/{productId}")
-    public ResponseEntity<ProductResponseDto> getProductDetail(@PathVariable Long productId) {
+    public ResponseEntity<ProductResponseDto> getProductDetail(@PathVariable Long productId,
+                                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ProductResponseDto result = productService.getProductDetail(productId);
         return new ResponseEntity(result, HttpStatus.OK);
     }
@@ -44,7 +45,7 @@ public class ProductApiController {
     @PostMapping("/api/products/{productId}")
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
                                                         @RequestBody OrderRequestDto orderRequestDto
-                             ,@AuthenticationPrincipal UserDetailsImpl userDetails
+                                                        ,@AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);

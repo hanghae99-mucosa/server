@@ -193,22 +193,22 @@ public class UserIntegrationTest {
     @Setter
     @Builder
     static class SigninDto {
-        private String email;
-        private String password;
+        public String email;
+        public String password;
     }
 
     @Getter
     @Setter
     @Builder
     static class SigninResponseDto {
-        private String email;
-        private String token;
+        public String email;
+        public String token;
     }
 
     @Getter
     @Setter
     @Builder
     static class FailResponseDto {
-        private String message;
+        public String message;
     }
 }

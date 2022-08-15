@@ -3,12 +3,9 @@ package com.hanghae99.mocosa.integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.mocosa.config.exception.ErrorResponseDto;
-import com.hanghae99.mocosa.config.exception.code.ErrorCode;
-import com.hanghae99.mocosa.config.jwt.PasswordEncoder;
 import com.hanghae99.mocosa.layer.dto.order.OrderRequestDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
-import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
-import com.hanghae99.mocosa.layer.dto.user.SigninRequestDto;
+import com.hanghae99.mocosa.layer.dto.product.ProductDetailResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,13 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 
-import java.nio.charset.Charset;
-
-import static com.hanghae99.mocosa.config.exception.code.ErrorCode.ORDER_NO_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -75,7 +67,7 @@ public class OrderIntegrationTest {
 
         // when
         ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
-                "/api/signin",
+                "/signin",
                 request,
                 UserIntegrationTest.SigninResponseDto.class
         );
@@ -106,15 +98,15 @@ public class OrderIntegrationTest {
 //                        ProductResponseDto.class
 //                        ,entity);
 
-        ResponseEntity<ProductResponseDto> response = restTemplate.exchange(
-                "/api/products/" + productId,
+        ResponseEntity<ProductDetailResponseDto> response = restTemplate.exchange(
+                "/products/" + productId,
                 HttpMethod.GET,
                 entity,
-                ProductResponseDto.class
+                ProductDetailResponseDto.class
         );
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        ProductResponseDto body = response.getBody();
+        ProductDetailResponseDto body = response.getBody();
 
         assertThat(body.getName()).isEqualTo("릴렉스 핏 크루 넥 반팔 티셔츠");
         assertThat(body.getPrice()).isEqualTo(10690);
@@ -133,7 +125,7 @@ public class OrderIntegrationTest {
 //        ResponseEntity<ErrorResponseDto> response = restTemplate
 //                .getForEntity("/api/products/" + productId,ErrorResponseDto.class);
         ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(
-                "/api/products/" + productId,
+                "/products/" + productId,
                 HttpMethod.GET,
                 entity,
                 ErrorResponseDto.class
@@ -143,7 +135,6 @@ public class OrderIntegrationTest {
         ErrorResponseDto body = response.getBody();
 
         //then
-        assertThat(body.getStatus()).isEqualTo(400);
         assertThat(body.getCode()).isEqualTo("DETAIL_NO_PRODUCT");
         assertThat(body.getMessage()).isEqualTo("존재하지 않는 상품입니다.");
     }
@@ -170,7 +161,7 @@ public class OrderIntegrationTest {
 
 
         ResponseEntity<OrderResponseDto> response = restTemplate
-                .postForEntity("/api/products/" + productId, entity, OrderResponseDto.class);
+                .postForEntity("/products/" + productId, entity, OrderResponseDto.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -194,7 +185,7 @@ public class OrderIntegrationTest {
 
 
         ResponseEntity<ErrorResponseDto> response = restTemplate
-                .postForEntity("/api/products/" + productId, entity, ErrorResponseDto.class);
+                .postForEntity("/products/" + productId, entity, ErrorResponseDto.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

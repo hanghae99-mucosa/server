@@ -55,7 +55,7 @@ public class RestockNotificationIntegrationTest {
 
         // when
         ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
-                "/api/signin",
+                "/signin",
                 request,
                 UserIntegrationTest.SigninResponseDto.class
         );
@@ -83,7 +83,7 @@ public class RestockNotificationIntegrationTest {
 
         HttpEntity<NotifyRequestDto> entity = new HttpEntity<>(requestDto, headers);
         ResponseEntity<NotifyResponseDto> response = restTemplate
-                .postForEntity("/api/notification", entity, NotifyResponseDto.class);
+                .postForEntity("/notification", entity, NotifyResponseDto.class);
 
 
         //then
@@ -106,13 +106,13 @@ public class RestockNotificationIntegrationTest {
         // 첫번째 요청은 성공
         HttpEntity<NotifyRequestDto> entity = new HttpEntity<>(requestDto, headers);
         ResponseEntity<NotifyResponseDto> response = restTemplate
-                .postForEntity("/api/notification", entity, NotifyResponseDto.class);
+                .postForEntity("/notification", entity, NotifyResponseDto.class);
 
 
         // 두번째 요청은 실패
         HttpEntity<NotifyRequestDto> error = new HttpEntity<>(requestDto, headers);
         ResponseEntity<ErrorResponseDto> errorResponse = restTemplate
-                .postForEntity("/api/notification", error, ErrorResponseDto.class);
+                .postForEntity("/notification", error, ErrorResponseDto.class);
 
         //then
         assertThat(errorResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -136,11 +136,11 @@ public class RestockNotificationIntegrationTest {
 
             //먼저 요청을 등록한다.
         ResponseEntity<NotifyResponseDto> response = restTemplate
-                .postForEntity("/api/notification", entity, NotifyResponseDto.class);
+                .postForEntity("/notification", entity, NotifyResponseDto.class);
 
             // 그 후 삭제를 요청한다.
         ResponseEntity<NotifyResponseDto> deleteResponse
-                = restTemplate.exchange("/api/notification", HttpMethod.DELETE, entity, NotifyResponseDto.class);
+                = restTemplate.exchange("/notification", HttpMethod.DELETE, entity, NotifyResponseDto.class);
 
 
         //then
@@ -164,15 +164,15 @@ public class RestockNotificationIntegrationTest {
 
             //먼저 요청을 등록한다.
         ResponseEntity<NotifyResponseDto> response = restTemplate
-                .postForEntity("/api/notification", entity, NotifyResponseDto.class);
+                .postForEntity("/notification", entity, NotifyResponseDto.class);
 
             // 그 후 삭제를 요청한다.
         ResponseEntity<NotifyResponseDto> deleteResponse
-                = restTemplate.exchange("/api/notification", HttpMethod.DELETE, entity, NotifyResponseDto.class);
+                = restTemplate.exchange("/notification", HttpMethod.DELETE, entity, NotifyResponseDto.class);
 
             // 그 후 중복으로 요청을 보낸다.
         ResponseEntity<ErrorResponseDto> errorResponse
-                = restTemplate.exchange("/api/notification", HttpMethod.DELETE, entity, ErrorResponseDto.class);
+                = restTemplate.exchange("/notification", HttpMethod.DELETE, entity, ErrorResponseDto.class);
 
         //then
         assertThat(errorResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

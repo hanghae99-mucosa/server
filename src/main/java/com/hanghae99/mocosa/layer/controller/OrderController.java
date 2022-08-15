@@ -8,16 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-public class OrderApiController {
+public class OrderController {
     private final OrderService orderService;
 
-    @GetMapping("/api/users/orders")
+    @GetMapping("/users/orders")
     public ResponseEntity<Page<OrderHistoryResponseDto>> getOrderHistory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam int page) {
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderService.getOrderHistory(userDetails, page);

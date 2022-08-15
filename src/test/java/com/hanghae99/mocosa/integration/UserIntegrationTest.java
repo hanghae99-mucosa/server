@@ -55,7 +55,7 @@ public class UserIntegrationTest {
 
         // when
         ResponseEntity<SignupResponseDto> response = restTemplate.postForEntity(
-                "/api/signup",
+                "/signup",
                 request,
                 SignupResponseDto.class
         );
@@ -84,7 +84,7 @@ public class UserIntegrationTest {
 
         // when
         ResponseEntity<ErrorResponseDto> response = restTemplate.postForEntity(
-                "/api/signup",
+                "/signup",
                 request,
                 ErrorResponseDto.class
         );
@@ -113,7 +113,7 @@ public class UserIntegrationTest {
 
         // when
         ResponseEntity<ErrorResponseDto> response = restTemplate.postForEntity(
-                "/api/signup",
+                "/signup",
                 request,
                 ErrorResponseDto.class
         );
@@ -142,7 +142,7 @@ public class UserIntegrationTest {
 
         // when
         ResponseEntity<ErrorResponseDto> response = restTemplate.postForEntity(
-                "/api/signup",
+                "/signup",
                 request,
                 ErrorResponseDto.class
         );
@@ -165,7 +165,7 @@ public class UserIntegrationTest {
 
         // when
         ResponseEntity<SigninResponseDto> response = restTemplate.postForEntity(
-                "/api/signin",
+                "/signin",
                 request,
                 SigninResponseDto.class
         );

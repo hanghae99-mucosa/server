@@ -6,7 +6,7 @@ import com.hanghae99.mocosa.config.exception.custom.OrderException;
 import com.hanghae99.mocosa.config.exception.custom.ProductException;
 import com.hanghae99.mocosa.config.exception.custom.SearchException;
 import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
-import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
+import com.hanghae99.mocosa.layer.dto.product.ProductDetailResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.model.Order;
@@ -37,7 +37,8 @@ public class ProductService {
 
         validateBlankKeyword(searchRequestDto.getKeyword());
 
-        Pageable pageable = PageRequest.of(searchRequestDto.getPage(), PAGEABLE_SIZE);
+        // 페이지를 1부터 시작
+        Pageable pageable = PageRequest.of(searchRequestDto.getPage()-1, PAGEABLE_SIZE);
 
         Page<SearchResponseDto> searchResponseDtos = productRepository.findBySearchRequestDto(searchRequestDto, pageable);
 
@@ -85,22 +86,22 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto getProductDetail(Long productId){
+    public ProductDetailResponseDto getProductDetail(Long productId){
 
         // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
         return getProductResponseDto(productId);
     }
 
-    private ProductResponseDto getProductResponseDto(Long productId){
+    private ProductDetailResponseDto getProductResponseDto(Long productId){
         Optional<Product> productByProductId = productRepository.findProductByProductId(productId);
         if (productByProductId.isEmpty()) {
             throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
         }
         Product product = productByProductId.orElseThrow(() -> new ProductException(ErrorCode.DETAIL_ETC));
 
-        ProductResponseDto productResponseDto;
+        ProductDetailResponseDto productResponseDto;
         try {
-            productResponseDto = new ProductResponseDto(
+            productResponseDto = new ProductDetailResponseDto(
                     product.getProductId(),
                     product.getName(),
                     product.getThumbnail(),

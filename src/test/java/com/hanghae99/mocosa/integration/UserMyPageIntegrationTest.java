@@ -1,14 +1,13 @@
 package com.hanghae99.mocosa.integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.http.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,25 +17,100 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserMyPageIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private HttpHeaders headers;
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    private String userToken1;
+    private String userToken2;
+
+    @BeforeEach
+    public void setup() {
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
+    @Test
+    @Order(1)
+    @DisplayName("test4@test.com 유저 로그인 성공 케이스")
+    void TODO_SIGNIN_RESULT_SUCCESS1() throws JsonProcessingException {
+        UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
+                .email("test4@test.com")
+                .password("abc123123*")
+                .build();
+
+        String requestBody = mapper.writeValueAsString(userForSignin);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+        // when
+        ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
+                "/signin",
+                request,
+                UserIntegrationTest.SigninResponseDto.class
+        );
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UserIntegrationTest.SigninResponseDto signinResponseDto = response.getBody();
+
+        assertNotNull(signinResponseDto);
+        assertEquals(userForSignin.email, signinResponseDto.getEmail());
+        userToken1 = signinResponseDto.getToken();
+    }
+
+    @Test
+    @Order(1)
+    @DisplayName("test2@test.com 유저 로그인 성공 케이스")
+    void TODO_SIGNIN_RESULT_SUCCESS2() throws JsonProcessingException {
+        UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
+                .email("test2@test.com")
+                .password("abc123123*")
+                .build();
+
+        String requestBody = mapper.writeValueAsString(userForSignin);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+        // when
+        ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
+                "/signin",
+                request,
+                UserIntegrationTest.SigninResponseDto.class
+        );
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UserIntegrationTest.SigninResponseDto signinResponseDto = response.getBody();
+
+        assertNotNull(signinResponseDto);
+        assertEquals(userForSignin.email, signinResponseDto.getEmail());
+        userToken2 = signinResponseDto.getToken();
+    }
 
     @Test
     @DisplayName("주문 데이터 가져오기에 성공한 케이스")
     public void case1(){
         //given
+        headers.set("Authorization", userToken1);
+        HttpEntity<String> request = new HttpEntity<>("",headers);
+
         int page = 0;
 
         //when
-        ResponseEntity<OrderHistoryResponseDtoList> response = restTemplate
-                .getForEntity(
-                        "/api/users/orders?page=" + page,
-                        OrderHistoryResponseDtoList.class
-                );
+        ResponseEntity<OrderHistoryResponseDtoList> response = restTemplate.exchange(
+                "/users/orders?page=" + page,
+                HttpMethod.GET,
+                request,
+                OrderHistoryResponseDtoList.class
+        );
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -73,14 +147,18 @@ public class UserMyPageIntegrationTest {
     @DisplayName("주문 데이터가 없는 경우")
     public void case2(){
         //given
+        headers.set("Authorization", userToken2);
+        HttpEntity<String> request = new HttpEntity<>("",headers);
+
         int page = 0;
 
         //when
-        ResponseEntity<ExceptionResponseDto> response = restTemplate
-                .getForEntity(
-                        "/api/users/orders?page=" + page,
-                        ExceptionResponseDto.class
-                );
+        ResponseEntity<ExceptionResponseDto> response = restTemplate.exchange(
+                "/users/orders?page=" + page,
+                HttpMethod.GET,
+                request,
+                ExceptionResponseDto.class
+        );
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -95,14 +173,18 @@ public class UserMyPageIntegrationTest {
     @DisplayName("존재하지 않는 페이지를 요청하는 경우")
     public void case3(){
         //given
-        int page = 100000;
+        headers.set("Authorization", userToken1);
+        HttpEntity<String> request = new HttpEntity<>("",headers);
+
+        int page = 1000000;
 
         //when
-        ResponseEntity<ExceptionResponseDto> response = restTemplate
-                .getForEntity(
-                        "/api/users/orders?page=" + page,
-                        ExceptionResponseDto.class
-                );
+        ResponseEntity<ExceptionResponseDto> response = restTemplate.exchange(
+                "/users/orders?page=" + page,
+                HttpMethod.GET,
+                request,
+                ExceptionResponseDto.class
+        );
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

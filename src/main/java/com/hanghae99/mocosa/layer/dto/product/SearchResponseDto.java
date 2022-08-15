@@ -17,4 +17,6 @@ public class SearchResponseDto {
     private int amount;
     private int reviewNum;
     private float reviewAvg;
+
+
 }

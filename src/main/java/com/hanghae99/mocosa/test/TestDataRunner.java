@@ -40,7 +40,7 @@ public class TestDataRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         User testUser1 = new User("test1@test.com", passwordEncoder.encode("abc123123*"), UserRoleEnum.ADMIN);
-        User testUser2 = new User("test2@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
+        User testUser2 = new User("test2@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.USER);
         User testUser3 = new User("test3@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
         User testUser4 = new User("test4@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.USER);
 

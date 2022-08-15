@@ -1,30 +1,36 @@
 package com.hanghae99.mocosa.layer.service;
 
+import com .hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
-import com.hanghae99.mocosa.config.exception.custom.MyPageException;
+import com.hanghae99.mocosa.config.exception.custom.OrderException;
+import com.hanghae99.mocosa.config.exception.custom.ProductException;
 import com.hanghae99.mocosa.config.exception.custom.SearchException;
-import com.hanghae99.mocosa.layer.dto.product.*;
-import com.hanghae99.mocosa.layer.model.Brand;
+import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
+import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
+import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
+import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
+import com.hanghae99.mocosa.layer.model.Order;
 import com.hanghae99.mocosa.layer.model.Product;
 import com.hanghae99.mocosa.layer.model.User;
+import com.hanghae99.mocosa.layer.repository.OrderRepository;
+import com.hanghae99.mocosa.config.exception.custom.MyPageException;
+import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
-import com.hanghae99.mocosa.layer.repository.ProductRepositoryImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
-    private final ProductRepositoryImpl productRepositoryImpl;
-    private final ProductRepository productRepository;
-
     private static final int PAGEABLE_SIZE = 12;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
         validateSort(searchRequestDto);
@@ -33,12 +39,12 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(searchRequestDto.getPage(), PAGEABLE_SIZE);
 
-        Page<SearchResponseDto> searchResponseDtos = productRepositoryImpl.findBySearchRequestDto(searchRequestDto, pageable);
+        Page<SearchResponseDto> searchResponseDtos = productRepository.findBySearchRequestDto(searchRequestDto, pageable);
 
         int requestPage = searchResponseDtos.getTotalPages();
         int totalPage = searchRequestDto.getPage();
 
-        validatePage(requestPage,totalPage);
+        validatePage(requestPage, totalPage);
 
         long totalElements = searchResponseDtos.getTotalElements();
 
@@ -51,15 +57,15 @@ public class ProductService {
         // 유효하지 않은 정렬조건이 넘어온 경우
         String sort = searchRequestDto.getSort();
 
-        if(sort.equals("리뷰순") || sort.equals("저가순") || sort.equals("고가순")) {
+        if (sort.equals("리뷰순") || sort.equals("저가순") || sort.equals("고가순")) {
             return;
         }
 
-        throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
+        throw new SearchException(ErrorCode.SEARCH_BAD_REQUEST);
     }
 
     private void validateBlankKeyword(String keyword) {
-        if(keyword.isBlank()) {
+        if (keyword.isBlank()) {
             throw new SearchException(ErrorCode.SEARCH_BLANK_KEYWORD);
         }
     }
@@ -67,38 +73,99 @@ public class ProductService {
     private void validatePage(int totalPage, int requestPage) {
         // 마지막 페이지 이상의 값이 들어갈 경우
         if(totalPage < requestPage){
-            throw new SearchException(ErrorCode.SEARCH_NO_PAGE);
+            throw new SearchException(ErrorCode.SEARCH_BAD_REQUEST);
         }
     }
 
     private void validateNoProduct(long totalElements) {
         // 검색결과가 없을 경우
-        if(totalElements == 0){
+        if (totalElements == 0) {
             throw new SearchException(ErrorCode.SEARCH_NO_PRODUCT);
         }
+    }
+
+    @Transactional
+    public ProductResponseDto getProductDetail(Long productId){
+
+        // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
+        return getProductResponseDto(productId);
+    }
+
+    private ProductResponseDto getProductResponseDto(Long productId){
+        Optional<Product> productByProductId = productRepository.findProductByProductId(productId);
+        if (productByProductId.isEmpty()) {
+            throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
+        }
+        Product product = productByProductId.orElseThrow(() -> new ProductException(ErrorCode.DETAIL_ETC));
+
+        ProductResponseDto productResponseDto;
+        try {
+            productResponseDto = new ProductResponseDto(
+                    product.getProductId(),
+                    product.getName(),
+                    product.getThumbnail(),
+                    product.getBrandName(),
+                    product.getCategoryName(),
+                    product.getPrice(),
+                    product.getAmount(),
+                    product.getReviewNum(),
+                    product.getReviewAvg());
+        } catch (Exception e) {
+            throw new ProductException(ErrorCode.DETAIL_ETC);
+        }
+        return productResponseDto;
+    }
+
+    @Transactional
+    public OrderResponseDto createOrder(Long productId, Integer orderAmount, User userDetails) {
+        // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
+
+        return createOrderAndReduceProduct(productId, orderAmount, userDetails);
+    }
+
+    private OrderResponseDto createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
+        Optional<Product> optional = productRepository.findById(productId);
+
+        if (optional.isEmpty()) {
+            throw new OrderException(ErrorCode.ORDER_ETC);
+        }
+
+        Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
+
+
+        // 가져온 상품의 수량과 사용자가 원하는 상품의 수량을 입력하게 한다.
+        // throw new OrderException(ErrorCode.ORDER_NO_STOCK);
+        if (orderAmount > product.getAmount()) {
+            throw new OrderException(ErrorCode.ORDER_NO_STOCK);
+        }
+
+        //Product 에서 상품의 수량을 제거하고
+        // TotalPrice 를 가져오게 한다.
+        Integer totalPrice = product.orderProduct(orderAmount);
+
+
+        // 상품의 수량이 문제 없이 깍였다면 Order 새로운 Order을 생성하고 저장한다.
+        Order order = Order.builder()
+                .product(product)
+                .user(userDetails)
+                .totalPrice(totalPrice)
+                .amount(orderAmount)
+                .build();
+
+        orderRepository.save(order);
+        return new OrderResponseDto("주문에 성공하셨습니다.");
     }
 
     public List<RestockListResponseDto> getRestockList(UserDetailsImpl userDetails) {
 
         User user = userDetails.getUser();
 
-        List<RestockListResponseDto> restockList = productRepositoryImpl.findBySeller(user);
+        List<RestockListResponseDto> restockList = productRepository.findBySeller(user);
 
         validateNoRestockList(restockList);
 
         return restockList;
     }
-
-//    public List<RestockListResponseDto> getRestockList() {
-//
-//        User user = new User(1L, "test1@test.com", "1234");
-//
-//        List<RestockListResponseDto> restockList = productRepositoryImpl.findBySeller(user);
-//
-//        validateNoRestockList(restockList);
-//
-//        return restockList;
-//    }
 
     private void validateNoRestockList(List<RestockListResponseDto> restockList) {
         // 수량이 0개인 상품이 없는 경우

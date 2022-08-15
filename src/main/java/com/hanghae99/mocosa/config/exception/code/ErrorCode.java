@@ -16,7 +16,7 @@ public enum ErrorCode {
      */
     SEARCH_NO_PRODUCT(HttpStatus.BAD_REQUEST, "상품이 존재하지 않습니다."),
     SEARCH_BLANK_KEYWORD(HttpStatus.BAD_REQUEST, "키워드를 입력해주세요."),
-    SEARCH_NO_PAGE(HttpStatus.BAD_REQUEST, "잘못된 접근입니다."),
+    SEARCH_BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 접근입니다."),
     SEARCH_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**

@@ -35,10 +35,43 @@ public class SellerMyPageIntegrationTest {
     private HttpHeaders headers;
     private ObjectMapper mapper = new ObjectMapper();
 
+    private String userToken1;
+    private UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
+            .email("test1@test.com")
+            .password("abc123123*")
+            .build();
+
+
     @BeforeEach
     public void setup() {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
+    @Test
+    @DisplayName("유저 로그인 성공 케이스")
+    void TODO_SIGNIN_RESULT_SUCCESS() throws JsonProcessingException {
+        // given
+
+        String requestBody = mapper.writeValueAsString(userForSignin);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+        // when
+        ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
+                "/api/signin",
+                request,
+                UserIntegrationTest.SigninResponseDto.class
+        );
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UserIntegrationTest.SigninResponseDto signinResponseDto = response.getBody();
+        assertNotNull(signinResponseDto);
+        assertEquals(userForSignin.email, signinResponseDto.getEmail());
+        assertNotNull(signinResponseDto.getToken());
+
+        userToken1 = signinResponseDto.getToken();
     }
 
     @Test
@@ -47,6 +80,7 @@ public class SellerMyPageIntegrationTest {
         //given
 
         //when
+        headers.set("Authorization", userToken1);
         ResponseEntity<RestockListResponseDto[]> response = restTemplate
                 .getForEntity(
                         "/api/users/restock",

@@ -3,7 +3,6 @@ package com.hanghae99.mocosa.test;
 import com.hanghae99.mocosa.layer.model.*;
 import com.hanghae99.mocosa.layer.repository.*;
 import com.hanghae99.mocosa.config.jwt.PasswordEncoder;
-import com.hanghae99.mocosa.layer.model.*;
 import com.hanghae99.mocosa.layer.repository.BrandRepository;
 import com.hanghae99.mocosa.layer.repository.CategoryRepository;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
@@ -35,14 +34,15 @@ public class TestDataRunner implements ApplicationRunner {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        User testUser1 = new User("test1@test.com", passwordEncoder.encode("abc123123*"), UserRoleEnum.USER);
-        User testUser2 = new User("test2@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.USER);
+        User testUser1 = new User("test1@test.com", passwordEncoder.encode("abc123123*"), UserRoleEnum.ADMIN);
+        User testUser2 = new User("test2@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
         User testUser3 = new User("test3@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
-        User testUser4 = new User("test4@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.ADMIN);
+        User testUser4 = new User("test4@test.com", passwordEncoder.encode("abc123123*"),UserRoleEnum.USER);
 
         userRepository.save(testUser1);
         userRepository.save(testUser2);

@@ -1,7 +1,7 @@
 package com.hanghae99.mocosa.layer.controller;
 
+import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.layer.dto.order.OrderHistoryResponseDto;
-import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,22 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class OrderApiController {
-
     private final OrderService orderService;
 
     @GetMapping("/api/users/orders")
-    public ResponseEntity<Page<OrderHistoryResponseDto>> getOrderHistory(@AuthenticationPrincipal User userDetails, @RequestParam int page) {
+    public ResponseEntity<Page<OrderHistoryResponseDto>> getOrderHistory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam int page) {
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderService.getOrderHistory(userDetails, page);
 
         return new ResponseEntity<>(orderHistoryResponseDtoPage, HttpStatus.OK);
     }
 
-//    @GetMapping("/api/users/orders")
-//    public ResponseEntity<Page<OrderHistoryResponseDto>> getOrderHistory(@RequestParam int page) {
-//
-//        Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderService.getOrderHistory(page);
-//
-//        return new ResponseEntity<>(orderHistoryResponseDtoPage, HttpStatus.OK);
-//    }
 }

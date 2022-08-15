@@ -1,11 +1,9 @@
 package com.hanghae99.mocosa.layer.model;
 
-import com.hanghae99.mocosa.layer.dto.product.RestockRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Getter
@@ -52,9 +50,9 @@ public class Product {
         Integer sum = price * amount;
         this.amount -= amount;
         return sum;
-        
+    }
+
     public void update(int amount) {
         this.amount = amount;
-        
     }
 }

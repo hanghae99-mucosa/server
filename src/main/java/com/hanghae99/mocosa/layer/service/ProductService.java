@@ -1,5 +1,6 @@
 package com.hanghae99.mocosa.layer.service;
 
+import com .hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
 import com.hanghae99.mocosa.config.exception.custom.OrderException;
 import com.hanghae99.mocosa.config.exception.custom.ProductException;
@@ -13,31 +14,22 @@ import com.hanghae99.mocosa.layer.model.Product;
 import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.OrderRepository;
 import com.hanghae99.mocosa.config.exception.custom.MyPageException;
-import com.hanghae99.mocosa.config.exception.custom.SearchException;
 import com.hanghae99.mocosa.layer.dto.product.*;
-import com.hanghae99.mocosa.layer.model.Brand;
-import com.hanghae99.mocosa.layer.model.Product;
-import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
-import com.hanghae99.mocosa.layer.repository.ProductRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
-
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
-    private final ProductRepositoryImpl productRepositoryImpl;
-    private final ProductRepository productRepository;
     private static final int PAGEABLE_SIZE = 12;
+    private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
@@ -47,7 +39,7 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(searchRequestDto.getPage(), PAGEABLE_SIZE);
 
-        Page<SearchResponseDto> searchResponseDtos = productRepositoryImpl.findBySearchRequestDto(searchRequestDto, pageable);
+        Page<SearchResponseDto> searchResponseDtos = productRepository.findBySearchRequestDto(searchRequestDto, pageable);
 
         int requestPage = searchResponseDtos.getTotalPages();
         int totalPage = searchRequestDto.getPage();
@@ -100,7 +92,7 @@ public class ProductService {
     }
 
     private ProductResponseDto getProductResponseDto(Long productId){
-        Optional<Product> productByProductId = repository.findProductByProductId(productId);
+        Optional<Product> productByProductId = productRepository.findProductByProductId(productId);
         if (productByProductId.isEmpty()) {
             throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
         }
@@ -132,7 +124,7 @@ public class ProductService {
     }
 
     private OrderResponseDto createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
-        Optional<Product> optional = repository.findById(productId);
+        Optional<Product> optional = productRepository.findById(productId);
 
         if (optional.isEmpty()) {
             throw new OrderException(ErrorCode.ORDER_ETC);
@@ -162,28 +154,18 @@ public class ProductService {
 
         orderRepository.save(order);
         return new OrderResponseDto("주문에 성공하셨습니다.");
-        
+    }
+
     public List<RestockListResponseDto> getRestockList(UserDetailsImpl userDetails) {
 
         User user = userDetails.getUser();
 
-        List<RestockListResponseDto> restockList = productRepositoryImpl.findBySeller(user);
+        List<RestockListResponseDto> restockList = productRepository.findBySeller(user);
 
         validateNoRestockList(restockList);
 
         return restockList;
     }
-
-//    public List<RestockListResponseDto> getRestockList() {
-//
-//        User user = new User(1L, "test1@test.com", "1234");
-//
-//        List<RestockListResponseDto> restockList = productRepositoryImpl.findBySeller(user);
-//
-//        validateNoRestockList(restockList);
-//
-//        return restockList;
-//    }
 
     private void validateNoRestockList(List<RestockListResponseDto> restockList) {
         // 수량이 0개인 상품이 없는 경우

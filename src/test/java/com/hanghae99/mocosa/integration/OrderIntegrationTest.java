@@ -125,7 +125,7 @@ public class OrderIntegrationTest {
     @DisplayName("Case 2 : 존재하지 않는 상품ID를 요청하는 경우 ⇒ 실패")
     public void getExceptionProduct() {
         //given
-        Long productId = 8L;
+        Long productId = 9L;
         headers.set("Authorization", userToken);
         HttpEntity<String> entity = new HttpEntity<>("",headers);
 

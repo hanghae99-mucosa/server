@@ -1,5 +1,6 @@
 package com.hanghae99.mocosa.layer.service;
 
+import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
 import com.hanghae99.mocosa.config.exception.custom.MyPageException;
 import com.hanghae99.mocosa.layer.dto.order.OrderHistoryResponseDto;
@@ -35,20 +36,6 @@ public class OrderService {
 
         return orderHistoryResponseDtoPage;
     }
-
-//    public Page<OrderHistoryResponseDto> getOrderHistory(int page) {
-//
-//        User user = new User(4L, "test4@test.com", "1234");
-//        Pageable pageable = PageRequest.of(page, PAGEABLE_SIZE, PAGEABLE_DIRECTION, PAGEABLE_SORT);
-//
-//        Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderRepositoryImpl.findByUser(user, pageable);
-//
-//        validatePage(orderHistoryResponseDtoPage, page);
-//
-//        validateNoOrderHistory(orderHistoryResponseDtoPage);
-//
-//        return orderHistoryResponseDtoPage;
-//    }
 
     private void validatePage(Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage, int page) {
         int toalPage = orderHistoryResponseDtoPage.getTotalPages();

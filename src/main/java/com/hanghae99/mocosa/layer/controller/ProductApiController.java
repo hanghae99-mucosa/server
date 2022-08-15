@@ -6,8 +6,6 @@ import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
-import com.hanghae99.mocosa.layer.model.User;
-import com.hanghae99.mocosa.layer.repository.UserRepository;
 import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -50,6 +47,7 @@ public class ProductApiController {
     ) {
         OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);
+    }
 
     @GetMapping("/api/users/restock")
     public ResponseEntity<List<RestockListResponseDto>> getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -58,12 +56,6 @@ public class ProductApiController {
         return new ResponseEntity<>(restockList, HttpStatus.OK);
     }
 
-//    @GetMapping("/api/users/restock")
-//    public ResponseEntity<List<RestockListResponseDto>> getRestockList() {
-//        List<RestockListResponseDto> restockList = productService.getRestockList();
-//
-//        return new ResponseEntity<>(restockList, HttpStatus.OK);
-//    }
 
     @PutMapping("/api/users/restock")
     public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto) {

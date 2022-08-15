@@ -7,14 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -27,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SellerMyPageIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -36,11 +34,7 @@ public class SellerMyPageIntegrationTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     private String userToken1;
-    private UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
-            .email("test1@test.com")
-            .password("abc123123*")
-            .build();
-
+    private String userToken2;
 
     @BeforeEach
     public void setup() {
@@ -49,9 +43,13 @@ public class SellerMyPageIntegrationTest {
     }
 
     @Test
-    @DisplayName("유저 로그인 성공 케이스")
-    void TODO_SIGNIN_RESULT_SUCCESS() throws JsonProcessingException {
-        // given
+    @Order(1)
+    @DisplayName("test1@test.com 유저 로그인 성공 케이스")
+    void TODO_SIGNIN_RESULT_SUCCESS1() throws JsonProcessingException {
+        UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
+                .email("test1@test.com")
+                .password("abc123123*")
+                .build();
 
         String requestBody = mapper.writeValueAsString(userForSignin);
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
@@ -67,25 +65,55 @@ public class SellerMyPageIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         UserIntegrationTest.SigninResponseDto signinResponseDto = response.getBody();
+
         assertNotNull(signinResponseDto);
         assertEquals(userForSignin.email, signinResponseDto.getEmail());
-        assertNotNull(signinResponseDto.getToken());
-
         userToken1 = signinResponseDto.getToken();
+    }
+
+    @Test
+    @Order(1)
+    @DisplayName("test3@test.com 유저 로그인 성공 케이스")
+    void TODO_SIGNIN_RESULT_SUCCESS2() throws JsonProcessingException {
+        UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
+                .email("test3@test.com")
+                .password("abc123123*")
+                .build();
+
+        String requestBody = mapper.writeValueAsString(userForSignin);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+        // when
+        ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
+                "/signin",
+                request,
+                UserIntegrationTest.SigninResponseDto.class
+        );
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UserIntegrationTest.SigninResponseDto signinResponseDto = response.getBody();
+
+        assertNotNull(signinResponseDto);
+        assertEquals(userForSignin.email, signinResponseDto.getEmail());
+        userToken2 = signinResponseDto.getToken();
     }
 
     @Test
     @DisplayName("재입고 가능 상품 목록을 성공적으로 가져온 경우")
     public void case1(){
         //given
+        headers.set("Authorization", userToken1);
+        HttpEntity<String> request = new HttpEntity<>("",headers);
 
         //when
-        headers.set("Authorization", userToken1);
-        ResponseEntity<RestockListResponseDto[]> response = restTemplate
-                .getForEntity(
-                        "/users/restock",
-                        RestockListResponseDto[].class
-                );
+        ResponseEntity<RestockListResponseDto[]> response = restTemplate.exchange(
+                "/users/restock",
+                HttpMethod.GET,
+                request,
+                RestockListResponseDto[].class
+        );
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -111,13 +139,16 @@ public class SellerMyPageIntegrationTest {
     @DisplayName("수량이 0개인 상품이 없는 경우")
     public void case2(){
         //given
+        headers.set("Authorization", userToken2);
+        HttpEntity<String> request = new HttpEntity<>("",headers);
 
         //when
-        ResponseEntity<ExceptionResponseDto> response = restTemplate
-                .getForEntity(
-                        "/users/restock",
-                        ExceptionResponseDto.class
-                );
+        ResponseEntity<ExceptionResponseDto> response = restTemplate.exchange(
+                "/users/restock",
+                HttpMethod.GET,
+                request,
+                ExceptionResponseDto.class
+        );
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -132,19 +163,19 @@ public class SellerMyPageIntegrationTest {
     @DisplayName("재입고 등록에 성공한 경우")
     public void case3() throws JsonProcessingException {
         //given
+        headers.set("Authorization", userToken1);
         RestockRequestDto restockRequestDto = new RestockRequestDto(2L, 80);
 
         String requestBody = mapper.writeValueAsString(restockRequestDto);
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
         //when
-        ResponseEntity<RestockResponseDto> response = restTemplate
-                .exchange(
-                        "/users/restock",
-                        HttpMethod.PUT,
-                        request,
-                        RestockResponseDto.class
-                );
+        ResponseEntity<RestockResponseDto> response = restTemplate.exchange(
+                "/users/restock",
+                HttpMethod.PUT,
+                request,
+                RestockResponseDto.class
+        );
 
         //then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -160,19 +191,19 @@ public class SellerMyPageIntegrationTest {
     @DisplayName("수량을 0개로 요청하는 경우")
     public void case4() throws JsonProcessingException {
         //given
+        headers.set("Authorization", userToken1);
         RestockRequestDto restockRequestDto = new RestockRequestDto(2L, 0);
 
         String requestBody = mapper.writeValueAsString(restockRequestDto);
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
         //when
-        ResponseEntity<ErrorResponseDto> response = restTemplate
-                .exchange(
-                        "/users/restock",
-                        HttpMethod.PUT,
-                        request,
-                        ErrorResponseDto.class
-                );
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(
+                "/users/restock",
+                HttpMethod.PUT,
+                request,
+                ErrorResponseDto.class
+        );
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());

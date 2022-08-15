@@ -1,13 +1,18 @@
 package com.hanghae99.mocosa.integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.mocosa.config.exception.ErrorResponseDto;
 import com.hanghae99.mocosa.config.exception.code.ErrorCode;
+import com.hanghae99.mocosa.config.jwt.PasswordEncoder;
 import com.hanghae99.mocosa.layer.dto.order.OrderRequestDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.ProductResponseDto;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.hanghae99.mocosa.layer.dto.user.SigninRequestDto;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -20,14 +25,26 @@ import java.nio.charset.Charset;
 
 import static com.hanghae99.mocosa.config.exception.code.ErrorCode.ORDER_NO_STOCK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+//테스트 환경에서 스프링 동작을 통해 필요한 의존성 제공
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// test 클래스 당 인스턴스 생성
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//Test의 실행 순서를 보장하기 위함
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrderIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private ObjectMapper objectMapper;
+
+    private HttpHeaders headers;
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    private String userToken;
 
     /**
      * PRODUCT_ID  	AMOUNT  	NAME  	                            PRICE  	REVIEW_AVG  	REVIEW_NUM  	THUMBNAIL  	BRAND_ID  	CATEGORY_ID
@@ -39,19 +56,62 @@ public class OrderIntegrationTest {
      * 6	        9999	    럭비 스트라이프 티셔츠 네이비	        13020	3.799999952316284	40	        image6.png	3	        2
      * 7	        100	        릴렉스 핏 크루 넥 긴팔 티셔츠	        20000	3.0	                5000	    image.png	1	        1
      */
+    @BeforeEach //각각의 테스트가 실행되기전에 실행 됨 <-> @BeforeAll
+    public void setup() {
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+    @Test
+    @Order(1)
+    @DisplayName("Case 5: 유저 로그인 성공 케이스")
+    void TODO_SIGNIN_RESULT_SUCCESS() throws JsonProcessingException {
+        UserIntegrationTest.SigninDto userForSignin = UserIntegrationTest.SigninDto.builder()
+                .email("test1@test.com")
+                .password("abc123123*")
+                .build();
+
+        String requestBody = mapper.writeValueAsString(userForSignin);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+        // when
+        ResponseEntity<UserIntegrationTest.SigninResponseDto> response = restTemplate.postForEntity(
+                "/api/signin",
+                request,
+                UserIntegrationTest.SigninResponseDto.class
+        );
+
+        // then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UserIntegrationTest.SigninResponseDto signinResponseDto = response.getBody();
+
+        assertNotNull(signinResponseDto);
+        assertEquals(userForSignin.email, signinResponseDto.getEmail());
+        userToken = signinResponseDto.getToken();
+    }
 
     // @PostMapping("/api/products/{productId}")
     @Test
+    @Order(2)
     @DisplayName("Case 1 : 상품 데이터를 정상적으로 가져온 경우 ⇒ 성공")
     public void getProduct() {
         //given
         Long productId = 1L;
+        headers.set("Authorization", userToken);
+        HttpEntity<String> entity = new HttpEntity<>("",headers);
 
         //when
-        ResponseEntity<ProductResponseDto> response = restTemplate
-                .getForEntity("/api/products/" + productId, ProductResponseDto.class);
+//        ResponseEntity<ProductResponseDto> response = restTemplate
+//                .getForEntity("/api/products/" + productId,
+//                        ProductResponseDto.class
+//                        ,entity);
 
-
+        ResponseEntity<ProductResponseDto> response = restTemplate.exchange(
+                "/api/products/" + productId,
+                HttpMethod.GET,
+                entity,
+                ProductResponseDto.class
+        );
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         ProductResponseDto body = response.getBody();
@@ -61,15 +121,23 @@ public class OrderIntegrationTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Case 2 : 존재하지 않는 상품ID를 요청하는 경우 ⇒ 실패")
     public void getExceptionProduct() {
         //given
         Long productId = 8L;
+        headers.set("Authorization", userToken);
+        HttpEntity<String> entity = new HttpEntity<>("",headers);
 
         //when
-        ResponseEntity<ErrorResponseDto> response = restTemplate
-                .getForEntity("/api/products/" + productId, ErrorResponseDto.class);
-
+//        ResponseEntity<ErrorResponseDto> response = restTemplate
+//                .getForEntity("/api/products/" + productId,ErrorResponseDto.class);
+        ResponseEntity<ErrorResponseDto> response = restTemplate.exchange(
+                "/api/products/" + productId,
+                HttpMethod.GET,
+                entity,
+                ErrorResponseDto.class
+        );
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         ErrorResponseDto body = response.getBody();
@@ -87,6 +155,7 @@ public class OrderIntegrationTest {
      * //                             ,@AuthenticationPrincipal UserDetailsImpl userDetails
      */
     @Test
+    @Order(4)
     @DisplayName("Case 1 : 주문에 성공한 경우 ⇒ 성공")
     public void createOrder() {
         //given
@@ -94,12 +163,7 @@ public class OrderIntegrationTest {
         OrderRequestDto requestDto = new OrderRequestDto(100);
 
         //when
-        //header 을 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application","json"));
-
-        //Body 을 설정
-        MultiValueMap<String, Integer> body = new LinkedMultiValueMap<String, Integer>();
+        headers.set("Authorization", userToken);
 
         //Entity를 설정
         HttpEntity<OrderRequestDto> entity = new HttpEntity<>(requestDto, headers);
@@ -116,6 +180,7 @@ public class OrderIntegrationTest {
     }
 
     @Test
+    @Order(5)
     @DisplayName("Case 2 : 재고가 없는 경우 ⇒ 실패")
     public void getExceptionOrder() {
         //given
@@ -123,13 +188,7 @@ public class OrderIntegrationTest {
         OrderRequestDto requestDto = new OrderRequestDto(120);
 
         //when
-        //header 을 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application","json"));
-
-        //Body 을 설정
-        MultiValueMap<String, Integer> body = new LinkedMultiValueMap<String, Integer>();
-
+        headers.set("Authorization", userToken);
         //Entity를 설정
         HttpEntity<OrderRequestDto> entity = new HttpEntity<>(requestDto, headers);
 
@@ -143,5 +202,13 @@ public class OrderIntegrationTest {
         ErrorResponseDto result = response.getBody();
         assertThat(result.getCode()).isEqualTo("ORDER_NO_STOCK");
         assertThat(result.getMessage()).isEqualTo("재고 수량이 부족합니다.");
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    static class loginDto {
+        private static String email;
+        private static String password;
     }
 }

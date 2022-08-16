@@ -30,10 +30,10 @@ public class User {
         this.role = role;
     }
 
-    public User(String email, String password, String role) {
+    public User(String email, String password, Boolean admin) {
         this.email = email;
         this.password = password;
-        if (role.equals("셀러")) {
+        if (admin == true) {
             this.role = UserRoleEnum.ADMIN;
         }else {
             this.role = UserRoleEnum.USER;

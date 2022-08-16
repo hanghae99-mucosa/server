@@ -33,7 +33,7 @@ public class UserService {
 
         validateSignupRequest(email, password, passwordCheck);
 
-        User user = new User(email,passwordEncoder.encode(password),signupRequestDto.getRole());
+        User user = new User(email,passwordEncoder.encode(password),signupRequestDto.getAdmin());
 
         userRepository.save(user);
         return new SignupResponseDto("회원가입에 성공했습니다.");

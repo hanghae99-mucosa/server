@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,9 +16,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    // 회원 가입 페이지
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> registerUser(@RequestBody SignupRequestDto signupRequestDto){
-        SignupResponseDto signupResponseDto = userService.registerUser(signupRequestDto);
-        return new ResponseEntity<>(signupResponseDto, HttpStatus.OK);
+    public String registerUser(SignupRequestDto signupRequestDto){
+        userService.registerUser(signupRequestDto);
+        return "redirect:/login";
+//        SignupResponseDto signupResponseDto = userService.registerUser(signupRequestDto);
+//        return new ResponseEntity<>(signupResponseDto, HttpStatus.OK);
     }
 }

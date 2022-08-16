@@ -52,6 +52,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withClaim("email", userDetails.getUsername())
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+
+        // 헤더에서 잘 받을수 있어서 굳이 이렇게 할 필요가 있을까?
         JSONObject responseJson = new JSONObject();
         response.setContentType("application/json;charset=UTF-8");
         responseJson.put("token", JwtProperties.TOKEN_PREFIX + jwtToken);

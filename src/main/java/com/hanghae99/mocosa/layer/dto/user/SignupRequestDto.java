@@ -3,13 +3,17 @@ package com.hanghae99.mocosa.layer.dto.user;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 public class SignupRequestDto {
     String email;
     String password;
     String passwordCheck;
-    String role;
+    Boolean admin;
+
+    public SignupRequestDto() {
+        admin = false;
+    }
 }

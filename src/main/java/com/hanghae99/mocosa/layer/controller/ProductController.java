@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -35,10 +36,12 @@ public class ProductController {
     // 상품 상세 페이지
     //상품 데이터 가져오기
     @GetMapping("/products/{productId}")
-    public ResponseEntity<ProductDetailResponseDto> getProductDetail(@PathVariable Long productId,
-                                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String getProductDetail(@PathVariable Long productId,
+                                   @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                   Model model) {
         ProductDetailResponseDto result = productService.getProductDetail(productId);
-        return new ResponseEntity(result, HttpStatus.OK);
+        model.addAttribute("product", result);
+        return "product_detail";
     }
 
     @PostMapping("/products/{productId}")

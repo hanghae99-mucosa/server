@@ -1,0 +1,22 @@
+.name{
+    margin-left: 50px;
+}
+
+.brand{
+    margin-bottom: 30px;
+}
+
+.order{
+    padding: 5px 105px;
+    margin-top: 30px;
+    margin-left: 45px;
+}
+
+.brand_last{
+    margin-top: -15px;
+}
+
+.order_amount{
+    width: 300px;
+    margin-left: 10px;
+}

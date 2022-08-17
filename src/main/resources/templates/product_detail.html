@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
     <title>Shop Item - Start Bootstrap Template</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico"/>
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
     <!-- Core theme CSS (includes Bootstrap)-->
@@ -79,7 +74,7 @@
                                 <input type="text" name="orderAmount" class="order_amount" placeholder="주문 수량"></div>
                         </div>
                         <button class="btn btn-outline-dark flex-shrink-0 order" type="submit"
-                                th:onclick="|location.href='@{search(keyword=${product.name})}'|">
+                                th:onclick="|location.href='@{/main}'|">
                             <i class="bi-cart-fill me-1 btn-lg"></i>
                             주문 하기
                         </button>
@@ -87,6 +82,7 @@
                 </div>
                 <div class="d-flex" th:if="${product.amount == 0}">
                     <div>
+                        <span sec:authentication="principal.user.username">demo</span>
                         <div class="brand name" th:text="${product.name}">릴렉스 핏 크루 넥 반팔 티셔츠</div>
                         <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
                         <div class="container">
@@ -124,14 +120,14 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <!--ajax	-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <!-- Core theme JS-->
-<script src="/static/js/scripts.js"></script>
+<script src="/js/product.js"></script>
 <script th:inline="javascript">
     let productId = [[${product.product_id}]];
-    let NotifyRequestDto = {"productId": productId}
+
+    let NotifyRequestDto = {"productId": productId};
+
     let stringify = JSON.stringify(NotifyRequestDto);
 
     function sendNotification() {
@@ -142,14 +138,15 @@
             contentType: "application/json",
             dataType: "json",
             success : function(data) {
-                const dataElement = data["message"];
+                const dataElement = data.message;
                 console.log(dataElement);
             },
             error	: function(error) {
-                let errorElement = error["message"];
+                let errorElement = error.message;
                 console.log(errorElement);
             }
         })
+        location.reload();
     }
 </script>
 </body>

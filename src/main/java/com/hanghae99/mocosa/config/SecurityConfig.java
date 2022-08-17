@@ -31,8 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .formLogin().disable()
                 .httpBasic().disable();
 
@@ -40,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .authorizeRequests()
-                .antMatchers("/signup","/signin","/login").permitAll()
+
+                .antMatchers("/signup","/signin","/login", "/").permitAll()
                 .antMatchers("/images/**","/css/**","basic.js").permitAll()
 
                 .antMatchers(HttpMethod.GET,"/search", "/products/**")

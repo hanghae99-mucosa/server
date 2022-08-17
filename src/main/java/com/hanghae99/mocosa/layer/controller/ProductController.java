@@ -45,8 +45,9 @@ public class ProductController {
     }
 
     @PostMapping("/products/{productId}")
+    @ResponseBody
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
-                                                        @RequestBody OrderRequestDto orderRequestDto
+                                                        OrderRequestDto orderRequestDto
                                                         ,@AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());

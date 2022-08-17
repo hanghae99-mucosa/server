@@ -7,6 +7,7 @@ import com.hanghae99.mocosa.layer.dto.product.ProductDetailResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.*;
+import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,19 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+
+    @GetMapping("/")
+    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails != null) {
+            model.addAttribute("email", userDetails.getUsername());
+
+            if (userDetails.getRole() == UserRoleEnum.ADMIN) {
+                model.addAttribute("admin", true);
+            }
+        }
+
+        return "index";
+    }
 
     @GetMapping("/search")
     public ResponseEntity<List<SearchResponseDto>> getProducts(SearchRequestDto searchRequestDto) {

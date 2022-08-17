@@ -18,6 +18,10 @@ public class UserDetailsImpl implements UserDetails {
         return user;
     }
 
+    public UserRoleEnum getRole(){
+        return user.getRole();
+    }
+
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         UserRoleEnum role = user.getRole();

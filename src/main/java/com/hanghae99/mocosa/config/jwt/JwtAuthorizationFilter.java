@@ -28,12 +28,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        String header = request.getHeader(JwtProperties.HEADER_STRING);
-        if(header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        String header = request.getHeader("Cookie");
+        if(header == null) {
             chain.doFilter(request, response);
             return;
         }
-        String token = header.replace(JwtProperties.TOKEN_PREFIX, "");
+        String token = header.split("%20")[1];
 
         String email = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
                 .getClaim("email").asString();

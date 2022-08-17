@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/css/user.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <meta charset="UTF-8">
@@ -49,13 +49,14 @@
         password: $('#password').val()
       }),
       success: function (response, textStatus, request) {
+        console.log("here")
         const jwtToken = request.getResponseHeader("Authorization");
 
         if (jwtToken) {
           $.cookie("token", jwtToken);
           $.ajaxSetup({
             headers:{
-              'Authorization': $.cookie('token', jwtToken, { path: '/' })
+              "Authorization": jwtToken
             }
           });
           window.location.href = '/';

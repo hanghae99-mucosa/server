@@ -1,10 +1,9 @@
 package com.hanghae99.mocosa.config;
 
-import com.hanghae99.mocosa.config.jwt.CustomAuthenticationEntryPoint;
+//import com.hanghae99.mocosa.config.jwt.CustomAuthenticationEntryPoint;
 import com.hanghae99.mocosa.config.jwt.JwtAuthenticationFilter;
 import com.hanghae99.mocosa.config.jwt.JwtAuthorizationFilter;
 import com.hanghae99.mocosa.layer.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -41,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .authorizeRequests()
-                .antMatchers("/signup","/signin").permitAll()
+                .antMatchers("/signup","/signin","/login","/").permitAll()
+                .antMatchers("/images/**","/css/**","basic.js").permitAll()
 
                 .antMatchers(HttpMethod.GET,"/search", "/products/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
@@ -57,8 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .anyRequest().authenticated();
 
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+//        http
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
     }
 }

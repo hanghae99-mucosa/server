@@ -17,8 +17,9 @@ public class OrderHistoryResponseDto {
     private String thumbnail;
     private String brandName;
     private String category;
-    private int totalPrice;
+    private int price;
     private int orderAmount;
+    private int totalPrice;
 
     public String getCreatedAt() {
         String createDate = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

@@ -52,6 +52,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     private BooleanBuilder keywordContains(String keyword) {
+        //초기 홈화면 검색
+        if (keyword.equals("ALL"))
+            return null;
         BooleanBuilder builder = new BooleanBuilder();
         builder
                 .or(product.name.contains(keyword))

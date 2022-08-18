@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,11 +19,13 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/users/orders")
-    public ResponseEntity<Page<OrderHistoryResponseDto>> getOrderHistory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam int page) {
+    public String getOrderHistory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(defaultValue = "1") int page, Model model) {
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderService.getOrderHistory(userDetails, page);
 
-        return new ResponseEntity<>(orderHistoryResponseDtoPage, HttpStatus.OK);
+        model.addAttribute("orderHistorys", orderHistoryResponseDtoPage);
+
+        return "user-mypage";
     }
 
 }

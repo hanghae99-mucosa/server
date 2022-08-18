@@ -11286,3 +11286,8 @@ textarea.form-control-lg {
         display: none !important;
     }
 }
+
+#alarm-button {
+    margin-right: 20px;
+}
+

@@ -11,36 +11,125 @@
   <!-- Bootstrap icons-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
   <!-- Core theme CSS (includes Bootstrap)-->
-  <link href="/css/index.css" rel="stylesheet" />
+  <link href="/static/css/index.css" rel="stylesheet" />
 </head>
 <body>
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg bg-light">
+<nav class="navbar navbar-expand-lg bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">MUCOSA</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
-    </div>
   </div>
+    <th:block th:if="${email != null}">
+      <button type="button" class="btn btn-dark position-relative" id="alarm-button">
+        알림 🔔
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          99+
+          <span class="visually-hidden">unread messages</span>
+        </span>
+      </button>
+      <button type="button" class="btn btn-dark">마이페이지 🙋</button>
+    </th:block>
+    <th:block th:unless="${email != null}">
+<!--      <button type="button" class="btn btn-dark" onclick = "location.href='/login' ">로그인 ⌨️</button>-->
+    </th:block>
 </nav>
 
 <!-- Header-->
-<header class="bg-dark py-5">
-  <div class="container px-4 px-lg-5 my-5">
-    <div class="text-center text-white">
-      <h1 class="display-4 fw-bolder">Shop in style</h1>
-      <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+<header class="bg-light py-1">
+  <div class="container text-center">
+<!--    가격 필터-->
+    <div class="row">
+      <div class="col-sm-2">
+        가격
+      </div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="최저가" >
+          </div>
+          <div class="col">
+            ~
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="최고가" >
+          </div>
+        </div>
+      </div>
     </div>
+<!--    평균리뷰-->
+    <div class="row">
+      <div class="col-sm-2">
+        평균 리뷰
+      </div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="평균 리뷰 몇점 이상" >
+          </div>
+        </div>
+      </div>
+<!--    카테고리 필터-->
+    <div class="row">
+      <div class="col-sm-2">
+        카테고리
+      </div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col">
+            상의
+          </div>
+          <div class="col">
+            바지
+          </div>
+          <div class="col">
+            아우터
+          </div>
+          <div class="col">
+            원피스
+          </div>
+          <div class="col">
+            스커트
+          </div>
+          <div class="col">
+            스니커즈
+          </div>
+          <div class="col">
+            신발
+          </div>
+          <div class="col">
+            가방
+          </div>
+        </div>
+      </div>
+    </div>
+<!--    정렬 조건-->
+    <div class="row">
+      <div class="col-sm-2">
+        정렬
+      </div>
+      <div class="col-sm-10">
+        <div class="row">
+          <div class="col">
+            고가순
+          </div>
+          <div class="col">
+            저가순
+          </div>
+          <div class="col">
+            리뷰순
+          </div>
+        </div>
+      </div>
   </div>
+
 </header>
 <!-- Section-->
-<section class="py-5">
+<section class="py-1">
   <div class="container px-4 px-lg-5 mt-5">
     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
       <div class="col mb-5">
@@ -242,10 +331,6 @@
     </div>
   </div>
 </section>
-<!-- Footer-->
-<footer class="py-5 bg-dark">
-  <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
-</footer>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->

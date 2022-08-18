@@ -8,19 +8,12 @@
     <meta name="author" content=""/>
     <title>Shop Item - Start Bootstrap Template</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+    <!--    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>-->
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/product_detail.css" rel="stylesheet"/>
     <link href="/css/custom_product_detail.css" rel="stylesheet"/>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!--ajax	-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="/js/product.js"></script>
 </head>
 
 <body>
@@ -82,9 +75,11 @@
                                 </div>
                                 <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
                                 </div>
-                                <input type="text" id="orderAmount" name="orderAmount" class="order_amount" placeholder="주문 수량"></div>
+                                <input type="text" id="orderAmount" name="orderAmount" class="order_amount"
+                                       placeholder="주문 수량"></div>
                         </div>
-                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button" th:onclick="|sendOrder(${product.product_id})|">
+                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button"
+                                th:onclick="|sendOrder(${product.product_id})|">
                             <i class="bi-cart-fill me-1 btn-lg"></i>
                             주문 하기
                         </button>
@@ -109,9 +104,10 @@
                                 <input type="text" name="orderAmount" class="order_amount" disabled placeholder="품절">
                             </div>
                         </div>
-                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button" onclick="sendNotification()" th:onclick="|sendNotification(${product.product_id})|">
+                        <button class="btn btn-outline-dark flex-shrink-0 order toggle" type="button"
+                                th:onclick="|toggling(${product.product_id})|">
                             <i class="bi-cart-fill me-1 btn-lg"></i>
-                            입고 신청
+                            재입고 알람 신청
                         </button>
                     </div>
                 </div>
@@ -125,5 +121,116 @@
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p>
     </div>
 </footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--ajax	-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!-- Core theme JS-->
+<script src="/js/product.js"></script>
+<script th:inline="javascript">
+    const toggle_button = document.querySelector(".toggle");
+
+    window.onload = function () {
+        // 값을 탐색한다.
+        let item = localStorage.getItem("cancelNotification");
+        let save_productId = localStorage.getItem("productId");
+        let productId = [[${product.product_id}]];
+
+        if (item == "cancelNotification" && save_productId == productId) {
+            // 클래스를 바꾸기 위해서 추가한다.
+            toggle_button.classList.add('cancelNotification');
+            // 바꾼 클래스에 맞는 text 를 출력한다.
+            toggle_button.innerText = "재입고 알람 신청 취소";
+        }
+    };
+
+    function sendOrder(productId) {
+        let orderAmount = $('#orderAmount').val();
+        console.log(orderAmount)
+        $.ajax({
+            type: "POST",
+            url: `/products/${productId}`,
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                orderAmount: orderAmount
+            }),
+            success: function (data) {
+                alert(data.message)
+                // window.location.reload()
+            },
+            error: function (error) {
+                alert(error.message)
+                // window.location.reload()
+            }
+        });
+    }
+
+    function sendNotification(productId) {
+        $.ajax({
+            type: "POST",
+            url: "/api/notification",
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify({
+                productId: productId
+            }),
+            success: function (data) {
+                alert(data.message)
+                // window.location.reload()
+            },
+            error: function (error) {
+                alert(error.message)
+                // window.location.reload()
+            }
+        });
+
+    }
+
+    function removeNotification(productId) {
+        $.ajax({
+            type: "DELETE",
+            url: "/api/notification",
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify({
+                productId: productId
+            }),
+            success: function (data) {
+                alert(data.message)
+                // window.location.reload()
+            },
+            error: function (error) {
+                alert(error.message)
+                // window.location.reload()
+            }
+        });
+    }
+
+    function toggling(productId) {
+        console.log(toggle_button);
+        if (toggle_button.classList.contains('cancelNotification')) {
+            // 클래스를 바꾸기 위해서 삭제한다.
+            toggle_button.classList.remove('cancelNotification');
+            // window 리로드 시 값을 가져오기 위해서 localStorage 에서 값을 삭제한다.
+            localStorage.removeItem('cancelNotification');
+            localStorage.removeItem('productId');
+            // 바꾼 클래스에 맞는 text 를 출력한다.
+            toggle_button.innerText = "재입고 알람 신청";
+            // 실제 함수 실행.
+            removeNotification(productId);
+        } else {
+            // 클래스를 바꾸기 위해서 추가한다.
+            toggle_button.classList.add('cancelNotification');
+            // 바꾼 클래스에 맞는 text 를 출력한다.
+            toggle_button.innerText = "재입고 알람 신청 취소";
+            // window 리로드 시 값을 가져오기 위해서 localStorage에서 값을 추가한다.
+            localStorage.setItem('cancelNotification', 'cancelNotification');
+            localStorage.setItem("productId", productId);
+            // 실제 함수 실행
+            sendNotification(productId);
+        }
+    }
+</script>
 </body>
 </html>

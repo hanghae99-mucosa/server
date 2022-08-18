@@ -106,7 +106,6 @@
                         </div>
                         <button class="btn btn-outline-dark flex-shrink-0 order toggle" type="button"
                                 th:onclick="|toggling(${product.product_id})|">
-                            <i class="bi-cart-fill me-1 btn-lg"></i>
                             재입고 알람 신청
                         </button>
                     </div>
@@ -157,11 +156,11 @@
             }),
             success: function (data) {
                 alert(data.message)
-                // window.location.reload()
+                window.location.reload()
             },
             error: function (error) {
                 alert(error.message)
-                // window.location.reload()
+                window.location.reload()
             }
         });
     }
@@ -177,11 +176,11 @@
             }),
             success: function (data) {
                 alert(data.message)
-                // window.location.reload()
+                window.location.reload()
             },
             error: function (error) {
                 alert(error.message)
-                // window.location.reload()
+                window.location.reload()
             }
         });
 
@@ -198,11 +197,11 @@
             }),
             success: function (data) {
                 alert(data.message)
-                // window.location.reload()
+                window.location.reload()
             },
             error: function (error) {
                 alert(error.message)
-                // window.location.reload()
+                window.location.reload()
             }
         });
     }
@@ -212,6 +211,7 @@
         if (toggle_button.classList.contains('cancelNotification')) {
             // 클래스를 바꾸기 위해서 삭제한다.
             toggle_button.classList.remove('cancelNotification');
+
             // window 리로드 시 값을 가져오기 위해서 localStorage 에서 값을 삭제한다.
             localStorage.removeItem('cancelNotification');
             localStorage.removeItem('productId');
@@ -224,6 +224,7 @@
             toggle_button.classList.add('cancelNotification');
             // 바꾼 클래스에 맞는 text 를 출력한다.
             toggle_button.innerText = "재입고 알람 신청 취소";
+
             // window 리로드 시 값을 가져오기 위해서 localStorage에서 값을 추가한다.
             localStorage.setItem('cancelNotification', 'cancelNotification');
             localStorage.setItem("productId", productId);

@@ -100,7 +100,47 @@ public class TestDataRunner implements ApplicationRunner {
         productRepository.save(testProduct8);
 
         Order testOrder1 = new Order(1L, testUser4, testProduct1, 100, 1069000);
+        Order testOrder2 = new Order(2L, testUser4, testProduct7, 1, 20000);
+        Order testOrder3 = new Order(3L, testUser4, testProduct3, 2, 50000);
+        Order testOrder4 = new Order(4L, testUser4, testProduct3, 2, 50000);
+        Order testOrder5 = new Order(5L, testUser4, testProduct3, 2, 50000);
+        Order testOrder6 = new Order(6L, testUser4, testProduct3, 2, 50000);
+        Order testOrder7 = new Order(7L, testUser4, testProduct3, 2, 50000);
+        Order testOrder8 = new Order(8L, testUser4, testProduct3, 2, 50000);
+        Order testOrder9 = new Order(9L, testUser4, testProduct3, 2, 50000);
+        Order testOrder10 = new Order(10L, testUser4, testProduct3, 2, 50000);
+        Order testOrder11 = new Order(11L, testUser4, testProduct3, 2, 50000);
+        Order testOrder12 = new Order(12L, testUser4, testProduct7, 1, 20000);
+        Order testOrder13 = new Order(13L, testUser4, testProduct3, 2, 50000);
+        Order testOrder14 = new Order(14L, testUser4, testProduct3, 2, 50000);
+        Order testOrder15 = new Order(15L, testUser4, testProduct3, 2, 50000);
+        Order testOrder16 = new Order(16L, testUser4, testProduct3, 2, 50000);
+        Order testOrder17 = new Order(17L, testUser4, testProduct3, 2, 50000);
+        Order testOrder18 = new Order(18L, testUser4, testProduct3, 2, 50000);
+        Order testOrder19 = new Order(19L, testUser4, testProduct3, 2, 50000);
+        Order testOrder20 = new Order(20L, testUser4, testProduct3, 2, 50000);
+        Order testOrder21 = new Order(21L, testUser4, testProduct3, 2, 50000);
 
         orderRepository.save(testOrder1);
+        orderRepository.save(testOrder2);
+        orderRepository.save(testOrder3);
+        orderRepository.save(testOrder4);
+        orderRepository.save(testOrder5);
+        orderRepository.save(testOrder6);
+        orderRepository.save(testOrder7);
+        orderRepository.save(testOrder8);
+        orderRepository.save(testOrder9);
+        orderRepository.save(testOrder10);
+        orderRepository.save(testOrder11);
+        orderRepository.save(testOrder12);
+        orderRepository.save(testOrder13);
+        orderRepository.save(testOrder14);
+        orderRepository.save(testOrder15);
+        orderRepository.save(testOrder16);
+        orderRepository.save(testOrder17);
+        orderRepository.save(testOrder18);
+        orderRepository.save(testOrder19);
+        orderRepository.save(testOrder20);
+        orderRepository.save(testOrder21);
     }
 }

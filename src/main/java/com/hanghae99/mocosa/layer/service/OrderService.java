@@ -26,7 +26,7 @@ public class OrderService {
     public Page<OrderHistoryResponseDto> getOrderHistory(UserDetailsImpl userDetails, int page) {
 
         User user = userDetails.getUser();
-        Pageable pageable = PageRequest.of(page, PAGEABLE_SIZE, PAGEABLE_DIRECTION, PAGEABLE_SORT);
+        Pageable pageable = PageRequest.of(page-1, PAGEABLE_SIZE, PAGEABLE_DIRECTION, PAGEABLE_SORT);
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderRepositoryImpl.findByUser(user, pageable);
 

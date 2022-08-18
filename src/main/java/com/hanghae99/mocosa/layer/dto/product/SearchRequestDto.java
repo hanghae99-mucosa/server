@@ -19,5 +19,6 @@ public class SearchRequestDto implements Serializable {
     public SearchRequestDto() {
         this.page = 1;
         this.sort = "리뷰순";
+        this.keyword = "ALL";
     }
 }

@@ -1,7 +1,6 @@
 package com.hanghae99.mocosa.layer.controller;
 
 import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
-import com.hanghae99.mocosa.layer.dto.order.OrderHistoryResponseDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderRequestDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.ProductDetailResponseDto;

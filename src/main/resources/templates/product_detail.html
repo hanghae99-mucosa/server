@@ -147,6 +147,7 @@
     function sendOrder(productId) {
         let orderAmount = $('#orderAmount').val();
         console.log(orderAmount)
+        
         $.ajax({
             type: "POST",
             url: `/products/${productId}`,

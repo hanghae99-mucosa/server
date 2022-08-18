@@ -26,7 +26,7 @@
     <div class="login-id-label">비밀번호</div>
     <input type="password" name="password" id="password" class="login-input-box">
 
-    <button id="login-id-submit" onclick="onLogin()">로그인</button>
+    <button id="login-id-submit" onclick="onLogin()" type="button" >로그인</button>
   </div>
   <div id="login-failed" style="display:none" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
 </div>
@@ -48,14 +48,6 @@
         email: $('#email').val(),
         password: $('#password').val()
       }),
-      // 요청은 단발성이라서 해더에 정보가 남아 있지 않다.
-      // http 통신은 단 방향성이라서 값이 header 값이 남지 않는다.
-      // 전에 사용가능했던 이유는 header 에 값을 react 가 저장해서 넣어줬다.
-      // 즉 통신하고 나서 사라진다.
-      // => Cookie 를 통해서 jwt 를 가져와서 구현
-      // 1. 요청이 오면 쿠키에서 jwt 를 꺼내기
-      // 2. 해당 쿠키가 만료 되었는 지 체크
-      // 3. 해당 쿠기를 통해서 인증이 되는지
       success: function (response, textStatus, request) {
         console.log("here")
         const jwtToken = request.getResponseHeader("Authorization");

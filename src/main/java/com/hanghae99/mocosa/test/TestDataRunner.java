@@ -98,9 +98,5 @@ public class TestDataRunner implements ApplicationRunner {
         productRepository.save(testProduct6);
         productRepository.save(testProduct7);
         productRepository.save(testProduct8);
-
-        Order testOrder1 = new Order(1L, testUser4, testProduct1, 100, 1069000);
-
-        orderRepository.save(testOrder1);
     }
 }

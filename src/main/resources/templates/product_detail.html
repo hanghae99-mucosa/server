@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
     <title>Shop Item - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/static/css/product_detail.css" rel="stylesheet"/>
-    <link href="/static/css/custom_product_detail.css" rel="stylesheet"/>
+    <link href="/css/product_detail.css" rel="stylesheet"/>
+    <link href="/css/custom_product_detail.css" rel="stylesheet"/>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!--ajax	-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="/js/product.js"></script>
 </head>
 
 <body>
@@ -55,8 +67,7 @@
                      alt="..."/></div>
             <div class="col-md-6">
                 <div class="d-flex" th:if="${product.amount != 0}">
-                    <form action="/products/1" th:action="@{/products/{productId}(productId=${product.product_id})}"
-                          method="post">
+                    <div>
                         <div class="brand name" th:text="${product.name}">릴렉스 핏 크루 넥 반팔 티셔츠</div>
                         <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
                         <div class="container">
@@ -71,14 +82,13 @@
                                 </div>
                                 <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
                                 </div>
-                                <input type="text" name="orderAmount" class="order_amount" placeholder="주문 수량"></div>
+                                <input type="text" id="orderAmount" name="orderAmount" class="order_amount" placeholder="주문 수량"></div>
                         </div>
-                        <button class="btn btn-outline-dark flex-shrink-0 order" type="submit"
-                                th:onclick="|location.href='@{/main}'|">
+                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button" th:onclick="|sendOrder(${product.product_id})|">
                             <i class="bi-cart-fill me-1 btn-lg"></i>
                             주문 하기
                         </button>
-                    </form>
+                    </div>
                 </div>
                 <div class="d-flex" th:if="${product.amount == 0}">
                     <div>
@@ -99,7 +109,7 @@
                                 <input type="text" name="orderAmount" class="order_amount" disabled placeholder="품절">
                             </div>
                         </div>
-                        <button class="btn btn-outline-dark flex-shrink-0 order" onclick=sendNotification()>
+                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button" onclick="sendNotification()" th:onclick="|sendNotification(${product.product_id})|">
                             <i class="bi-cart-fill me-1 btn-lg"></i>
                             입고 신청
                         </button>
@@ -115,39 +125,5 @@
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p>
     </div>
 </footer>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<!--ajax	-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<!-- Core theme JS-->
-<script src="/js/product.js"></script>
-<script th:inline="javascript">
-    let productId = [[${product.product_id}]];
-
-    let NotifyRequestDto = {"productId": productId};
-
-    let stringify = JSON.stringify(NotifyRequestDto);
-
-    function sendNotification() {
-        $.ajax({
-            type: "POST",
-            url: "/api/notification",
-            data: {stringify},
-            contentType: "application/json",
-            dataType: "json",
-            success : function(data) {
-                const dataElement = data.message;
-                console.log(dataElement);
-            },
-            error	: function(error) {
-                let errorElement = error.message;
-                console.log(errorElement);
-            }
-        })
-        location.reload();
-    }
-</script>
 </body>
-
 </html>

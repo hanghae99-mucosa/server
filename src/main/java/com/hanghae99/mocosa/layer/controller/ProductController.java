@@ -10,6 +10,7 @@ import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
     private final ProductService productService;
@@ -61,7 +63,7 @@ public class ProductController {
     @PostMapping("/products/{productId}")
     @ResponseBody
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
-                                                        OrderRequestDto orderRequestDto
+                                                        @RequestBody OrderRequestDto orderRequestDto
                                                         ,@AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         OrderResponseDto result = productService.createOrder(productId, orderRequestDto.getOrderAmount(), userDetails.getUser());

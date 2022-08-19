@@ -10,6 +10,7 @@ import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
     private final ProductService productService;
@@ -54,13 +56,16 @@ public class ProductController {
     // 상품 상세 페이지
     //상품 데이터 가져오기
     @GetMapping("/products/{productId}")
-    public ResponseEntity<ProductDetailResponseDto> getProductDetail(@PathVariable Long productId,
-                                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String getProductDetail(@PathVariable Long productId,
+                                   @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                   Model model) {
         ProductDetailResponseDto result = productService.getProductDetail(productId);
-        return new ResponseEntity(result, HttpStatus.OK);
+        model.addAttribute("product", result);
+        return "product_detail";
     }
 
     @PostMapping("/products/{productId}")
+    @ResponseBody
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
                                                         @RequestBody OrderRequestDto orderRequestDto
                                                         ,@AuthenticationPrincipal UserDetailsImpl userDetails

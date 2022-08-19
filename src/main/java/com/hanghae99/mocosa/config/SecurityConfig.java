@@ -40,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .authorizeRequests()
-                .antMatchers("/signup","/signin","/login","/","/search").permitAll()
+                
+                .antMatchers("/signup","/signin","/login","/").permitAll()
                 .antMatchers("/images/**","/css/**","/js/**").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/products/**")

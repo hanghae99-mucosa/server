@@ -86,7 +86,7 @@ public class OrderIntegrationTest {
     @Test
     @Order(2)
     @DisplayName("Case 1 : 상품 데이터를 정상적으로 가져온 경우 ⇒ 성공")
-    public void getProduct() {
+    public void TODO_GET_PRODUCT_RESULT_DTO() {
         //given
         Long productId = 1L;
         headers.set("Authorization", userToken);
@@ -115,7 +115,7 @@ public class OrderIntegrationTest {
     @Test
     @Order(3)
     @DisplayName("Case 2 : 존재하지 않는 상품ID를 요청하는 경우 ⇒ 실패")
-    public void getExceptionProduct() {
+    public void TODO_NO_PRODUCT_RESULT_ERROR() {
         //given
         Long productId = 9L;
         headers.set("Authorization", userToken);
@@ -148,7 +148,7 @@ public class OrderIntegrationTest {
     @Test
     @Order(4)
     @DisplayName("Case 1 : 주문에 성공한 경우 ⇒ 성공")
-    public void createOrder() {
+    public void TODO_CREATE_ORDER_RESULT_DTO() {
         //given
         Long productId = 1L;
         OrderRequestDto requestDto = new OrderRequestDto(100);
@@ -173,7 +173,7 @@ public class OrderIntegrationTest {
     @Test
     @Order(5)
     @DisplayName("Case 2 : 재고가 없는 경우 ⇒ 실패")
-    public void getExceptionOrder() {
+    public void TODO_NO_AMOUNT_RESULT_ERROR() {
         //given
         Long productId = 1L;
         OrderRequestDto requestDto = new OrderRequestDto(120);

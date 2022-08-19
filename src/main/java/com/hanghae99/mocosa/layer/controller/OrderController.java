@@ -2,6 +2,7 @@ package com.hanghae99.mocosa.layer.controller;
 
 import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.layer.dto.order.OrderHistoryResponseDto;
+import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,14 @@ public class OrderController {
     public String getOrderHistory(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(defaultValue = "1") int page, Model model) {
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderService.getOrderHistory(userDetails, page);
+
+        if (userDetails != null) {
+            model.addAttribute("email", userDetails.getUsername());
+
+            if (userDetails.getRole() == UserRoleEnum.ADMIN) {
+                model.addAttribute("admin", true);
+            }
+        }
 
         model.addAttribute("orderHistorys", orderHistoryResponseDtoPage);
 

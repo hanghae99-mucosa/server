@@ -18,39 +18,32 @@
 
 <body>
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#!">Start Bootstrap</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">MUCOSA</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">All Products</a></li>
-                        <li>
-                            <hr class="dropdown-divider"/>
-                        </li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="d-flex">
-                <button class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyword">
+                <button class="btn btn-outline-success" type="button" onclick = "searchByKeyword()">Search</button>
             </form>
         </div>
     </div>
+    <th:block th:if="${email != null}">
+        <button type="button" class="btn btn-dark position-relative" id="alarm-button">
+            알림 🔔
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          99+
+          <span class="visually-hidden">unread messages</span>
+        </span>
+        </button>
+        <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+        <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+    </th:block>
+    <th:block th:unless="${email != null}">
+        <button type="button" class="btn btn-dark" onclick = "location.href='/login' ">로그인 ⌨️</button>
+    </th:block>
 </nav>
+
 <!-- Product section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
@@ -65,16 +58,14 @@
                         <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
                         <div class="container">
                             <div class="row">
-                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|">가격</div>
-                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|">수량</div>
+                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|"></div>
+                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|"></div>
 
                                 <!-- Force next columns to break to new line at md breakpoint and up -->
                                 <div class="w-100 d-none d-md-block"></div>
 
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewNum}|">리뷰 수
-                                </div>
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
-                                </div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
                                 <input type="text" id="orderAmount" name="orderAmount" class="order_amount"
                                        placeholder="주문 수량"></div>
                         </div>
@@ -91,16 +82,14 @@
                         <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
                         <div class="container">
                             <div class="row">
-                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|">가격</div>
-                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|">수량</div>
+                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|"></div>
+                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|"></div>
 
                                 <!-- Force next columns to break to new line at md breakpoint and up -->
                                 <div class="w-100 d-none d-md-block"></div>
 
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewNum}|">리뷰 수
-                                </div>
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
-                                </div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
                                 <input type="text" name="orderAmount" class="order_amount" disabled placeholder="품절">
                             </div>
                         </div>
@@ -129,15 +118,14 @@
 <script src="/js/product.js"></script>
 <script th:inline="javascript">
     const toggle_button = document.querySelector(".toggle");
-    let check_productId = [[${product.product_id}]];
-    let item = localStorage.getItem('cancelNotification ' + check_productId.toString());
-    let save_productId = localStorage.getItem("productId " + check_productId.toString());
+    let checking = [[ ${product.alert}]];
 
+    //유저 email 와 check_productId 를 조합해서 로직을 변경
     $(document).ready(startChecking);
 
     function startChecking() {
         // 값을 탐색한다.
-        if (item == "cancelNotification" && save_productId == check_productId) {
+        if (!checking) {
             // 클래스를 바꾸기 위해서 추가한다.
             toggle_button.classList.add('cancelNotification');
             // 바꾼 클래스에 맞는 text 를 출력한다.
@@ -158,11 +146,12 @@
                 }),
                 success: function (data) {
                     alert(data.message)
-                    window.location = "/";
+                    window.location.reload();
                 },
                 error: function (error) {
                     alert(error.responseJSON.message);
                     console.log(error.responseJSON.message);
+                    window.location.reload();
                 }
             });
         } else {
@@ -183,13 +172,12 @@
             }),
             success: function (data) {
                 alert(data.message)
-                window.location = "/";
+                window.location.reload();
             },
             error: function (error) {
                 alert(error.responseJSON.message);
                 console.log(error.responseJSON.message);
-                localStorage.removeItem('cancelNotification ' + productId.toString());
-                localStorage.removeItem("productId " + productId.toString());
+                window.location.reload();
             }
         });
 
@@ -206,29 +194,22 @@
             }),
             success: function (data) {
                 alert(data.message);
-                window.location = "/";
+                window.location.reload();
             },
             error: function (error) {
                 alert(error.responseJSON.message);
                 console.log(error.responseJSON.message);
-                localStorage.setItem('cancelNotification ' + productId.toString(), 'cancelNotification');
-                localStorage.setItem("productId " + productId.toString(), productId);
+                window.location.reload();
             }
         });
     }
 
     function toggling(productId) {
         console.log(toggle_button);
+        // 이친구가 boolean 값을 찾는 거다.
         if (toggle_button.classList.contains('cancelNotification')) {
             // 클래스를 바꾸기 위해서 삭제한다.
             toggle_button.classList.remove('cancelNotification');
-
-            // window 리로드 시 값을 가져오기 위해서 localStorage 에서 값을 삭제한다.
-            // 이걸 지우려면 id 체크를 확인해서 값이 같는 지 체크를 해야한다.
-            if (productId == save_productId) {
-                localStorage.removeItem('cancelNotification ' + productId.toString());
-                localStorage.removeItem("productId " + productId.toString());
-            }
             // 바꾼 클래스에 맞는 text 를 출력한다.
             toggle_button.innerText = "재입고 알람 신청";
             // 실제 함수 실행.
@@ -238,10 +219,6 @@
             toggle_button.classList.add('cancelNotification');
             // 바꾼 클래스에 맞는 text 를 출력한다.
             toggle_button.innerText = "재입고 알람 신청 취소";
-
-            // window 리로드 시 값을 가져오기 위해서 localStorage에서 값을 추가한다.
-            localStorage.setItem('cancelNotification ' + productId.toString(), 'cancelNotification');
-            localStorage.setItem("productId " + productId.toString(), productId);
             // 실제 함수 실행
             sendNotification(productId);
         }

@@ -20,8 +20,8 @@
     <a class="navbar-brand" href="/">MUCOSA</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyword">
+        <button class="btn btn-outline-success" type="button" onclick = "searchByKeyword()">Search</button>
       </form>
   </div>
     <th:block th:if="${email != null}">
@@ -50,16 +50,16 @@
       <div class="col-sm-10">
         <div class="row">
           <div class="col-3">
-            <input type="text" class="form-control" placeholder="최저가" >
+            <input type="text" class="form-control" placeholder="최저가" id="minPriceFilter">
           </div>
           <div class="col-3">
             ~
           </div>
           <div class="col-3">
-            <input type="text" class="form-control" placeholder="최고가" >
+            <input type="text" class="form-control" placeholder="최고가" id="maxPriceFilter">
           </div>
           <div class="col-1">
-            <button type="button" class="btn btn-dark" onclick = "searchByPrice()">검색</button>
+            <button type="button" class="btn btn-dark" onclick = "filterByPrice()">검색</button>
           </div>
         </div>
       </div>
@@ -72,10 +72,10 @@
       <div class="col-sm-10">
         <div class="row">
           <div class="col-9">
-            <input type="text" class="form-control" placeholder="평균 리뷰 몇점 이상" >
+            <input type="text" class="form-control" placeholder="평균 리뷰 몇점 이상" id="reviewFilter">
           </div>
           <div class="col-1">
-            <button type="button" class="btn btn-dark" onclick = "location.href='/login' ">검색</button>
+            <button type="button" class="btn btn-dark" onclick = "filterByReviewAvg()">검색</button>
           </div>
         </div>
       </div>
@@ -87,28 +87,28 @@
       <div class="col-sm-10">
         <div class="row">
           <div class="col">
-            <a class="btn btn-outline-link" href="#" role="button">상의</a>
+            <a class="btn btn-outline-link" onclick="filterByCategory('상의')" role="button">상의</a>
           </div>
           <div class="col">
-            <a class="btn btn-outline-link" href="#" role="button">바지</a>
+            <a class="btn btn-outline-link" onclick="filterByCategory('바지')" role="button">바지</a>
           </div>
           <div class="col">
-             <a class="btn btn-outline-link" href="#" role="button">아우터</a>
+             <a class="btn btn-outline-link" onclick="filterByCategory('아우터')" role="button">아우터</a>
           </div>
           <div class="col">
-             <a class="btn btn-outline-link" href="#" role="button">원피스</a>
+             <a class="btn btn-outline-link" onclick="filterByCategory('원피스')" role="button">원피스</a>
           </div>
           <div class="col">
-             <a class="btn btn-outline-link" href="#" role="button">스커트</a>
+             <a class="btn btn-outline-link" onclick="filterByCategory('스커트')" role="button">스커트</a>
           </div>
           <div class="col">
-             <a class="btn btn-outline-link" href="#" role="button">스니커즈</a>
+             <a class="btn btn-outline-link" onclick="filterByCategory('스니커즈')" role="button">스니커즈</a>
           </div>
           <div class="col">
-             <a class="btn btn-outline-link" href="#" role="button">신발</a>
+             <a class="btn btn-outline-link" onclick="filterByCategory('신발')" role="button">신발</a>
           </div>
           <div class="col">
-             <a class="btn btn-outline-link" href="#" role="button">가방</a>
+             <a class="btn btn-outline-link" onclick="filterByCategory('가방')" role="button">가방</a>
           </div>
         </div>
       </div>
@@ -121,13 +121,13 @@
       <div class="col-sm-10">
         <div class="row">
           <div class="col">
-            <a class="btn btn-outline-link" href="#" role="button">고가순</a>
+            <a class="btn btn-outline-link" onclick="orderByInput('고가순')" role="button">고가순</a>
           </div>
           <div class="col">
-            <a class="btn btn-outline-link" href="#" role="button">저가순</a>
+            <a class="btn btn-outline-link" onclick="orderByInput('저가순')" role="button">저가순</a>
           </div>
           <div class="col">
-            <a class="btn btn-outline-link" href="#" role="button">평점순</a>
+            <a class="btn btn-outline-link" onclick="orderByInput('리뷰순')" role="button">리뷰순</a>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@
           </div>
           <!-- Product actions-->
           <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" th:text="${searchResponse.amount == 0} ? '재입고 알림 등록' : '구매하기'"></a></div>
+            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" >상세보기</a></div>
           </div>
           </div>
         </div>
@@ -187,7 +187,7 @@
     </a>
   </li>
   <li th:unless="${current} == 1" class="page-item">
-    <a class="page-link" th:href="@{?page=1}" aria-label="First">
+    <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(1)|" aria-label="First">
       <span aria-hidden="true">&laquo;</span>
     </a>
   </li>
@@ -199,14 +199,14 @@
     </a>
   </li>
   <li th:unless="${current} == 1" class="page-item">
-    <a class="page-link" th:href="@{'?page=' + ${current - 1}}" aria-label="Previous">
+    <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${current-1})|" aria-label="Previous">
       <span aria-hidden="true">&lt;</span>
     </a>
   </li>
 
 
   <li th:each="num : ${#numbers.sequence(start, end)}" class="page-item">
-    <a class="page-link" th:href="@{'?page=' + ${num}}" th:text="${num}"></a>
+    <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${num})|" th:text="${num}"></a>
   </li>
 
 
@@ -216,7 +216,7 @@
     </a>
   </li>
   <li th:unless="${current} == ${total}" class="page-item">
-    <a class="page-link" th:href="@{'?page=' + ${current + 1}}" aria-label="Next">
+    <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${current+1})|" aria-label="Next">
       <span aria-hidden="true">&gt;</span>
     </a>
   </li>
@@ -228,7 +228,7 @@
     </a>
   </li>
   <li th:unless="${current} == ${total}" class="page-item">
-    <a class="page-link" th:href="@{'?page=' + ${total}}" aria-label="Last">
+    <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${total})|" aria-label="Last">
       <span aria-hidden="true">&raquo;</span>
     </a>
   </li>

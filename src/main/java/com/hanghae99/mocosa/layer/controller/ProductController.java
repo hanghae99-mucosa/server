@@ -52,12 +52,13 @@ public class ProductController {
     }
 
 
-    // 상품 상세 페이지
+    //상품 상세 페이지
     //상품 데이터 가져오기
     @GetMapping("/products/{productId}")
     public String getProductDetail(@PathVariable Long productId,
                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
                                    Model model) {
+
         ProductDetailResponseDto result = productService.getProductDetail(productId);
 
         if (userDetails != null) {

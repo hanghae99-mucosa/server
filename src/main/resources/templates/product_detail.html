@@ -118,15 +118,14 @@
 <script src="/js/product.js"></script>
 <script th:inline="javascript">
     const toggle_button = document.querySelector(".toggle");
-    let check_productId = [[${product.product_id}]];
-    let item = localStorage.getItem('cancelNotification ' + check_productId.toString());
-    let save_productId = localStorage.getItem("productId " + check_productId.toString());
+    let checking = [[ ${product.alert}]];
 
+    //유저 email 와 check_productId 를 조합해서 로직을 변경
     $(document).ready(startChecking);
 
     function startChecking() {
         // 값을 탐색한다.
-        if (item == "cancelNotification" && save_productId == check_productId) {
+        if (!checking) {
             // 클래스를 바꾸기 위해서 추가한다.
             toggle_button.classList.add('cancelNotification');
             // 바꾼 클래스에 맞는 text 를 출력한다.
@@ -152,6 +151,7 @@
                 error: function (error) {
                     alert(error.responseJSON.message);
                     console.log(error.responseJSON.message);
+                    window.location.reload();
                 }
             });
         } else {
@@ -177,8 +177,7 @@
             error: function (error) {
                 alert(error.responseJSON.message);
                 console.log(error.responseJSON.message);
-                localStorage.removeItem('cancelNotification ' + productId.toString());
-                localStorage.removeItem("productId " + productId.toString());
+                window.location.reload();
             }
         });
 
@@ -200,24 +199,17 @@
             error: function (error) {
                 alert(error.responseJSON.message);
                 console.log(error.responseJSON.message);
-                localStorage.setItem('cancelNotification ' + productId.toString(), 'cancelNotification');
-                localStorage.setItem("productId " + productId.toString(), productId);
+                window.location.reload();
             }
         });
     }
 
     function toggling(productId) {
         console.log(toggle_button);
+        // 이친구가 boolean 값을 찾는 거다.
         if (toggle_button.classList.contains('cancelNotification')) {
             // 클래스를 바꾸기 위해서 삭제한다.
             toggle_button.classList.remove('cancelNotification');
-
-            // window 리로드 시 값을 가져오기 위해서 localStorage 에서 값을 삭제한다.
-            // 이걸 지우려면 id 체크를 확인해서 값이 같는 지 체크를 해야한다.
-            if (productId == save_productId) {
-                localStorage.removeItem('cancelNotification ' + productId.toString());
-                localStorage.removeItem("productId " + productId.toString());
-            }
             // 바꾼 클래스에 맞는 text 를 출력한다.
             toggle_button.innerText = "재입고 알람 신청";
             // 실제 함수 실행.
@@ -227,10 +219,6 @@
             toggle_button.classList.add('cancelNotification');
             // 바꾼 클래스에 맞는 text 를 출력한다.
             toggle_button.innerText = "재입고 알람 신청 취소";
-
-            // window 리로드 시 값을 가져오기 위해서 localStorage에서 값을 추가한다.
-            localStorage.setItem('cancelNotification ' + productId.toString(), 'cancelNotification');
-            localStorage.setItem("productId " + productId.toString(), productId);
             // 실제 함수 실행
             sendNotification(productId);
         }

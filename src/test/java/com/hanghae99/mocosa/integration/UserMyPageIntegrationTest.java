@@ -97,7 +97,7 @@ public class UserMyPageIntegrationTest {
 
     @Test
     @DisplayName("주문 데이터 가져오기에 성공한 케이스")
-    public void case1(){
+    public void TODO_GET_ORDERHISTORY_RESULT_LIST_DTO(){
         //given
         headers.set("Authorization", userToken1);
         HttpEntity<String> request = new HttpEntity<>("",headers);
@@ -145,7 +145,7 @@ public class UserMyPageIntegrationTest {
 
     @Test
     @DisplayName("주문 데이터가 없는 경우")
-    public void case2(){
+    public void TODO_NO_ORDERHISTORY_RESULT_ERROR(){
         //given
         headers.set("Authorization", userToken2);
         HttpEntity<String> request = new HttpEntity<>("",headers);
@@ -171,7 +171,7 @@ public class UserMyPageIntegrationTest {
 
     @Test
     @DisplayName("존재하지 않는 페이지를 요청하는 경우")
-    public void case3(){
+    public void TODO_NO_PAGE_RESULT_ERROR(){
         //given
         headers.set("Authorization", userToken1);
         HttpEntity<String> request = new HttpEntity<>("",headers);

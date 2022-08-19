@@ -18,39 +18,32 @@
 
 <body>
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#!">Start Bootstrap</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">MUCOSA</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">All Products</a></li>
-                        <li>
-                            <hr class="dropdown-divider"/>
-                        </li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="d-flex">
-                <button class="btn btn-outline-dark" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyword">
+                <button class="btn btn-outline-success" type="button" onclick = "searchByKeyword()">Search</button>
             </form>
         </div>
     </div>
+    <th:block th:if="${email != null}">
+        <button type="button" class="btn btn-dark position-relative" id="alarm-button">
+            알림 🔔
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          99+
+          <span class="visually-hidden">unread messages</span>
+        </span>
+        </button>
+        <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+        <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+    </th:block>
+    <th:block th:unless="${email != null}">
+        <button type="button" class="btn btn-dark" onclick = "location.href='/login' ">로그인 ⌨️</button>
+    </th:block>
 </nav>
+
 <!-- Product section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
@@ -65,16 +58,14 @@
                         <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
                         <div class="container">
                             <div class="row">
-                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|">가격</div>
-                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|">수량</div>
+                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|"></div>
+                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|"></div>
 
                                 <!-- Force next columns to break to new line at md breakpoint and up -->
                                 <div class="w-100 d-none d-md-block"></div>
 
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewNum}|">리뷰 수
-                                </div>
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
-                                </div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
                                 <input type="text" id="orderAmount" name="orderAmount" class="order_amount"
                                        placeholder="주문 수량"></div>
                         </div>
@@ -91,16 +82,14 @@
                         <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
                         <div class="container">
                             <div class="row">
-                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|">가격</div>
-                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|">수량</div>
+                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|"></div>
+                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|"></div>
 
                                 <!-- Force next columns to break to new line at md breakpoint and up -->
                                 <div class="w-100 d-none d-md-block"></div>
 
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewNum}|">리뷰 수
-                                </div>
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
-                                </div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
                                 <input type="text" name="orderAmount" class="order_amount" disabled placeholder="품절">
                             </div>
                         </div>

@@ -46,10 +46,10 @@ public class ProductService {
 
         Page<SearchResponseDto> searchResponseDtos = productRepository.findBySearchRequestDto(searchRequestDto, pageable);
 
-        int requestPage = searchResponseDtos.getTotalPages();
-        int totalPage = searchRequestDto.getPage();
+        int totalPage = searchResponseDtos.getTotalPages();
+        int requestPage = searchRequestDto.getPage();
 
-        validatePage(requestPage, totalPage);
+        validatePage(totalPage, requestPage);
 
         long totalElements = searchResponseDtos.getTotalElements();
 

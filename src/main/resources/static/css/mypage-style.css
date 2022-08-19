@@ -39,3 +39,16 @@
     text-align: right;
     font-size: 20px;
 }
+
+.form-wrap {
+    width: 600px;
+    margin: auto;
+}
+
+.amount-input {
+    margin-bottom: 16px;
+}
+
+.submit-button {
+    width: 100%;
+}

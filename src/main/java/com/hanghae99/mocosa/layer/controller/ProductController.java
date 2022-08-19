@@ -10,6 +10,7 @@ import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,13 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
     private final ProductService productService;
 
     @GetMapping("/")
-    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails, SearchRequestDto searchRequestDto) {
         if (userDetails != null) {
             model.addAttribute("email", userDetails.getUsername());
 
@@ -34,6 +36,10 @@ public class ProductController {
                 model.addAttribute("admin", true);
             }
         }
+
+        Page<SearchResponseDto> searchResponseDtoList = productService.getProducts(searchRequestDto);
+
+        model.addAttribute("searchResponses", searchResponseDtoList);
 
         return "index";
     }
@@ -50,13 +56,16 @@ public class ProductController {
     // 상품 상세 페이지
     //상품 데이터 가져오기
     @GetMapping("/products/{productId}")
-    public ResponseEntity<ProductDetailResponseDto> getProductDetail(@PathVariable Long productId,
-                                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String getProductDetail(@PathVariable Long productId,
+                                   @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                   Model model) {
         ProductDetailResponseDto result = productService.getProductDetail(productId);
-        return new ResponseEntity(result, HttpStatus.OK);
+        model.addAttribute("product", result);
+        return "product_detail";
     }
 
     @PostMapping("/products/{productId}")
+    @ResponseBody
     public ResponseEntity<OrderResponseDto> createOrder(@PathVariable Long productId,
                                                         @RequestBody OrderRequestDto orderRequestDto
                                                         ,@AuthenticationPrincipal UserDetailsImpl userDetails
@@ -66,18 +75,22 @@ public class ProductController {
     }
 
     @GetMapping("/users/restock")
-    public ResponseEntity<List<RestockListResponseDto>> getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         List<RestockListResponseDto> restockList = productService.getRestockList(userDetails);
 
-        return new ResponseEntity<>(restockList, HttpStatus.OK);
+        model.addAttribute("restockList", restockList);
+        model.addAttribute("restockRequestDto", new RestockRequestDto());
+
+        return "seller-mypage";
     }
 
 
     @PutMapping("/users/restock")
-    public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto) {
+    public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto, Model model) {
         RestockResponseDto restockResponseDto = productService.restock(restockRequestDto);
 
-        return new ResponseEntity<>(restockResponseDto, HttpStatus.OK);
+        model.addAttribute("restock", new RestockRequestDto());
 
+        return new ResponseEntity<>(restockResponseDto, HttpStatus.OK);
     }
 }

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Shop Item - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <!--    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>-->
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/product_detail.css" rel="stylesheet"/>
+    <link href="/css/custom_product_detail.css" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="#!">Start Bootstrap</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">All Products</a></li>
+                        <li>
+                            <hr class="dropdown-divider"/>
+                        </li>
+                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <button class="btn btn-outline-dark" type="submit">
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+<!-- Product section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg"
+                     alt="..."/></div>
+            <div class="col-md-6">
+                <div class="d-flex" th:if="${product.amount != 0}">
+                    <div>
+                        <div class="brand name" th:text="${product.name}">릴렉스 핏 크루 넥 반팔 티셔츠</div>
+                        <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|">가격</div>
+                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|">수량</div>
+
+                                <!-- Force next columns to break to new line at md breakpoint and up -->
+                                <div class="w-100 d-none d-md-block"></div>
+
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewNum}|">리뷰 수
+                                </div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
+                                </div>
+                                <input type="text" id="orderAmount" name="orderAmount" class="order_amount"
+                                       placeholder="주문 수량"></div>
+                        </div>
+                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button"
+                                th:onclick="|sendOrder(${product.product_id})|">
+                            <i class="bi-cart-fill me-1 btn-lg"></i>
+                            주문 하기
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex" th:if="${product.amount == 0}">
+                    <div>
+                        <div class="brand name" th:text="${product.name}">릴렉스 핏 크루 넥 반팔 티셔츠</div>
+                        <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|">가격</div>
+                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|">수량</div>
+
+                                <!-- Force next columns to break to new line at md breakpoint and up -->
+                                <div class="w-100 d-none d-md-block"></div>
+
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewNum}|">리뷰 수
+                                </div>
+                                <div class="col-6 col-sm-4 brand brand_last" th:text="|수량 ${product.reviewAvg}|">평균 평점
+                                </div>
+                                <input type="text" name="orderAmount" class="order_amount" disabled placeholder="품절">
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-dark flex-shrink-0 order toggle" type="button"
+                                th:onclick="|toggling(${product.product_id})|">
+                            재입고 알람 신청
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer-->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p>
+    </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--ajax	-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!-- Core theme JS-->
+<script src="/js/product.js"></script>
+<script th:inline="javascript">
+    const toggle_button = document.querySelector(".toggle");
+    let check_productId = [[${product.product_id}]];
+    let item = localStorage.getItem('cancelNotification ' + check_productId.toString());
+    let save_productId = localStorage.getItem("productId " + check_productId.toString());
+
+    $(document).ready(startChecking);
+
+    function startChecking() {
+        // 값을 탐색한다.
+        if (item == "cancelNotification" && save_productId == check_productId) {
+            // 클래스를 바꾸기 위해서 추가한다.
+            toggle_button.classList.add('cancelNotification');
+            // 바꾼 클래스에 맞는 text 를 출력한다.
+            toggle_button.innerText = "재입고 알람 신청 취소";
+        }
+    };
+
+    function sendOrder(order_product_id) {
+        let orderAmount = $('#orderAmount').val();
+        console.log(orderAmount)
+        if (orderAmount > 0) {
+            $.ajax({
+                type: "POST",
+                url: `/products/${order_product_id}`,
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    orderAmount: orderAmount
+                }),
+                success: function (data) {
+                    alert(data.message)
+                    window.location = "/";
+                },
+                error: function (error) {
+                    alert(error.responseJSON.message);
+                    console.log(error.responseJSON.message);
+                }
+            });
+        } else {
+            alert("주문 수량을 확인해 주세요");
+            window.location.reload();
+        }
+
+    }
+
+    function sendNotification(productId) {
+        $.ajax({
+            type: "POST",
+            url: "/api/notification",
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify({
+                productId: productId
+            }),
+            success: function (data) {
+                alert(data.message)
+                window.location = "/";
+            },
+            error: function (error) {
+                alert(error.responseJSON.message);
+                console.log(error.responseJSON.message);
+                localStorage.removeItem('cancelNotification ' + productId.toString());
+                localStorage.removeItem("productId " + productId.toString());
+            }
+        });
+
+    }
+
+    function removeNotification(productId) {
+        $.ajax({
+            type: "DELETE",
+            url: "/api/notification",
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify({
+                productId: productId
+            }),
+            success: function (data) {
+                alert(data.message);
+                window.location = "/";
+            },
+            error: function (error) {
+                alert(error.responseJSON.message);
+                console.log(error.responseJSON.message);
+                localStorage.setItem('cancelNotification ' + productId.toString(), 'cancelNotification');
+                localStorage.setItem("productId " + productId.toString(), productId);
+            }
+        });
+    }
+
+    function toggling(productId) {
+        console.log(toggle_button);
+        if (toggle_button.classList.contains('cancelNotification')) {
+            // 클래스를 바꾸기 위해서 삭제한다.
+            toggle_button.classList.remove('cancelNotification');
+
+            // window 리로드 시 값을 가져오기 위해서 localStorage 에서 값을 삭제한다.
+            // 이걸 지우려면 id 체크를 확인해서 값이 같는 지 체크를 해야한다.
+            if (productId == save_productId) {
+                localStorage.removeItem('cancelNotification ' + productId.toString());
+                localStorage.removeItem("productId " + productId.toString());
+            }
+            // 바꾼 클래스에 맞는 text 를 출력한다.
+            toggle_button.innerText = "재입고 알람 신청";
+            // 실제 함수 실행.
+            removeNotification(productId);
+        } else {
+            // 클래스를 바꾸기 위해서 추가한다.
+            toggle_button.classList.add('cancelNotification');
+            // 바꾼 클래스에 맞는 text 를 출력한다.
+            toggle_button.innerText = "재입고 알람 신청 취소";
+
+            // window 리로드 시 값을 가져오기 위해서 localStorage에서 값을 추가한다.
+            localStorage.setItem('cancelNotification ' + productId.toString(), 'cancelNotification');
+            localStorage.setItem("productId " + productId.toString(), productId);
+            // 실제 함수 실행
+            sendNotification(productId);
+        }
+    }
+</script>
+</body>
+</html>

@@ -30,19 +30,11 @@ public class OrderService {
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderRepositoryImpl.findByUser(user, pageable);
 
-        validatePage(orderHistoryResponseDtoPage, page);
-
         validateNoOrderHistory(orderHistoryResponseDtoPage);
 
+        validatePage(orderHistoryResponseDtoPage, page);
+
         return orderHistoryResponseDtoPage;
-    }
-
-    private void validatePage(Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage, int page) {
-        int toalPage = orderHistoryResponseDtoPage.getTotalPages();
-
-        if(toalPage < page) {
-            throw new MyPageException(ErrorCode.MYPAGE_NO_PAGE);
-        }
     }
 
     private void validateNoOrderHistory(Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage) {
@@ -50,6 +42,14 @@ public class OrderService {
 
         if(totalElements == 0) {
             throw new MyPageException(ErrorCode.MYPAGE_NO_DATA);
+        }
+    }
+
+    private void validatePage(Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage, int page) {
+        int toalPage = orderHistoryResponseDtoPage.getTotalPages();
+
+        if(toalPage < page) {
+            throw new MyPageException(ErrorCode.MYPAGE_NO_PAGE);
         }
     }
 }

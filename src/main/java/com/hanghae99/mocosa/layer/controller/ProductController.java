@@ -70,18 +70,22 @@ public class ProductController {
     }
 
     @GetMapping("/users/restock")
-    public ResponseEntity<List<RestockListResponseDto>> getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         List<RestockListResponseDto> restockList = productService.getRestockList(userDetails);
 
-        return new ResponseEntity<>(restockList, HttpStatus.OK);
+        model.addAttribute("restockList", restockList);
+        model.addAttribute("restockRequestDto", new RestockRequestDto());
+
+        return "seller-mypage";
     }
 
 
     @PutMapping("/users/restock")
-    public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto) {
+    public ResponseEntity<RestockResponseDto> restock(@RequestBody RestockRequestDto restockRequestDto, Model model) {
         RestockResponseDto restockResponseDto = productService.restock(restockRequestDto);
 
-        return new ResponseEntity<>(restockResponseDto, HttpStatus.OK);
+        model.addAttribute("restock", new RestockRequestDto());
 
+        return new ResponseEntity<>(restockResponseDto, HttpStatus.OK);
     }
 }

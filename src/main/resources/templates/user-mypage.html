@@ -15,6 +15,33 @@
 </head>
 
 <body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">MUCOSA</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyword">
+                    <button class="btn btn-outline-success" type="button" onclick = "searchByKeyword()">Search</button>
+                </form>
+            </div>
+        </div>
+        <th:block th:if="${email != null}">
+            <button type="button" class="btn btn-dark position-relative" id="alarm-button">
+                알림 🔔
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              99+
+              <span class="visually-hidden">unread messages</span>
+            </span>
+            </button>
+            <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+            <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+        </th:block>
+        <th:block th:unless="${email != null}">
+            <button type="button" class="btn btn-dark" onclick = "location.href='/login' ">로그인 ⌨️</button>
+        </th:block>
+    </nav>
+
     <div class="wrap">
         <h2 class="title" th:text="주문내역"></h2>
 

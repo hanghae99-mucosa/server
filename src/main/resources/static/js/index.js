@@ -1,6 +1,6 @@
 function searchByKeyword(){
     var url = "?keyword=" + document.getElementById('keyword').value;
-    alert(url);
+
     window.location.href = url;
 }
 
@@ -97,9 +97,13 @@ function orderByInput(input) {
 function moveToPage(num) {
     const regex = /page=[0-9]{1,}/g;
     var url = window.location.href;
-    var changed = url.match(regex)[0];
+    var changed = url.match(regex);
 
-    url = url.replace(changed, "page="+num);
+    if (changed == null){
+        url += "?page=" + num;
+    } else{
+        url = url.replace(changed, "page=" + num);
+    }
 
     window.location.href = url;
-}기
+}

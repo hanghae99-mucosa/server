@@ -340,15 +340,15 @@ button {
 }
 
 #login-form {
-    width: 538px;
-    height: 710px;
+    width: 600px;
+    /*height: 710px;*/
     margin: 70px auto 141px auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     /*gap: 96px;*/
-    padding: 56px 0 0;
+    padding: 50px 0 50px;
     border-radius: 10px;
     box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.15);
     background-color: #ffffff;
@@ -403,7 +403,7 @@ button {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    /*margin: 8px 0 0;*/
+    margin: 14px 0 0;
     padding: 11px 12px;
     border-radius: 5px;
     border: solid 1px #212529;
@@ -456,7 +456,7 @@ button {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin: 40px 0 0;
+    margin: 40px 0 40px;
     padding: 11px 12px;
     border-radius: 5px;
     /*background-color: #15aabf;*/
@@ -835,4 +835,13 @@ input[type=submit] {
     padding: 1.75rem 1.25rem;
     border: 1px solid transparent;
     border-radius: .25rem;
+}
+
+.logo {
+    width: 70%;
+}
+
+.text {
+    margin-top: 40px;
+    text-align: center;
 }

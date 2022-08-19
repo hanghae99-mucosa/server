@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <link th:href="@{/css/mypage-style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/pagination-style.css}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Prompt:wght@900&display=swap" rel="stylesheet">
 
     <title>마이페이지</title>
@@ -73,53 +74,54 @@
                                                                         end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
 
             <li th:if="${current} == 1" class="page-item disabled">
-                <a class="page-link" aria-label="First">
+                <a class="page-link font-color" aria-label="First">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li th:unless="${current} == 1" class="page-item">
-                <a class="page-link" th:href="@{/users/orders?page=1}" aria-label="First">
+                <a class="page-link font-color" th:href="@{/users/orders?page=1}" aria-label="First">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
 
             <li th:if="${current} == 1" class="page-item disabled">
-                <a class="page-link" aria-label="Previous">
+                <a class="page-link font-color" aria-label="Previous">
                     <span aria-hidden="true">&lt;</span>
                 </a>
             </li>
             <li th:unless="${current} == 1" class="page-item">
-                <a class="page-link" th:href="@{'/users/orders?page=' + ${current - 1}}" aria-label="Previous">
+                <a class="page-link font-color" th:href="@{'/users/orders?page=' + ${current - 1}}" aria-label="Previous">
                     <span aria-hidden="true">&lt;</span>
                 </a>
             </li>
 
 
             <li th:each="num : ${#numbers.sequence(start, end)}" class="page-item">
-                <a class="page-link" th:href="@{'/users/orders?page=' + ${num}}" th:text="${num}"></a>
+                <span th:if="${num} == ${current}" class="page-link current-page" th:text="${num}" disabled></span>
+                <a th:unless="${num} == ${current}" class="page-link font-color" th:href="@{'/users/orders?page=' + ${num}}" th:text="${num}"></a>
             </li>
 
 
             <li th:if="${current} == ${total}" class="page-item disabled">
-                <a class="page-link" aria-label="Next">
+                <a class="page-link font-color" aria-label="Next">
                     <span aria-hidden="true">&gt;</span>
                 </a>
             </li>
             <li th:unless="${current} == ${total}" class="page-item">
-                <a class="page-link" th:href="@{'/users/orders?page=' + ${current + 1}}" aria-label="Next">
+                <a class="page-link font-color" th:href="@{'/users/orders?page=' + ${current + 1}}" aria-label="Next">
                     <span aria-hidden="true">&gt;</span>
                 </a>
             </li>
 
 
             <li th:if="${current} == ${total}" class="page-item disabled">
-                <a class="page-link" aria-label="Last">
+                <a class="page-link font-color" aria-label="Last">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
             <li th:unless="${current} == ${total}" class="page-item">
-                <a class="page-link" th:href="@{'/users/orders?page=' + ${total}}" aria-label="Last">
+                <a class="page-link font-color" th:href="@{'/users/orders?page=' + ${total}}" aria-label="Last">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

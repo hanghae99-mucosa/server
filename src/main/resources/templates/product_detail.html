@@ -49,37 +49,40 @@
     <div class="container px-4 px-lg-5 my-5">
         <div class="row gx-4 gx-lg-5 align-items-center">
             <div class="col-md-6">
-                <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg"
-                     alt="..."/></div>
+                <img class="card-img-top mb-5 mb-md-0" th:src="${product.thumbnail}"
+                     alt="상품 이미지"/></div>
             <div class="col-md-6">
                 <div class="d-flex" th:if="${product.amount != 0}">
                     <div>
-                        <div class="brand name" th:text="${product.name}">릴렉스 핏 크루 넥 반팔 티셔츠</div>
-                        <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
+                        <span class="name text-muted" th:text="${product.brandName}"></span>
+                        <h4 class="brand name" th:text="${product.name}"></h4>
                         <div class="container">
                             <div class="row">
-                                <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|"></div>
-                                <div class="col-6 col-sm-4 brand" th:text="|수량 ${product.amount}|"></div>
+                                <div class="col brand" th:text="|가격 ${product.price}|"></div>
+                                <div class="col brand" th:text="|수량 ${product.amount}|"></div>
 
                                 <!-- Force next columns to break to new line at md breakpoint and up -->
                                 <div class="w-100 d-none d-md-block"></div>
 
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
-                                <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
-                                <input type="text" id="orderAmount" name="orderAmount" class="order_amount"
+                                <div class="col brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
+                                <div class="col brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
+
+                                <div class="w-100 d-none d-md-block"></div>
+
+                                <input type="number" id="orderAmount" name="orderAmount" class="form-control order_amount"
                                        placeholder="주문 수량"></div>
                         </div>
                         <button class="btn btn-outline-dark flex-shrink-0 order" type="button"
                                 th:onclick="|sendOrder(${product.product_id})|">
-                            <i class="bi-cart-fill me-1 btn-lg"></i>
-                            주문 하기
+                            <i class="bi-cart-fill me-1 btn-lg"></i>주문 하기
+
                         </button>
                     </div>
                 </div>
                 <div class="d-flex" th:if="${product.amount == 0}">
                     <div>
-                        <div class="brand name" th:text="${product.name}">릴렉스 핏 크루 넥 반팔 티셔츠</div>
-                        <div class="brand name" th:text="${product.brandName}">무신사 무탠다드</div>
+                        <span class="name" th:text="${product.brandName}"></span>
+                        <h4 class="brand name" th:text="${product.name}"></h4>
                         <div class="container">
                             <div class="row">
                                 <div class="col-6 col-sm-4 brand" th:text="|가격 ${product.price}|"></div>
@@ -90,7 +93,7 @@
 
                                 <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 수 ${product.reviewNum}|"></div>
                                 <div class="col-6 col-sm-4 brand brand_last" th:text="|리뷰 평점 ${product.reviewAvg}|"></div>
-                                <input type="text" name="orderAmount" class="order_amount" disabled placeholder="품절">
+                                <input type="text" name="orderAmount" class="form-control order_amount" disabled placeholder="품절">
                             </div>
                         </div>
                         <button class="btn btn-outline-dark flex-shrink-0 order toggle" type="button"

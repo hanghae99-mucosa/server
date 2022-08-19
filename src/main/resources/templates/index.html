@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/index.css" rel="stylesheet"/>
+    <link th:href="@{/css/pagination-style.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
 <!-- Navigation-->
@@ -47,21 +48,21 @@
 
 <!-- Header-->
 <header class="bg-light py-1">
-    <div class="container text-center">
+    <div class="container text-center filter-wrap">
         <!--    가격 필터-->
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-1 filter-name">
                 가격
             </div>
-            <div class="col-sm-10">
+            <div class="col">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col">
                         <input type="text" class="form-control" placeholder="최저가" id="minPriceFilter">
                     </div>
-                    <div class="col-3">
+                    <div class="col filter-text">
                         ~
                     </div>
-                    <div class="col-3">
+                    <div class="col">
                         <input type="text" class="form-control" placeholder="최고가" id="maxPriceFilter">
                     </div>
                     <div class="col-1">
@@ -72,12 +73,12 @@
         </div>
         <!--    평균리뷰-->
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-1 filter-name">
                 평균 리뷰
             </div>
-            <div class="col-sm-10">
+            <div class="col">
                 <div class="row">
-                    <div class="col-9">
+                    <div class="col">
                         <input type="text" class="form-control" placeholder="평균 리뷰 몇점 이상" id="reviewFilter">
                     </div>
                     <div class="col-1">
@@ -89,10 +90,10 @@
 
         <!--    카테고리 필터-->
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-1 filter-name">
                 카테고리
             </div>
-            <div class="col-sm-10">
+            <div class="col">
                 <div class="row">
                     <div class="col">
                         <a class="btn btn-outline-link" onclick="filterByCategory('상의')" role="button">상의</a>
@@ -123,10 +124,10 @@
         </div>
         <!--    정렬 조건-->
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-1 filter-name">
                 정렬
             </div>
-            <div class="col-sm-10">
+            <div class="col">
                 <div class="row">
                     <div class="col">
                         <a class="btn btn-outline-link" onclick="orderByInput('고가순')" role="button">고가순</a>
@@ -152,7 +153,7 @@
                     <div class="badge bg-dark text-white position-absolute" th:if="${searchResponse.amount == 0}"
                          style="top: 0.5rem; right: 0.5rem" th:text="'Sold out'"></div>
                     <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..."/>
+                    <img class="card-img-top" th:src="${searchResponse.thumbnail}" alt="상품이미지"/>
                     <!-- th:src="${searchResponse.thumbnail}" -->
                     <!-- Product details-->
                     <div class="card-body p-3">
@@ -191,57 +192,58 @@
 <!--페이지네이션-->
 <ul class="pagination" style="justify-content: center" th:with="total=${searchResponses.totalPages},
                                             current=${searchResponses.pageable.pageNumber + 1},
-                                            start=${(searchResponses.pageable.pageNumber / 12) * 12 + 1},
-                                            end=(${(total == 1) ? 1 : (start + 11 < total ? start + 11 : total)})">
+                                            start=${(searchResponses.pageable.pageNumber / 10) * 10 + 1},
+                                            end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
 
     <li th:if="${current} == 1" class="page-item disabled">
-        <a class="page-link" aria-label="First">
+        <a class="page-link font-color" aria-label="First">
             <span aria-hidden="true">&laquo;</span>
         </a>
     </li>
     <li th:unless="${current} == 1" class="page-item">
-        <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(1)|" aria-label="First">
+        <a class="page-link font-color" href="javascript:void(0);" th:onclick="|moveToPage(1)|" aria-label="First">
             <span aria-hidden="true">&laquo;</span>
         </a>
     </li>
 
 
     <li th:if="${current} == 1" class="page-item disabled">
-        <a class="page-link" aria-label="Previous">
+        <a class="page-link font-color" aria-label="Previous">
             <span aria-hidden="true">&lt;</span>
         </a>
     </li>
     <li th:unless="${current} == 1" class="page-item">
-        <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${current}-1)|" aria-label="Previous">
+        <a class="page-link font-color" href="javascript:void(0);" th:onclick="|moveToPage(${current}-1)|" aria-label="Previous">
             <span aria-hidden="true">&lt;</span>
         </a>
     </li>
 
 
     <li th:each="num : ${#numbers.sequence(start, end)}" class="page-item">
-        <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${num})|" th:text="${num}"></a>
+        <span th:if="${num} == ${current}" class="page-link current-page" th:text="${num}" disabled></span>
+        <a th:unless="${num} == ${current}" class="page-link font-color" href="javascript:void(0);" th:onclick="|moveToPage(${num})|" th:text="${num}"></a>
     </li>
 
 
     <li th:if="${current} == ${total}" class="page-item disabled">
-        <a class="page-link" aria-label="Next">
+        <a class="page-link font-color" aria-label="Next">
             <span aria-hidden="true">&gt;</span>
         </a>
     </li>
     <li th:unless="${current} == ${total}" class="page-item">
-        <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${current+1})|" aria-label="Next">
+        <a class="page-link font-color" href="javascript:void(0);" th:onclick="|moveToPage(${current+1})|" aria-label="Next">
             <span aria-hidden="true">&gt;</span>
         </a>
     </li>
 
 
     <li th:if="${current} == ${total}" class="page-item disabled">
-        <a class="page-link" aria-label="Last">
+        <a class="page-link font-color" aria-label="Last">
             <span aria-hidden="true">&raquo;</span>
         </a>
     </li>
     <li th:unless="${current} == ${total}" class="page-item">
-        <a class="page-link" href="javascript:void(0);" th:onclick="|moveToPage(${total})|" aria-label="Last">
+        <a class="page-link font-color" href="javascript:void(0);" th:onclick="|moveToPage(${total})|" aria-label="Last">
             <span aria-hidden="true">&raquo;</span>
         </a>
     </li>

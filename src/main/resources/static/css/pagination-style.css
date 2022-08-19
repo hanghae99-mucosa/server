@@ -1,3 +1,11 @@
 .pagination {
     justify-content: center;
 }
+
+.font-color {
+    color: black;
+}
+
+.current-page {
+    color: lightgrey;
+}

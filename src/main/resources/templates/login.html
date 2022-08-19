@@ -24,10 +24,8 @@
 </head>
 <body>
 <div id="login-form">
-  <div id="login-title"></div>
-  <button id="login-id-btn" onclick="location.href='/signup'">
-    회원 가입하기
-  </button>
+  <img class="logo" th:src="@{/images/mucosa.png}" alt="mucosa">
+
   <div>
     <div class="login-id-label">이메일</div>
     <input type="text" name="email" id="email" class="login-input-box">
@@ -36,7 +34,11 @@
     <input type="password" name="password" id="password" class="login-input-box">
 
     <button id="login-id-submit" class="btn btn-dark" onclick="onLogin()" type="button" >로그인</button>
+    <hr>
+    <p class="text" th:text="'아직 회원이 아니라면?'"></p>
+    <button id="login-id-btn" onclick="location.href='/signup'">회원 가입</button>
   </div>
+
   <div id="login-failed" style="display:none" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
 </div>
 </body>

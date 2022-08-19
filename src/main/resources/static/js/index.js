@@ -5,16 +5,18 @@ function searchByKeyword(){
 }
 
 function filterByPrice() {
+    const pageRegex = /page=[0-9]{1,}/g;
     const minRegex = /minPriceFilter=[0-9]{1,}/g;
     const maxRegex = /maxPriceFilter=[0-9]{1,}/g;
     var url = window.location.href;
+    var pageChanged = url.match(pageRegex);
     var minChanged =  url.match(minRegex);
     var maxChanged =  url.match(maxRegex);
     var minPriceFilter = document.getElementById('minPriceFilter').value;
     var maxPriceFilter = document.getElementById('maxPriceFilter').value;
 
-    if(url.indexOf("?")== -1) {
-        url += "?page=1";
+    if(url.includes("page=")) {
+        url = url.replace(pageChanged, "page=1");
     }
 
     if(minPriceFilter != ""){
@@ -38,13 +40,15 @@ function filterByPrice() {
 }
 
 function filterByReviewAvg() {
+    const pageRegex = /page=[0-9]{1,}/g;
     const regex = /reviewFilter=[0-9]{1,}/g;
     var url = window.location.href;
+    var pageChanged = url.match(pageRegex);
     var changed =  url.match(regex);
     var reviewFilter = document.getElementById('reviewFilter').value;
 
-    if(url.indexOf("?")== -1) {
-        url += "?page=1";
+    if(url.includes("page=")) {
+        url = url.replace(pageChanged, "page=1");
     }
 
     if(reviewFilter != ""){
@@ -59,12 +63,14 @@ function filterByReviewAvg() {
 }
 
 function filterByCategory(category) {
+    const pageRegex = /page=[0-9]{1,}/g;
     const regex = /categoryFilter=[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{1,}/g;
     var url = decodeURI(window.location.href);
+    var pageChanged = url.match(pageRegex);
     var changed =  url.match(regex);
 
-    if(url.indexOf("?")== -1) {
-        url += "?page=1";
+    if(url.includes("page=")) {
+        url = url.replace(pageChanged, "page=1");
     }
 
     if (changed == null){
@@ -77,12 +83,14 @@ function filterByCategory(category) {
 }
 
 function orderByInput(input) {
+    const pageRegex = /page=[0-9]{1,}/g;
     const regex = /sort=[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{1,}/g;
     var url = decodeURI(window.location.href);
+    var pageChanged = url.match(pageRegex);
     var changed =  url.match(regex);
 
-    if(url.indexOf("?")== -1) {
-        url += "?page=1";
+    if(url.includes("page=")) {
+        url = url.replace(pageChanged, "page=1");
     }
 
     if (changed == null){
@@ -99,10 +107,12 @@ function moveToPage(num) {
     var url = window.location.href;
     var changed = url.match(regex);
 
-    if (changed == null){
+    if (!url.includes("?")){
         url += "?page=" + num;
-    } else{
+    } else if (url.includes("page=")) {
         url = url.replace(changed, "page=" + num);
+    } else {
+        url += "&page=" + num;
     }
 
     window.location.href = url;

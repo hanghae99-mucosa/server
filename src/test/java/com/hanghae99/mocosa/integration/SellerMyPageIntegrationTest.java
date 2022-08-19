@@ -102,7 +102,7 @@ public class SellerMyPageIntegrationTest {
 
     @Test
     @DisplayName("재입고 가능 상품 목록을 성공적으로 가져온 경우")
-    public void case1(){
+    public void TODO_GET_RESTOCK_LIST_RESULT_LIST_DTO(){
         //given
         headers.set("Authorization", userToken1);
         HttpEntity<String> request = new HttpEntity<>("",headers);
@@ -137,7 +137,7 @@ public class SellerMyPageIntegrationTest {
 
     @Test
     @DisplayName("수량이 0개인 상품이 없는 경우")
-    public void case2(){
+    public void TODO_NO_RESTOCK_LIST_RESULT_ERROR(){
         //given
         headers.set("Authorization", userToken2);
         HttpEntity<String> request = new HttpEntity<>("",headers);
@@ -161,7 +161,7 @@ public class SellerMyPageIntegrationTest {
 
     @Test
     @DisplayName("재입고 등록에 성공한 경우")
-    public void case3() throws JsonProcessingException {
+    public void TODO_RESTOCK_RESULT_DTO() throws JsonProcessingException {
         //given
         headers.set("Authorization", userToken1);
         RestockRequestDto restockRequestDto = new RestockRequestDto(2L, 80);
@@ -189,7 +189,7 @@ public class SellerMyPageIntegrationTest {
 
     @Test
     @DisplayName("수량을 0개로 요청하는 경우")
-    public void case4() throws JsonProcessingException {
+    public void TODO_ZERO_AMOUNT_RESULT_ERROR() throws JsonProcessingException {
         //given
         headers.set("Authorization", userToken1);
         RestockRequestDto restockRequestDto = new RestockRequestDto(2L, 0);

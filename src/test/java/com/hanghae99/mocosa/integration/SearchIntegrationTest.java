@@ -32,7 +32,7 @@ public class SearchIntegrationTest {
 
     @Test
     @DisplayName("검색에 성공한 케이스 - 필터 제외")
-    public void case1(){
+    public void TODO_GET_SEARCH_RESULT_WITHOUT_FILTER_RESULT_LIST_DTO(){
         //given
         String keyword = "티셔츠";
 
@@ -79,7 +79,7 @@ public class SearchIntegrationTest {
 
     @Test
     @DisplayName("검색에 성공한 케이스 - 필터 존재")
-    public void case2(){
+    public void TODO_GET_SEARCH_RESULT_WITH_FILTER_RESULT_LIST_DTO(){
         //given
         String keyword = "티셔츠";
         int page = 0;
@@ -134,7 +134,7 @@ public class SearchIntegrationTest {
 
     @Test
     @DisplayName("검색 결과가 존재하지 않는 케이스")
-    public void case3(){
+    public void TODO_NO_SEARCH_RESULT_RESULT_ERROR(){
         //given
         String keyword = "무탠다드 에디션";
         int page = 0;
@@ -164,7 +164,7 @@ public class SearchIntegrationTest {
 
     @Test
     @DisplayName("키워드가 공란이여서 실패하는 케이스")
-    public void case4(){
+    public void TODO_BLANK_KEYWORD_RESULT_ERROR(){
         //given
         String keyword = "";
         int page = 0;
@@ -194,7 +194,7 @@ public class SearchIntegrationTest {
 
     @Test
     @DisplayName("존재하지 않는 페이지를 요청해서 실패하는 케이스")
-    public void case5(){
+    public void TODO_NO_PAGE_RESULT_ERROR(){
         //given
         String keyword = "무탠다드";
         int page = 10000;  //2147483647

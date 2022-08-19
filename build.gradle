@@ -60,9 +60,9 @@ dependencies {
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
 
 /*
  * queryDSL 설정 추가

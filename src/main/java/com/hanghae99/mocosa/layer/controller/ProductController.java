@@ -59,7 +59,7 @@ public class ProductController {
                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
                                    Model model) {
 
-        ProductDetailResponseDto result = productService.getProductDetail(productId);
+        ProductDetailResponseDto result = productService.getProductDetail(productId, userDetails);
 
         if (userDetails != null) {
             model.addAttribute("email", userDetails.getUsername());

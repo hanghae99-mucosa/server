@@ -22,7 +22,6 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class ProductController {
 
     private final ProductService productService;
@@ -60,7 +59,17 @@ public class ProductController {
                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
                                    Model model) {
         ProductDetailResponseDto result = productService.getProductDetail(productId);
+
+        if (userDetails != null) {
+            model.addAttribute("email", userDetails.getUsername());
+
+            if (userDetails.getRole() == UserRoleEnum.ADMIN) {
+                model.addAttribute("admin", true);
+            }
+        }
+
         model.addAttribute("product", result);
+
         return "product_detail";
     }
 
@@ -77,6 +86,14 @@ public class ProductController {
     @GetMapping("/users/restock")
     public String getRestockList(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
         List<RestockListResponseDto> restockList = productService.getRestockList(userDetails);
+
+        if (userDetails != null) {
+            model.addAttribute("email", userDetails.getUsername());
+
+            if (userDetails.getRole() == UserRoleEnum.ADMIN) {
+                model.addAttribute("admin", true);
+            }
+        }
 
         model.addAttribute("restockList", restockList);
         model.addAttribute("restockRequestDto", new RestockRequestDto());

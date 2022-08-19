@@ -11,11 +11,13 @@ import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.model.Order;
 import com.hanghae99.mocosa.layer.model.Product;
+import com.hanghae99.mocosa.layer.model.RestockNotification;
 import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.OrderRepository;
 import com.hanghae99.mocosa.config.exception.custom.MyPageException;
 import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
+import com.hanghae99.mocosa.layer.repository.RestockNotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +33,8 @@ public class ProductService {
     private static final int PAGEABLE_SIZE = 12;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final RestockNotificationRepository restockNotificationRepository;
+
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
         validateSort(searchRequestDto);
@@ -86,18 +90,28 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDetailResponseDto getProductDetail(Long productId){
+    public ProductDetailResponseDto getProductDetail(Long productId, UserDetailsImpl userDetails){
 
         // ErrorCode.DETAIL_ETC 를 잡기 위한 로직
-        return getProductResponseDto(productId);
+        return getProductResponseDto(productId, userDetails);
     }
 
-    private ProductDetailResponseDto getProductResponseDto(Long productId){
+    private ProductDetailResponseDto getProductResponseDto(Long productId, UserDetailsImpl userDetails){
+
+
         Optional<Product> productByProductId = productRepository.findProductByProductId(productId);
+
         if (productByProductId.isEmpty()) {
             throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
         }
         Product product = productByProductId.orElseThrow(() -> new ProductException(ErrorCode.DETAIL_ETC));
+
+        Optional<RestockNotification> notification =
+                restockNotificationRepository
+                        .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
+
+        //true 면 작동하게 한다.
+        boolean empty = notification.isEmpty();
 
         ProductDetailResponseDto productResponseDto;
         try {
@@ -110,7 +124,9 @@ public class ProductService {
                     product.getPrice(),
                     product.getAmount(),
                     product.getReviewNum(),
-                    product.getReviewAvg());
+                    product.getReviewAvg(),
+                    empty);
+            //
         } catch (Exception e) {
             throw new ProductException(ErrorCode.DETAIL_ETC);
         }
@@ -126,11 +142,9 @@ public class ProductService {
 
     private OrderResponseDto createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
         Optional<Product> optional = productRepository.findById(productId);
-
         if (optional.isEmpty()) {
             throw new OrderException(ErrorCode.ORDER_ETC);
         }
-
         Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
 
 
@@ -139,12 +153,9 @@ public class ProductService {
         if (orderAmount > product.getAmount()) {
             throw new OrderException(ErrorCode.ORDER_NO_STOCK);
         }
-
         //Product 에서 상품의 수량을 제거하고
         // TotalPrice 를 가져오게 한다.
         Integer totalPrice = product.orderProduct(orderAmount);
-
-
         // 상품의 수량이 문제 없이 깍였다면 Order 새로운 Order을 생성하고 저장한다.
         Order order = Order.builder()
                 .product(product)

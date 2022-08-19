@@ -16,6 +16,8 @@ public class ProductDetailResponseDto {
     private final int reviewNum;
     private final float reviewAvg;
 
+    private final Boolean alert;
+
     public ProductDetailResponseDto(Long product_id,
                                     String name,
                                     String thumbnail,
@@ -24,8 +26,8 @@ public class ProductDetailResponseDto {
                                     int price,
                                     int amount,
                                     int reviewNum,
-                                    float reviewAvg
-                              ) {
+                                    float reviewAvg,
+                                    Boolean alert) {
         this.product_id = product_id;
         this.name = name;
         this.thumbnail = thumbnail;
@@ -35,5 +37,6 @@ public class ProductDetailResponseDto {
         this.amount = amount;
         this.reviewNum = reviewNum;
         this.reviewAvg = reviewAvg;
+        this.alert = alert;
     }
 }

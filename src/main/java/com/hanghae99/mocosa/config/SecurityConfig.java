@@ -40,11 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
                 .authorizeRequests()
-
+                
                 .antMatchers("/signup","/signin","/login","/").permitAll()
-                .antMatchers("/images/**","/css/**","basic.js").permitAll()
+                .antMatchers("/images/**","/css/**","/js/**").permitAll()
 
-                .antMatchers(HttpMethod.GET,"/search", "/products/**")
+                .antMatchers(HttpMethod.GET, "/products/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 
                 .antMatchers("/notification","/users/orders")

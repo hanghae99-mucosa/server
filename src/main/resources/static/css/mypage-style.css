@@ -1,0 +1,54 @@
+* {
+    font-family: 'Gowun Dodum', sans-serif;
+}
+
+.wrap {
+    width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.order-list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.thumbnail {
+    display: block;
+    margin: auto;
+    height: 150px;
+    alignment: center;
+}
+
+.order-info {
+    display: block;
+    margin: auto;
+}
+
+.category {
+    margin-bottom: 5px;
+}
+
+.total-price {
+    text-align: right;
+    font-size: 20px;
+}
+
+.form-wrap {
+    width: 600px;
+    margin: auto;
+}
+
+.amount-input {
+    margin-bottom: 16px;
+}
+
+.submit-button {
+    width: 100%;
+}

@@ -6,9 +6,11 @@ import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
 import com.hanghae99.mocosa.layer.model.QProduct;
 import com.hanghae99.mocosa.layer.model.User;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +26,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
-        List<SearchResponseDto> returnPost = queryFactory.select(Projections.fields(
+        JPQLQuery<SearchResponseDto> query = queryFactory.select(Projections.fields(
                         SearchResponseDto.class,
                         product.productId,
                         product.name,
@@ -45,13 +47,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .orderBy(orderBySort(searchRequestDto.getSort()))
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .limit(pageable.getPageSize());
 
-        return new PageImpl<>(returnPost, pageable, returnPost.size());
+        QueryResults<SearchResponseDto> returnPost = query.fetchResults();
+
+        return new PageImpl<>(returnPost.getResults(), pageable, returnPost.getTotal());
     }
 
     private BooleanBuilder keywordContains(String keyword) {
+        //초기 홈화면 검색
+        if (keyword.equals("ALL"))
+            return null;
         BooleanBuilder builder = new BooleanBuilder();
         builder
                 .or(product.name.contains(keyword))

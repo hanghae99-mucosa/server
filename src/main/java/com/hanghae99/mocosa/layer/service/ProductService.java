@@ -175,6 +175,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public RestockResponseDto restock(RestockRequestDto restockRequestDto) {
         Long productId = restockRequestDto.getProductId();
         int amount = restockRequestDto.getAmount();

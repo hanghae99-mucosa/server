@@ -26,7 +26,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/")
-    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails, SearchRequestDto searchRequestDto) {
         if (userDetails != null) {
             model.addAttribute("email", userDetails.getUsername());
 
@@ -34,6 +34,10 @@ public class ProductController {
                 model.addAttribute("admin", true);
             }
         }
+
+        Page<SearchResponseDto> searchResponseDtoList = productService.getProducts(searchRequestDto);
+
+        model.addAttribute("searchResponses", searchResponseDtoList);
 
         return "index";
     }

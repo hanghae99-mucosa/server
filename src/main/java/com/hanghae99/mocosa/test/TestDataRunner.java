@@ -90,6 +90,15 @@ public class TestDataRunner implements ApplicationRunner {
         Product testProduct7 = new Product(7L, testBrand1, "릴렉스 핏 크루 넥 긴팔 티셔츠", "image7.png", testCategory1, 20000, 100, 5000, 3F);
         Product testProduct8 = new Product(8L, testBrand1, "[쿨탠다드] 우먼즈 스트레이트 히든 밴딩 슬랙스 [블랙]", "image8.png", testCategory7, 34900, 0, 393, 4.7F);
 
+        Product testProduct9 = new Product(9L, testBrand1, "블루 오버핏 플라워 아트웍 맨투맨", "image.png", testCategory1, 59000, 100, 69058, 4.8F);
+        Product testProduct10 = new Product(10L, testBrand2, "빅 트위치 로고 티셔츠 화이트", "image2.png", testCategory3, 65030, 0, 590, 4.5F);
+        Product testProduct11 = new Product(11L, testBrand3, " 미시간 울버린 피그먼트 후드티 블랙 차콜", "image3.png", testCategory4, 37000, 79, 234, 4.2F);
+        Product testProduct12 = new Product(12L, testBrand4, "와이드 데님 팬츠", "image4.png", testCategory5, 33000, 50, 22233, 3.7F);
+        Product testProduct13 = new Product(13L, testBrand5, "테이퍼드 와이드 원턱 린넨 팬츠_Martine Olive", "image5.png", testCategory6, 24900, 44, 990, 2.5F);
+        Product testProduct14 = new Product(14L, testBrand6, " TC2-TS1203 하프 베네치아 반팔티-네이비", "image6.png", testCategory2, 43500, 9999, 40, 3.8F);
+        Product testProduct15 = new Product(15L, testBrand1, "베이직 레이어드 티셔츠", "image7.png", testCategory1, 27000, 100, 5000, 3F);
+        Product testProduct16 = new Product(16L, testBrand1, "[유아인 착용 상품] 테이퍼드 히든 밴딩 크롭 슬랙스 [블랙]", "image8.png", testCategory7, 25900, 0, 393, 4.7F);
+
         productRepository.save(testProduct1);
         productRepository.save(testProduct2);
         productRepository.save(testProduct3);
@@ -98,6 +107,14 @@ public class TestDataRunner implements ApplicationRunner {
         productRepository.save(testProduct6);
         productRepository.save(testProduct7);
         productRepository.save(testProduct8);
+        productRepository.save(testProduct9);
+        productRepository.save(testProduct10);
+        productRepository.save(testProduct11);
+        productRepository.save(testProduct12);
+        productRepository.save(testProduct13);
+        productRepository.save(testProduct14);
+        productRepository.save(testProduct15);
+        productRepository.save(testProduct16);
 
         Order testOrder1 = new Order(1L, testUser4, testProduct1, 100, 1069000);
         Order testOrder2 = new Order(2L, testUser4, testProduct7, 1, 20000);

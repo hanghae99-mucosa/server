@@ -3,9 +3,7 @@ package com.hanghae99.mocosa.layer.repository;
 import com.hanghae99.mocosa.layer.dto.product.RestockListResponseDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchRequestDto;
 import com.hanghae99.mocosa.layer.dto.product.SearchResponseDto;
-import com.hanghae99.mocosa.layer.model.QCategory;
-import com.hanghae99.mocosa.layer.model.QProduct;
-import com.hanghae99.mocosa.layer.model.User;
+import com.hanghae99.mocosa.layer.model.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
@@ -24,7 +22,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     QProduct product = QProduct.product;
-    QCategory category = QCategory.category1;
+    QBrand brand = QBrand.brand;
+    QCategory parentCategory = QCategory.category1;
 
     @Override
     public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
@@ -33,15 +32,16 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.productId,
                         product.name,
                         product.thumbnail,
-                        product.brand.name.as("brandName"),
-                        product.category.category,
+                        brand.name.as("brandName"),
+                        parentCategory.category,
                         product.price,
                         product.amount,
                         product.reviewNum,
                         product.reviewAvg
                 ))
                 .from(product)
-                .join(category).on(product.category.parentCategory.eq(category.categoryId))
+                .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
+                .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
                 .where(
                         keywordContains(searchRequestDto.getKeyword()),
                         categoryEq(searchRequestDto.getCategoryFilter()),
@@ -64,21 +64,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
         builder
                 .or(product.name.contains(keyword))
-                .or(product.brand.name.contains(keyword));
+                .or(brand.name.contains(keyword));
 
         return builder;
     }
 
-    private BooleanBuilder categoryEq(String inputCategory) {
-        if(inputCategory==null)
-            return null;
-
-        BooleanBuilder builder = new BooleanBuilder();
-        builder
-                .or(product.category.category.eq(inputCategory))
-                .or(category.category.eq(inputCategory));
-
-        return builder;
+    private BooleanExpression categoryEq(String inputCategory) {
+        return inputCategory == null ? null : parentCategory.category.eq(inputCategory);
     }
 
     private BooleanExpression reviewAvgGt(Float reviewAvg) {

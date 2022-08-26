@@ -33,6 +33,10 @@ public class TraceRqAndRsAOP {
 
         JSONObject rqLogJson = new JSONObject();
         for (Object rq : request) {
+            if(rq == null) {
+                break;
+            }
+
             rqLogJson.put(method.getName(), rq.toString());
         }
         String logRq = rqLogJson.toString();

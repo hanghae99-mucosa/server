@@ -40,6 +40,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+    // AOP
+    implementation "org.springframework.boot:spring-boot-starter-aop"
 
     // 테스트 코드를 위한 Lombok 라이브러리
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
@@ -79,7 +81,7 @@ sourceSets {
     main.java.srcDir querydslDir
 }
 // querydsl 컴파일시 사용할 옵션 설정
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 // querydsl 이 compileClassPath 를 상속하도록 설정

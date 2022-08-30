@@ -24,20 +24,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     QProduct product = QProduct.product;
     QBrand brand = QBrand.brand;
     QCategory parentCategory = QCategory.category1;
-    @Override
-    public List<RestockListResponseDto> findBySeller(User user) {
-        return queryFactory.select(Projections.fields(
-                        RestockListResponseDto.class,
-                        product.productId,
-                        product.name.as("productName")
-                ))
-                .from(product)
-                .where(
-                        product.brand.user.userId.eq(user.getUserId()),
-                        product.amount.eq(0)
-                )
-                .fetch();
-    }
 
     @Override
     public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
@@ -155,5 +141,20 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         // default 정렬조건 "리뷰순"
         return product.reviewNum.desc();
+    }
+
+    @Override
+    public List<RestockListResponseDto> findBySeller(User user) {
+        return queryFactory.select(Projections.fields(
+                        RestockListResponseDto.class,
+                        product.productId,
+                        product.name.as("productName")
+                ))
+                .from(product)
+                .where(
+                        product.brand.user.userId.eq(user.getUserId()),
+                        product.amount.eq(0)
+                )
+                .fetch();
     }
 }

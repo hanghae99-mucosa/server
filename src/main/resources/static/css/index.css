@@ -11294,8 +11294,23 @@ textarea.form-control-lg {
     margin-right: 20px;
 }
 
+.search-wrap {
+    background-color: #2f2f2f;
+}
+
+.search-keyword-wrap {
+    margin: 0 auto;
+    padding: 30px 0;
+    width: 1200px;
+}
+
+.vertical-align {
+    margin: auto;
+}
+
 .filter-wrap {
     margin: 0 auto;
+    padding: 15px 0;
     width: 1200px;
 }
 

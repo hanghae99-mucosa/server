@@ -87,23 +87,23 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         List<SearchResponseDto> returnPost = queryFactory.select(Projections.fields(
-                                                SearchResponseDto.class,
-                                                product.productId,
-                                                product.name,
-                                                product.thumbnail,
-                                                brand.name.as("brandName"),
-                                                parentCategory.category,
-                                                product.price,
-                                                product.amount,
-                                                product.reviewNum,
-                                                product.reviewAvg
-                                            ))
-                                            .from(product)
-                                            .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
-                                            .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
-                                            .where(product.productId.in(ids))
-                                            .orderBy(orderBySort(searchRequestDto.getSort()))
-                                            .fetch();
+                SearchResponseDto.class,
+                product.productId,
+                product.name,
+                product.thumbnail,
+                brand.name.as("brandName"),
+                parentCategory.category,
+                product.price,
+                product.amount,
+                product.reviewNum,
+                product.reviewAvg
+        ))
+                .from(product)
+                .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
+                .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
+                .where(product.productId.in(ids))
+                .orderBy(orderBySort(searchRequestDto.getSort()))
+                .fetch();
 
         return new PageImpl<>(returnPost, pageable,totalCount);
     }

@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,40 +29,87 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public Page<SearchResponseDto> findBySearchRequestDto(SearchRequestDto searchRequestDto, Pageable pageable) {
-        JPQLQuery<SearchResponseDto> query = queryFactory.select(Projections.fields(
-                        SearchResponseDto.class,
-                        product.productId,
-                        product.name,
-                        product.thumbnail,
-                        brand.name.as("brandName"),
-                        parentCategory.category,
-                        product.price,
-                        product.amount,
-                        product.reviewNum,
-                        product.reviewAvg
-                ))
-                .from(product)
-                .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
-                .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
-                .where(
-                        keywordContains(searchRequestDto.getKeyword()),
-                        categoryEq(searchRequestDto.getCategoryFilter()),
-                        priceBetween(searchRequestDto.getMinPriceFilter(),searchRequestDto.getMaxPriceFilter()),
-                        reviewAvgGt(searchRequestDto.getReviewFilter())
-                )
-                .orderBy(orderBySort(searchRequestDto.getSort()))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize());
+        JPQLQuery<Product> countQuery;
+        List<Long> ids;
 
-        QueryResults<SearchResponseDto> returnPost = query.fetchResults();
+        if(searchRequestDto.getKeyword().equals("ALL")) {
+            countQuery = queryFactory.selectFrom(product)
+                    .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
+                    .where(
+                            categoryEq(searchRequestDto.getCategoryFilter()),
+                            priceBetween(searchRequestDto.getMinPriceFilter(),searchRequestDto.getMaxPriceFilter()),
+                            reviewAvgGt(searchRequestDto.getReviewFilter())
+                    );
 
-        return new PageImpl<>(returnPost.getResults(), pageable, returnPost.getTotal());
+            ids = queryFactory.select(product.productId)
+                    .from(product)
+                    .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
+                    .where(
+                            categoryEq(searchRequestDto.getCategoryFilter()),
+                            priceBetween(searchRequestDto.getMinPriceFilter(),searchRequestDto.getMaxPriceFilter()),
+                            reviewAvgGt(searchRequestDto.getReviewFilter())
+                    )
+                    .orderBy(orderBySort(searchRequestDto.getSort()))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+        } else {
+            countQuery = queryFactory.selectFrom(product)
+                    .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
+                    .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
+                    .where(
+                            keywordContains(searchRequestDto.getKeyword()),
+                            categoryEq(searchRequestDto.getCategoryFilter()),
+                            priceBetween(searchRequestDto.getMinPriceFilter(),searchRequestDto.getMaxPriceFilter()),
+                            reviewAvgGt(searchRequestDto.getReviewFilter())
+                    );
+
+            ids = queryFactory.select(product.productId)
+                    .from(product)
+                    .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
+                    .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
+                    .where(
+                            keywordContains(searchRequestDto.getKeyword()),
+                            categoryEq(searchRequestDto.getCategoryFilter()),
+                            priceBetween(searchRequestDto.getMinPriceFilter(),searchRequestDto.getMaxPriceFilter()),
+                            reviewAvgGt(searchRequestDto.getReviewFilter())
+                    )
+                    .orderBy(orderBySort(searchRequestDto.getSort()))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+        }
+
+        long totalCount = countQuery.fetchCount();
+
+        if(ids.isEmpty()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, totalCount);
+        }
+
+        List<SearchResponseDto> returnPost = queryFactory.select(Projections.fields(
+                                                SearchResponseDto.class,
+                                                product.productId,
+                                                product.name,
+                                                product.thumbnail,
+                                                brand.name.as("brandName"),
+                                                parentCategory.category,
+                                                product.price,
+                                                product.amount,
+                                                product.reviewNum,
+                                                product.reviewAvg
+                                            ))
+                                            .from(product)
+                                            .innerJoin(brand).on(product.brand.brandId.eq(brand.brandId))
+                                            .innerJoin(parentCategory).on(product.category.parentCategory.eq(parentCategory.categoryId))
+                                            .where(product.productId.in(ids))
+                                            .orderBy(orderBySort(searchRequestDto.getSort()))
+                                            .fetch();
+
+        return new PageImpl<>(returnPost, pageable,totalCount);
     }
 
     private BooleanBuilder keywordContains(String keyword) {
         //초기 홈화면 검색
-        if (keyword.equals("ALL"))
-            return null;
         BooleanBuilder builder = new BooleanBuilder();
         builder
                 .or(product.name.contains(keyword))
@@ -100,10 +149,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public List<RestockListResponseDto> findBySeller(User user) {
         return queryFactory.select(Projections.fields(
-                        RestockListResponseDto.class,
-                        product.productId,
-                        product.name.as("productName")
-                ))
+                RestockListResponseDto.class,
+                product.productId,
+                product.name.as("productName")
+        ))
                 .from(product)
                 .where(
                         product.brand.user.userId.eq(user.getUserId()),

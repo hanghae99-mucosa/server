@@ -40,6 +40,9 @@
         <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">
             마이페이지 🙋
         </button>
+        <button onclick="logout()" type="button" class="btn btn-dark">
+            로그아웃 💨
+        </button>
     </th:block>
     <th:block th:unless="${email != null}">
         <button type="button" class="btn btn-dark" onclick="location.href='/login' ">로그인 ⌨️</button>
@@ -252,6 +255,6 @@
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
-<script src="js/index.js"></script>
+<script src="/js/index.js"></script>
 </body>
 </html>

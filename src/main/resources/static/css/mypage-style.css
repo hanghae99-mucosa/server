@@ -30,9 +30,17 @@
     margin-bottom: 10px;
 }
 
+.vertical-align {
+    margin: auto;
+}
+
+.cancel-button {
+    text-align: right;
+}
+
 .thumbnail {
     display: block;
-    margin: auto;
+    margin: 5px auto;
     height: 150px;
     alignment: center;
 }

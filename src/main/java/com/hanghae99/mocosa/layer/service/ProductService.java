@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.List;
@@ -141,21 +142,12 @@ public class ProductService {
     }
 
     private OrderResponseDto createOrderAndReduceProduct(Long productId, Integer orderAmount, User userDetails) {
-        Optional<Product> optional = productRepository.findById(productId);
-        if (optional.isEmpty()) {
-            throw new OrderException(ErrorCode.ORDER_ETC);
-        }
-        Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
+        //
+        Product product = reduceProductAmount(productId, orderAmount);
 
+        // 주문 가격 계산
+        Integer totalPrice = product.calculateTotalPrice(orderAmount);
 
-        // 가져온 상품의 수량과 사용자가 원하는 상품의 수량을 입력하게 한다.
-        // throw new OrderException(ErrorCode.ORDER_NO_STOCK);
-        if (orderAmount > product.getAmount()) {
-            throw new OrderException(ErrorCode.ORDER_NO_STOCK);
-        }
-        //Product 에서 상품의 수량을 제거하고
-        // TotalPrice 를 가져오게 한다.
-        Integer totalPrice = product.orderProduct(orderAmount);
         // 상품의 수량이 문제 없이 깍였다면 Order 새로운 Order을 생성하고 저장한다.
         Order order = Order.builder()
                 .product(product)
@@ -166,6 +158,30 @@ public class ProductService {
 
         orderRepository.save(order);
         return new OrderResponseDto("주문에 성공하셨습니다.");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Product reduceProductAmount(Long productId, Integer orderAmount) {
+        //1. product를 id를 가지고 탐색
+        Optional<Product> optional = productRepository.findByIdWithLock(productId);
+        if (optional.isEmpty()) {
+            throw new OrderException(ErrorCode.ORDER_ETC);
+        }
+        Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
+
+
+        // 2. 주문하고자 하는 수량의 유효성 검사
+        if (orderAmount > product.getAmount()) {
+            throw new OrderException(ErrorCode.ORDER_NO_STOCK);
+        }
+
+        // 3. 재고 감소
+        product.decrease(orderAmount);
+
+        // 4. DB에 반영후 lock 해제
+        productRepository.saveAndFlush(product);
+
+        return product;
     }
 
     public List<RestockListResponseDto> getRestockList(UserDetailsImpl userDetails) {

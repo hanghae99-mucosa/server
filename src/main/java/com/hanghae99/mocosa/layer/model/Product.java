@@ -46,10 +46,12 @@ public class Product {
         return this.category.getCategory();
     }
 
-    public Integer orderProduct(int amount) {
-        Integer sum = price * amount;
-        this.amount -= amount;
-        return sum;
+    public Integer calculateTotalPrice(int amount) {
+        return price * amount;
+    }
+
+    public void decrease(int orderAmount){
+        this.amount -= orderAmount;
     }
 
     public void update(int amount) {

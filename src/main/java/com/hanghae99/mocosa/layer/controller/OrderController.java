@@ -1,6 +1,7 @@
 package com.hanghae99.mocosa.layer.controller;
 
 import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
+import com.hanghae99.mocosa.layer.dto.order.OrderCancelResponseDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderHistoryResponseDto;
 import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.service.OrderService;
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -37,4 +40,11 @@ public class OrderController {
         return "user-mypage";
     }
 
+    @DeleteMapping("/users/orders/{orderId}")
+    public ResponseEntity<OrderCancelResponseDto> cancelOrder(@PathVariable Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        OrderCancelResponseDto orderCancelResponseDto = orderService.cancelOrder(orderId, userDetails);
+
+        return new ResponseEntity<>(orderCancelResponseDto, HttpStatus.OK);
+    }
 }

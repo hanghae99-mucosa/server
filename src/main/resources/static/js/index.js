@@ -86,10 +86,10 @@ function createUrl(key, value, changed, url){
 
 function logout() {
     document.cookie = 'token' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    if (window.location != 'http://localhost:8080/' ) {
-        window.location.href='http://localhost:8080/';
+    if (window.location.href != '/' ) {
+        window.location.href='/';
     }
-    if (window.location == 'http://localhost:8080/' ) {
+    if (window.location.href == '/' ) {
         location.reload();
     }
     alert('정상적으로 로그아웃이 되었습니다.');

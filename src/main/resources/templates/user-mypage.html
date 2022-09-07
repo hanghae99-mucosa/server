@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,10 +7,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 
     <link th:href="@{/css/mypage-style.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/pagination-style.css}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Prompt:wght@900&display=swap" rel="stylesheet">
+    <script th:src="@{/js/mypage.js}" type="text/javascript"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Prompt:wght@900&display=swap"
+          rel="stylesheet">
 
     <title>마이페이지</title>
 </head>
@@ -20,26 +25,27 @@
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">MUCOSA</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyword">
-                    <button class="btn btn-outline-success" type="button" onclick = "searchByKeyword()">Search</button>
-                </form>
-            </div>
         </div>
         <th:block th:if="${email != null}">
             <button type="button" class="btn btn-dark position-relative" id="alarm-button">
                 알림 🔔
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              99+
-              <span class="visually-hidden">unread messages</span>
-            </span>
+          99+
+          <span class="visually-hidden">unread messages</span>
+        </span>
             </button>
-            <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">마이페이지 🙋</button>
-            <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">마이페이지 🙋</button>
+            <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">
+                마이페이지 🙋
+            </button>
+            <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">
+                마이페이지 🙋
+            </button>
+            <button onclick="logout()" type="button" class="btn btn-dark">
+                로그아웃 💨
+            </button>
         </th:block>
         <th:block th:unless="${email != null}">
-            <button type="button" class="btn btn-dark" onclick = "location.href='/login' ">로그인 ⌨️</button>
+            <button type="button" class="btn btn-dark" onclick="location.href='/login' ">로그인 ⌨️</button>
         </th:block>
     </nav>
 
@@ -47,14 +53,24 @@
         <h2 class="title" th:text="주문내역"></h2>
 
         <div class="card border-dark mb-3 order-list" th:each="orderHistory : ${orderHistorys}">
-            <div class="card-header" th:text="${orderHistory.createdAt}"></div>
+            <div class="card-header">
+                <div class="row">
+                    <div class="col vertical-align">
+                        <span th:text="${orderHistory.createdAt}"></span>
+                    </div>
+                    <div class="col-2 cancel-button">
+                        <button type="button" th:onclick="|cancelOrder(${orderHistory.orderId})|" class="btn btn-secondary btn-sm">주문 취소</button>
+                    </div>
+                </div>
+            </div>
             <div class="row g-0">
                 <div class="col-md-4">
                     <img th:src="${orderHistory.thumbnail}" class="img-fluid rounded-start thumbnail" alt="상품 이미지">
                 </div>
                 <div class="col-md-8 order-info">
                     <div class="card-body">
-                        <p class="card-text category"><small class="text-muted" th:text="${orderHistory.brandName}"></small></p>
+                        <p class="card-text category"><small class="text-muted" th:text="${orderHistory.brandName}"></small>
+                        </p>
                         <h5 class="card-title" th:text="${orderHistory.productName}"></h5>
                         <p class="card-text">
                             <span th:text="${orderHistory.price} + 원"></span>
@@ -69,9 +85,9 @@
 
         <!--페이지네이션-->
         <ul class="pagination" style="justify-content: center" th:with="total=${orderHistorys.totalPages},
-                                                                        current=${orderHistorys.pageable.pageNumber + 1},
-                                                                        start=${(orderHistorys.pageable.pageNumber / 10) * 10 + 1},
-                                                                        end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
+                                                                            current=${orderHistorys.pageable.pageNumber + 1},
+                                                                            start=${(orderHistorys.pageable.pageNumber / 10) * 10 + 1},
+                                                                            end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
 
             <li th:if="${current} == 1" class="page-item disabled">
                 <a class="page-link font-color" aria-label="First">
@@ -99,7 +115,8 @@
 
             <li th:each="num : ${#numbers.sequence(start, end)}" class="page-item">
                 <span th:if="${num} == ${current}" class="page-link current-page" th:text="${num}" disabled></span>
-                <a th:unless="${num} == ${current}" class="page-link font-color" th:href="@{'/users/orders?page=' + ${num}}" th:text="${num}"></a>
+                <a th:unless="${num} == ${current}" class="page-link font-color" th:href="@{'/users/orders?page=' + ${num}}"
+                   th:text="${num}"></a>
             </li>
 
 
@@ -128,5 +145,7 @@
 
         </ul>
     </div>
+    <!-- Core theme JS-->
+    <script src="/js/index.js"></script>
 </body>
 </html>

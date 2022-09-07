@@ -1,9 +1,26 @@
+function cancelOrder(orderId) {
+    let currentPage = new URL(location.href).searchParams.get('page');
+
+    if(currentPage == null) {
+        currentPage = 1;
+    }
+
+    $.ajax({
+        type: "DELETE",
+        url: `/users/orders/` + orderId,
+        success: function (response) {
+            const message = response.message;
+
+            alert(message);
+
+            window.location.href = '/users/orders?page=' + currentPage;
+        }
+    })
+}
+
 function restock() {
     const productId = $('#selectedProductId').val();
     const amount = $('#inputAmount').val();
-
-    console.log(productId);
-    console.log(amount);
 
     if(productId == 0) {
         alert("재입고 등록할 상품을 선택하세요.");

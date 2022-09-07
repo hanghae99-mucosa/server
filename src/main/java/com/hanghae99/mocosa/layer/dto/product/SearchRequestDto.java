@@ -14,11 +14,13 @@ public class SearchRequestDto implements Serializable {
     Integer minPriceFilter;
     Integer maxPriceFilter;
     Float reviewFilter;
+    String searchType;
     String keyword;
 
     public SearchRequestDto() {
         this.page = 1;
         this.sort = "리뷰순";
+        this.searchType = "상품명";
         this.keyword = "ALL";
     }
 }

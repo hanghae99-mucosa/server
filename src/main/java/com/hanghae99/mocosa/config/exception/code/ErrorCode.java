@@ -87,6 +87,19 @@ public enum ErrorCode {
     MYPAGE_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
 
     /**
+     * 주문 취소
+     *
+     * ORDERCANCEL_NO_ORDER => 존재하지 않는 주문ID로 요청하는 경우
+     * ORDERCANCEL_BAD_REQUEST => 로그인 사용자와 구매자가 다른 경우
+     * ORDERCANCEL_ETC => 그 외 실패 시 따로 메세지를 세팅
+     */
+
+    ORDERCANCEL_NO_ORDER(HttpStatus.BAD_REQUEST, "존재하지 않는 주문번호입니다."),
+    ORDERCANCEL_BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    ORDERCANCEL_ETC(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다."),
+
+
+    /**
      * 재입고 등록
      *
      * RESTOCK_BAD_REQUEST => 수량을 0개로 요청하는 경우

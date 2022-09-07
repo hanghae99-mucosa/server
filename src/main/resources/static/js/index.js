@@ -1,5 +1,8 @@
 function searchByKeyword(){
-    var url = "?keyword=" + document.getElementById('keyword').value;
+    const type = $('#searchType').val();
+    const keyword = $('#searchKeyword').val();
+
+    let url = "?searchType=" + type + "&keyword=" + keyword;
 
     window.location.href = url;
 }
@@ -79,6 +82,17 @@ function createUrl(key, value, changed, url){
     }
 
     return url;
+}
+
+function logout() {
+    document.cookie = 'token' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    if (window.location != 'http://localhost:8080/' ) {
+        window.location.href='http://localhost:8080/';
+    }
+    if (window.location == 'http://localhost:8080/' ) {
+        location.reload();
+    }
+    alert('정상적으로 로그아웃이 되었습니다.');
 }
 
 // 1.?가 있다면

@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Shop Homepage - Start Bootstrap Template</title>
+    <title>MUCOSA</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
     <!-- Bootstrap icons-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/index.css" rel="stylesheet"/>
@@ -19,12 +20,6 @@
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">MUCOSA</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyword">
-                <button class="btn btn-outline-success" type="button" onclick="searchByKeyword()">Search</button>
-            </form>
-        </div>
     </div>
     <th:block th:if="${email != null}">
         <button type="button" class="btn btn-dark position-relative" id="alarm-button">
@@ -47,7 +42,31 @@
 </nav>
 
 <!-- Header-->
-<header class="bg-light py-1">
+<header class="bg-light py-0">
+    <div class="search-wrap">
+        <div class="container text-center search-keyword-wrap">
+            <div class="row">
+                <div class="col-2 vertical-align">
+                    <select class="form-select form-select-lg" id="searchType">
+                        <option th:value="상품명" th:text="상품명" selected></option>
+                        <option th:value="브랜드명" th:text="브랜드명"></option>
+                    </select>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col vertical-align">
+                            <input class="form-control form-control-lg search-keyword" id="searchKeyword" type="text" placeholder="검색어를 입력하세요." aria-label="검색어를 입력하세요.">
+                        </div>
+                        <div class="col-1 vertical-align">
+                            <button type="button" onclick="searchByKeyword()" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container text-center filter-wrap">
         <!--    가격 필터-->
         <div class="row">

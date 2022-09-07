@@ -1,5 +1,8 @@
 function searchByKeyword(){
-    var url = "?keyword=" + document.getElementById('keyword').value;
+    const type = $('#searchType').val();
+    const keyword = $('#searchKeyword').val();
+
+    let url = "?searchType=" + type + "&keyword=" + keyword;
 
     window.location.href = url;
 }

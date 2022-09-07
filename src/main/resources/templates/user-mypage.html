@@ -25,15 +25,18 @@
             <button type="button" class="btn btn-dark position-relative" id="alarm-button">
                 알림 🔔
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              99+
-              <span class="visually-hidden">unread messages</span>
-            </span>
+          99+
+          <span class="visually-hidden">unread messages</span>
+        </span>
             </button>
             <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">
                 마이페이지 🙋
             </button>
             <button th:unless="${admin} == true" onclick="location.href='/users/orders'" type="button" class="btn btn-dark">
                 마이페이지 🙋
+            </button>
+            <button onclick="logout()" type="button" class="btn btn-dark">
+                로그아웃 💨
             </button>
         </th:block>
         <th:block th:unless="${email != null}">
@@ -126,5 +129,7 @@
 
         </ul>
     </div>
+    <!-- Core theme JS-->
+    <script src="/js/index.js"></script>
 </body>
 </html>

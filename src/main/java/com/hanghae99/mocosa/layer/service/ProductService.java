@@ -35,7 +35,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final RestockNotificationRepository restockNotificationRepository;
-
+    private final RestockNotificationService restockNotificationService;
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
         validateSort(searchRequestDto);
@@ -211,7 +211,11 @@ public class ProductService {
 
         Product product = productRepository.findById(productId).get();
 
-        product.update(amount);
+//        product.update(amount);
+
+        // 재입고 알림
+        List<RestockNotification> restockList = restockNotificationRepository.findAllByProduct(product);
+        restockList.forEach(restockNotificationService::send);
 
         return new RestockResponseDto("재입고 등록이 완료되었습니다.");
     }

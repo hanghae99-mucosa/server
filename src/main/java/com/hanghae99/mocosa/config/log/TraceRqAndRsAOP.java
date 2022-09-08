@@ -46,11 +46,14 @@ public class TraceRqAndRsAOP {
         Object rs = joinPoint.proceed();
         //response Log 를 위한 로직
 
-        JSONObject rsLogJson = new JSONObject();
-        rsLogJson.put(method.getName(), rs.toString());
-        String logRr = rsLogJson.toString();
+        if(rs != null) {
+            JSONObject rsLogJson = new JSONObject();
+            rsLogJson.put(method.getName(), rs.toString());
+            String logRr = rsLogJson.toString();
 
-        log.info("response ={}",logRr);
+            log.info("response ={}",logRr);
+        }
+
         return rs;
     }
 

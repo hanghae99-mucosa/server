@@ -3,6 +3,7 @@ package com.hanghae99.mocosa.layer.controller;
 import com.hanghae99.mocosa.config.auth.UserDetailsImpl;
 import com.hanghae99.mocosa.layer.dto.notify.NotifyRequestDto;
 import com.hanghae99.mocosa.layer.dto.notify.NotifyResponseDto;
+import com.hanghae99.mocosa.layer.model.UserRoleEnum;
 import com.hanghae99.mocosa.layer.repository.UserRepository;
 import com.hanghae99.mocosa.layer.service.RestockNotificationService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 @Controller
@@ -36,5 +38,14 @@ public class RestockNotificationController {
 
         NotifyResponseDto result = restockNotificationService.deleteNotify(notifyRequestDto, userDetails.getUser());
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/subscribe/{email}", produces = "text/event-stream")
+    public SseEmitter subscribe(@PathVariable String email,
+                                @AuthenticationPrincipal UserDetailsImpl  userDetails) {
+        if (userDetails.getRole() == UserRoleEnum.ADMIN){
+            return null;
+        }
+        return restockNotificationService.subscribe(email, userDetails.getUser());
     }
 }

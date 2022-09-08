@@ -60,7 +60,7 @@
         password: $('#password').val()
       }),
       success: function (response, textStatus, request) {
-        console.log("here")
+
         const jwtToken = request.getResponseHeader("Authorization");
 
         if (jwtToken) {

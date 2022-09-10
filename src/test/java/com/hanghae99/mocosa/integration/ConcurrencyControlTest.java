@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class ConcurrencyControlTest {
-    public static int CONCURRENCY_COUNT = 100;
+    public static int CONCURRENCY_COUNT = 5000;
     @Autowired
     private ProductService productService;
 

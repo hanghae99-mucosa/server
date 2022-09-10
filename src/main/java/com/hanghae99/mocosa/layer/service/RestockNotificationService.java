@@ -93,9 +93,9 @@ public class RestockNotificationService {
         return new NotifyResponseDto("재입고 알림 삭제를 성공했습니다.");
     }
 
-    public SseEmitter subscribe(String email, User user) {
         // 1
-        String id = email;
+    public SseEmitter subscribe(User user) {
+        String id = user.getEmail();
 
         // 2
         emitterRepository.deleteById(id);
@@ -106,7 +106,7 @@ public class RestockNotificationService {
 
         // 3
         // 503 에러를 방지하기 위한 더미 이벤트 전송
-        sendToClient(emitter, id, "EventStream Created. [email=" + email + "]");
+        sendToClient(emitter, id, "EventStream Created. [email=" + id + "]");
 
         // 4
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
@@ -155,6 +155,6 @@ public class RestockNotificationService {
             sendToClient(sseEmitter, id, restockNotification);
         }
 
-        checkAlarmFlag(restockNotification);
+//        checkAlarmFlag(restockNotification);
     }
 }

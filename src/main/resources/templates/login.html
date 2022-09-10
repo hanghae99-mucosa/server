@@ -70,12 +70,33 @@
               "Authorization": jwtToken
             }
           });
+          activateAlarm();
           window.location.href = '/';
         } else {
           window.location.href = '/login?error';
         }
       }
     })
+  }
+
+  var webworker;
+
+  function activateAlarm() {
+
+    if(typeof(Worker) !== "undefined") {
+
+      if(typeof(webworker) == "undefined") { webworker = new Worker("js/alarm.js"); }
+
+    }
+
+  }
+
+  function deactivateAlarm() {
+
+    webworker.terminate();
+
+    webworker = undefined;
+
   }
 </script>
 </html>

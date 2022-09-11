@@ -4,20 +4,28 @@ import com.hanghae99.mocosa.layer.model.Product;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
 import com.hanghae99.mocosa.layer.repository.UserRepository;
 import com.hanghae99.mocosa.layer.service.ProductService;
+import com.hanghae99.mocosa.layer.service.RedisService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class ConcurrencyControlTest {
-    public static int CONCURRENCY_COUNT = 5000;
+    public int lockCount = 0;
+    public int unLockCount = 0;
+    public static int CONCURRENCY_COUNT = 100;
     @Autowired
     private ProductService productService;
 
@@ -25,7 +33,10 @@ public class ConcurrencyControlTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private RedisService redisService;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @AfterEach
     public void reset() {
@@ -48,7 +59,7 @@ public class ConcurrencyControlTest {
             executorService.submit(() -> {
                 try {
 
-                    productService.reduceProductAmount(985L,1);
+                    reduceProductAmount(985L,1);
                 } finally {
                     latch.countDown();
                 }
@@ -57,8 +68,52 @@ public class ConcurrencyControlTest {
 
         latch.await();
 
+
         Product product = productRepository.findById(985L).orElseThrow();
 
+        System.out.println("남은 갯수 : "+product.getAmount());
+        System.out.println("Lock 횟수 : "+lockCount);
+        System.out.println("unLock 횟수 : "+unLockCount);
+
         assertEquals(0, product.getAmount());
+        assertEquals(100, lockCount);
+        assertEquals(100, unLockCount);
+
     }
+
+    public void reduceProductAmount(Long productId, Integer orderAmount) {
+
+        RLock lock = redissonClient.getLock(productId.toString());
+
+        try{
+            boolean available = lock.tryLock(5, 3, TimeUnit.SECONDS);
+
+            if(!available){
+                return ;
+            } else {
+                lockCount++;
+            }
+
+            reduceAmount(productId, orderAmount);
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (lock != null && lock.isLocked()) {
+                lock.unlock();
+                unLockCount++;
+            }
+        }
+
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void reduceAmount(Long productId, Integer orderAmount) {
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        product.decrease(orderAmount);
+
+        productRepository.saveAndFlush(product);
+    }
+
 }

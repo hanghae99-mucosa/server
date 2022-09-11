@@ -19,6 +19,8 @@ import com.hanghae99.mocosa.layer.dto.product.*;
 import com.hanghae99.mocosa.layer.repository.ProductRepository;
 import com.hanghae99.mocosa.layer.repository.RestockNotificationRepository;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final RestockNotificationRepository restockNotificationRepository;
+
+    private final RedissonClient redissonClient;
 
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
@@ -160,10 +165,54 @@ public class ProductService {
         return new OrderResponseDto("주문에 성공하셨습니다.");
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Product reduceProductAmount(Long productId, Integer orderAmount) {
-        //1. product를 id를 가지고 탐색
-        Optional<Product> optional = productRepository.findByIdWithLock(productId);
+////      1. product를 id를 가지고 탐색
+//        Optional<Product> optional = productRepository.findByIdWithLock(productId);
+//        if (optional.isEmpty()) {
+//            throw new OrderException(ErrorCode.ORDER_ETC);
+//        }
+//        Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
+//
+//
+//        // 2. 주문하고자 하는 수량의 유효성 검사
+//        if (orderAmount > product.getAmount()) {
+//            throw new OrderException(ErrorCode.ORDER_NO_STOCK);
+//        }
+
+
+        RLock lock = redissonClient.getLock(productId.toString());
+
+        try{
+            boolean available = lock.tryLock(2, 3, TimeUnit.SECONDS);
+
+            if(!available){
+                return null;
+            }
+
+            Product product = getProduct(productId, orderAmount);
+
+            return product;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (lock != null && lock.isLocked()) {
+                lock.unlock();
+            }
+        }
+
+        // 3. 재고 감소
+//        product.decrease(orderAmount);
+//
+//        // 4. DB에 반영후 lock 해제
+//        productRepository.saveAndFlush(product);
+//
+//        return product;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Product getProduct(Long productId, Integer orderAmount) {
+        Optional<Product> optional = productRepository.findById(productId);
         if (optional.isEmpty()) {
             throw new OrderException(ErrorCode.ORDER_ETC);
         }
@@ -180,9 +229,9 @@ public class ProductService {
 
         // 4. DB에 반영후 lock 해제
         productRepository.saveAndFlush(product);
-
         return product;
     }
+
 
     public List<RestockListResponseDto> getRestockList(UserDetailsImpl userDetails) {
 

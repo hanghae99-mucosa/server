@@ -211,7 +211,7 @@ public class ProductService {
 
         Product product = productRepository.findById(productId).get();
 
-//        product.update(amount);
+        product.update(amount);
 
         // 재입고 알림
         List<RestockNotification> restockList = restockNotificationRepository.findAllByProduct(product);

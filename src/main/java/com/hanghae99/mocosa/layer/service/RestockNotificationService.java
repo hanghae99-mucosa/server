@@ -160,6 +160,6 @@ public class RestockNotificationService {
             sendToClient(sseEmitter, id, restockNotification);
         }
 
-//        checkAlarmFlag(restockNotification);
+        checkAlarmFlag(restockNotification);
     }
 }

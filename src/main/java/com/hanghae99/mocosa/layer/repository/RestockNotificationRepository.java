@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RestockNotificationRepository extends JpaRepository<RestockNotification, Long> {
@@ -18,4 +19,7 @@ public interface RestockNotificationRepository extends JpaRepository<RestockNoti
 //    Optional<RestockNotification> findRestockNotificationByUser_UserIdAndProduct_ProductId(Long userId, Long productId);
     Optional<RestockNotification> findRestockNotificationByUserAndProduct(User user, Product product);
 
+    List<RestockNotification> findAllByProduct(Product product);
+
+    List<RestockNotification> findAllByUserAndAlarmFlag(User user, Boolean alarmFlag);
 }

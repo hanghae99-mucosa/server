@@ -12,22 +12,35 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-public class RestockNotification {
+public class RestockNotification extends TimeStamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long restockId;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-
     private Boolean alarmFlag;
+
+    public String getUserEmail() {
+        return user.getEmail();
+    }
+
+    public String getProductName() {
+        return product.getName();
+    }
+
+    public Long getProductId() {
+        return product.getProductId();
+    }
+
+    public void checkAlarm() {
+        this.alarmFlag = true;
+    }
 }

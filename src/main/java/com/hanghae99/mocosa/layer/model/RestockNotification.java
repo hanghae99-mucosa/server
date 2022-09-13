@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-public class RestockNotification extends TimeStamped{
+public class RestockNotification{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

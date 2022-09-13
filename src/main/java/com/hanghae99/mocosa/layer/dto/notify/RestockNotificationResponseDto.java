@@ -13,15 +13,13 @@ public class RestockNotificationResponseDto {
     private Long id;
     private String content;
     private String url;
-    private Integer[] createdAt;
     private boolean alarmFlag;
 
     @Builder
-    public RestockNotificationResponseDto(Long id, String content, String url, LocalDateTime createdAt, boolean alarmFlag) {
+    public RestockNotificationResponseDto(Long id, String content, String url, boolean alarmFlag) {
         this.id = id;
         this.content = content+"가 재입고 되었습니다.";
         this.url = url;
-        this.createdAt = LocalDateTimeToArray.convert(createdAt);
         this.alarmFlag = alarmFlag;
     }
 
@@ -30,7 +28,6 @@ public class RestockNotificationResponseDto {
                 .id(notification.getRestockId())
                 .content(notification.getProductName())
                 .url("/products/"+notification.getProductId())
-                .createdAt(notification.getCreatedAt())
                 .alarmFlag(notification.getAlarmFlag())
                 .build();
     }

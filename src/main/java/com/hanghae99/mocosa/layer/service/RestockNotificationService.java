@@ -63,6 +63,7 @@ public class RestockNotificationService {
         RestockNotification restockNotification = RestockNotification.builder()
                 .product(product)
                 .user(userDetails)
+                .alarmFlag(false)
                 .build();
 
         restockNotificationRepository.save(restockNotification);
@@ -94,7 +95,7 @@ public class RestockNotificationService {
     }
 
         // 1
-    public SseEmitter subscribe(User user) {
+    public SseEmitter subscribe(User user, String isLogin) {
         String id = user.getEmail();
 
         // 2
@@ -110,8 +111,12 @@ public class RestockNotificationService {
 
         // 4
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
-        List<RestockNotification> restockList = restockNotificationRepository.findAllByUserAndAlarmFlag(user, true);
-        restockList.forEach(this::send);
+        if(isLogin.equals("true")){
+            List<RestockNotification> restockList = restockNotificationRepository.findAllByUserAndAlarmFlag(user, true);
+            restockList.forEach(this::send);
+        }
+
+
 
         return emitter;
     }

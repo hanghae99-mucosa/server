@@ -1,6 +1,4 @@
-console.log("here");
-
-const eventSource = new EventSource(`/subscribe`);
+const eventSource = new EventSource(`/subscribe/false`);
 
 eventSource.addEventListener("sse", function (event) {
     console.log(event.data);

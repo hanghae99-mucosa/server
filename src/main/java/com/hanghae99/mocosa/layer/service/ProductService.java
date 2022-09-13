@@ -31,11 +31,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+    // 테스트 후 삭제
+    public int lockCount = 0;
     private static final int PAGEABLE_SIZE = 12;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final RestockNotificationRepository restockNotificationRepository;
-
 
     public Page<SearchResponseDto> getProducts(SearchRequestDto searchRequestDto) {
         validateSort(searchRequestDto);
@@ -162,23 +163,18 @@ public class ProductService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Product reduceProductAmount(Long productId, Integer orderAmount) {
-        //1. product를 id를 가지고 탐색
         Optional<Product> optional = productRepository.findByIdWithLock(productId);
         if (optional.isEmpty()) {
             throw new OrderException(ErrorCode.ORDER_ETC);
         }
         Product product = optional.orElseThrow(() -> new OrderException(ErrorCode.ORDER_ETC));
 
-
-        // 2. 주문하고자 하는 수량의 유효성 검사
         if (orderAmount > product.getAmount()) {
             throw new OrderException(ErrorCode.ORDER_NO_STOCK);
         }
 
-        // 3. 재고 감소
         product.decrease(orderAmount);
 
-        // 4. DB에 반영후 lock 해제
         productRepository.saveAndFlush(product);
 
         return product;

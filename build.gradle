@@ -61,11 +61,6 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    // Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-    //Redisson
-    implementation group: 'org.redisson', name: 'redisson-spring-boot-starter', version: '3.13.6'
 }
 
 //tasks.named('test') {

@@ -82,7 +82,7 @@
   }
 
   function checkAlarm() {
-    const eventSource = new EventSource(`/subscribe/true`);
+    const eventSource = new EventSource(`/subscribe?isLogin=true`);
 
     eventSource.addEventListener("sse", function (event) {
       console.log(event.data);

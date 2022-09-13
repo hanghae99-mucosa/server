@@ -40,12 +40,12 @@ public class RestockNotificationController {
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/subscribe/{isLogin}", produces = "text/event-stream")
+    @GetMapping(value = "/subscribe", produces = "text/event-stream")
     public SseEmitter subscribe(
             @AuthenticationPrincipal UserDetailsImpl  userDetails,
-            @PathVariable String isLogin
+            @RequestParam String isLogin
     ) {
-        if (userDetails.getRole() == UserRoleEnum.ADMIN){
+        if (userDetails == null || userDetails.getRole() == UserRoleEnum.ADMIN){
             return null;
         }
 

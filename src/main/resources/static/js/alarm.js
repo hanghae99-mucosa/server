@@ -1,4 +1,4 @@
-const eventSource = new EventSource(`/subscribe/false`);
+const eventSource = new EventSource(`/subscribe?isLogin=false`);
 
 eventSource.addEventListener("sse", function (event) {
     console.log(event.data);

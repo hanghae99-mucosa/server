@@ -2,9 +2,12 @@ function searchByKeyword(){
     const type = $('#searchType').val();
     const keyword = $('#searchKeyword').val();
 
-    let url = "?searchType=" + type + "&keyword=" + keyword;
-
-    window.location.href = url;
+    if(keyword.trim() != "") {
+        let url = "?searchType=" + type + "&keyword=" + keyword;
+        window.location.href = url;
+    } else {
+        alert("검색어를 입력해주세요.")
+    }
 }
 
 function filterByPrice() {
@@ -22,8 +25,6 @@ function filterByPrice() {
     if(maxPriceFilter!=""){
         url = createUrl("maxPriceFilter", maxPriceFilter, maxChanged, url);
     }
-
-
 
     window.location.href = url;
 }

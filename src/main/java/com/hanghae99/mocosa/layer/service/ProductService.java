@@ -52,11 +52,9 @@ public class ProductService {
         int totalPage = searchResponseDtos.getTotalPages();
         int requestPage = searchRequestDto.getPage();
 
-        validatePage(totalPage, requestPage);
-
-        long totalElements = searchResponseDtos.getTotalElements();
-
-        validateNoProduct(totalElements);
+        if(totalPage != 0) {
+            validatePage(totalPage, requestPage);
+        }
 
         return searchResponseDtos;
     }
@@ -187,17 +185,10 @@ public class ProductService {
 
         List<RestockListResponseDto> restockList = productRepository.findBySeller(user);
 
-        validateNoRestockList(restockList);
-
         return restockList;
     }
 
-    private void validateNoRestockList(List<RestockListResponseDto> restockList) {
-        // 수량이 0개인 상품이 없는 경우
-        if(restockList.size() == 0){
-            throw new MyPageException(ErrorCode.MYPAGE_NO_DATA);
-        }
-    }
+//
 
     @Transactional
     public RestockResponseDto restock(RestockRequestDto restockRequestDto) {

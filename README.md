@@ -1,4 +1,7 @@
 # [MUCOSA] 대규모 패션 플랫폼 사이트
+
+[![mocusa](http://img.youtube.com/vi/cmaeEvKl6xY/0.jpg)](https://youtu.be/cmaeEvKl6xY)
+
 ## 프로젝트 기획
 ### 프로젝트 설명
 > 💡 무신사나 지그재그와 같이 패션카테고리의 제품들을 사용자가 보다 효율적으로 찾을 수 있는 서비스를 제공 

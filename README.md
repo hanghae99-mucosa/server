@@ -181,8 +181,20 @@
 </details>
 
 
-## API 리스트
-https://www.notion.so/grazinggoat/API-f628e62f892b4f41a464c22bdfc76f6b
+## 설계
+&nbsp; 📖 &nbsp; [API 설계](https://www.notion.so/grazinggoat/API-f628e62f892b4f41a464c22bdfc76f6b)  
+&nbsp; 🗃️ &nbsp; [DB 설계](https://www.notion.so/grazinggoat/DB-8de3ac23def0400caa0dc6e399d53984)
+
+## 팀원
+
+|이름|포지션|분담|@ Email|Github|
+|------|------|------|------|------|
+|김동일|BackEnd|검색(쿼리 최적화)<br/>데이터 생성<br/>CD<br/>부하 테스트|ehddlf618@gmail.com|https://github.com/dongil618|
+|박소윤|BackEnd|검색(쿼리 최적화) <br/>사용자/판매자 마이페이지<br/>주문 취소<br/>부하 테스트|parksoyun98@naver.com|https://github.com/dongil618|
+|백승찬|BackEnd|회원가입<br/>로그인<br/>재입고 알림<br/>상품 주문(동시성 제어)<br/>로깅|bsc980504@outlook.com|https://github.com/Backseungchan|
+|주유찬|BackEnd|재입고 알림<br/>상품 주문(로직)<br/>상품 주문(동시성 제어)<br/>로깅|jjucc99@naver.com|https://github.com/jjucc99|
+
+
 
 ## ERD
 ![ERD](https://user-images.githubusercontent.com/47559613/186055988-7f0b4c7d-ea35-415e-a322-1dc2a8373c12.png)

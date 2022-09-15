@@ -8,8 +8,10 @@
 <details>
 <summary>📌 데이터 기준</summary>
 <div markdown="1">
+<br/>
+
  1. 상품 데이터 수 : 100만 개
- <br/><br/>
+ <br/>
  &nbsp; &nbsp; 여러 패션 플랫폼(ex. 무신사, 브랜디 등)의 의류 상품 수를 확인 후 최대 값으로 결정<br/>
  <br/>
 
@@ -18,6 +20,7 @@
    * 무신사 : 약 20만개
    
    ![Untitled](https://user-images.githubusercontent.com/59110017/190332582-1d3764a9-918f-4975-b226-39f81c07dd21.png)<br/>
+ <br/>
  2. 주문 데이터 수 : 약 1670만 개
  ![MUCOSA (1)](https://user-images.githubusercontent.com/59110017/190332840-e827a733-034d-4c1d-917b-d3408549e94e.png)
 
@@ -30,8 +33,9 @@
 <details>
 <summary>📌 Latency, Throughput 목표</summary>
 <div markdown="1">
+<br/>
+
  1. Latency 목표값 설정  
- <br/><br/>
  
   ```
  📢 KISSmetrics는 고객의 47%가 2초 이내의 시간에 로딩이 되는 웹 페이지를 원하고 있으며, 40%는 로딩에 3초 이상 걸리는 페이지를 바로 떠난다고 설명했습니다.
@@ -60,6 +64,7 @@
 
 <details>
 <summary>📌 동시성 제어 기준</summary>
+<br/>
 
  ```
  📢 MUSINSA는 직매입한 인기 제품들을 최대 60% 할인하는 ‘무신사 라이브' 행사에서 1초당 최대 동시 접속자 수가 6400명을 기록하였다고 하였으며 이는 약 30여 분 만에 품절이 되었다고 하였습니다.
@@ -79,14 +84,38 @@
 </div>
 </details> 
 
-### 아키텍처
+## 아키텍처
+![Untitled (2)](https://user-images.githubusercontent.com/59110017/190337828-429460fa-fcd0-43d0-a0d9-88dd2d2ed83f.png)
+
+## 핵심 기능
+
+### 🔍 검색(필터 및 정렬)
+
+> * Query DSL을 통한 상품 검색 기능 구현
+> * 쿼리 성능 개선을 통해 모든 페이지에서 1초 이내로 응답(Latency 목표값 달성)
+> * 부하테스트를 통해 DB 병목 지점을 확인 후 DB 스케일 업으로 해결
+
+### 👠 상품 주문
+
+> * 대규모 트래픽에서 상품 주문 시 동시성 이슈 발생
+> * Pessimistic Lock을 통해서 동시성 제어
+> * 성능 개선(다중 컬럼 update 쿼리, N+1)
+
+### 🔔 재입고 알림
+
+> * 사용자의 UX 향상을 위해서 사용자가 관심이 있는 상품에 대해서 재입고 알람을 제공
+> * Redis pub/sub 방식을 고려해봤지만 프론트 상의 한계로  SSE로 구현
+
+### 🧑🏻사용자 & 판매자 마이페이지
+
+> * 권한에 따라 기능에 대한 접근을 제한 (USER/ADMIN)
+> * 사용자 마이페이지의 경우 사용자의 주문내역을 보여주는 기능
+> * 판매자 마이페이지의 경우 품절된 상품내역을 관리하고 재입고를 등록하는 기능
+
 
 ## API 리스트
 https://www.notion.so/grazinggoat/API-f628e62f892b4f41a464c22bdfc76f6b
 
 ## ERD
 ![ERD](https://user-images.githubusercontent.com/47559613/186055988-7f0b4c7d-ea35-415e-a322-1dc2a8373c12.png)
-
-## Architecture
-![이미지 002](https://user-images.githubusercontent.com/47559613/186055515-853f0ec1-ad69-432d-8d33-d910451216d8.png)
 

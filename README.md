@@ -1,8 +1,26 @@
-# MUCOSA
+# [MUCOSA] 대규모 패션 플랫폼 사이트
+## 프로젝트 기획
+### 프로젝트 설명
+> 💡 무신사나 지그재그와 같이 패션카테고리의 제품들을 사용자가 보다 효율적으로 찾을 수 있는 서비스를 제공	
+> ![MUCOSA](https://user-images.githubusercontent.com/59110017/190330199-c923fd20-9d89-45db-bae2-1d357373a8f8.png)
 
-무코사의 프로젝트는 무신사나 지그재그와 같이 패션카테고리의 제품들을 사용자가 보다 효율적으로 찾을 수 있는 서비스를 제공하는 것입니다.
+### 설계 고려사항
+<details>
+<summary>📌 데이터 기준</summary>
+<div markdown="1">
+</div>
+</details>
+<details>
+<summary>📌 Latency, Throughput 목표</summary>
+<div markdown="1">
+</div>
+</details>
+<details>
+<summary>📌 동시성 제어 기준</summary>
+<div markdown="1">
+</div>
+</details> 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/cmaeEvKl6xY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## 개발환경
 ![항해99 이노베이션 실전 프로젝트 1차 최종발표](https://user-images.githubusercontent.com/47559613/186055514-a4ec060e-1f00-4d25-bee2-5d3f04bc71a4.png)

@@ -9,9 +9,10 @@
 <summary>📌 데이터 기준</summary>
 <div markdown="1">
  1. 상품 데이터 수 : 100만 개
- 여러 패션 플랫폼(ex. 무신사, 브랜디 등)의 의류 상품 수를 확인 후 최대 값으로 결정<br/>
- 
-  &nbsp;
+ <br/><br/>
+ &nbsp; &nbsp; 여러 패션 플랫폼(ex. 무신사, 브랜디 등)의 의류 상품 수를 확인 후 최대 값으로 결정<br/>
+ <br/>
+
    * 서울스토어 : 약 17만개
    * 브랜디 : 약 100만개
    * 무신사 : 약 20만개
@@ -25,24 +26,60 @@
  
 </div>
 </details>
+
 <details>
 <summary>📌 Latency, Throughput 목표</summary>
 <div markdown="1">
+ 1. Latency 목표값 설정  
+ <br/><br/>
+ 
+  ```
+ 📢 KISSmetrics는 고객의 47%가 2초 이내의 시간에 로딩이 되는 웹 페이지를 원하고 있으며, 40%는 로딩에 3초 이상 걸리는 페이지를 바로 떠난다고 설명했습니다.
+  ```
+  
+   * 일반적인 경우 : 0.05~0.1초
+   * 복잡한 트랜잭션이 필요한 경우 : 2초이내
+  
+ 2. Throughput 목표값 설정
+ 
+  ```
+ 📢 News1 자료(2021년 기준)에서 쇼핑 플랫폼별 MAU(Monthly Active User, 월간 순수 이용자) 추이는 평균 약 400만 명이다.
+  ```
+  
+   * MAU : 400만(단위 : 명)
+   * DAU : 13만(단위 : 명)
+   * 안전계수 : 3
+   * 1일 평균 접속 수에 대한 최대 피크 때 배율 : 2배<br/><br/>
+   ![Untitled (1)](https://user-images.githubusercontent.com/59110017/190335545-856adc4a-17e7-4aaf-8322-dcf580414d5a.png)
+   * 1명당 평균 접속 수 : 20회<br/>
+   &nbsp; ⇒ 130,000(명) * 20(회) / 86,400(초) * 3(안전계수) * 2(1일 평균 접속 수에 대한 최대 피크 때 배율) = 약 180 rps
+
+  	
 </div>
 </details>
+
 <details>
 <summary>📌 동시성 제어 기준</summary>
+
+ ```
+ 📢 MUSINSA는 직매입한 인기 제품들을 최대 60% 할인하는 ‘무신사 라이브' 행사에서 1초당 최대 동시 접속자 수가 6400명을 기록하였다고 하였으며 이는 약 30여 분 만에 품절이 되었다고 하였습니다.
+ ```
+ 
+ 1. 1초당 최대 동시 접속자 수 : 6400명
+ 	
+	* 인기 온라인 패션 스토어의 특가 할인 케이스를 참고
+	
+ 2. 시간 당 처리량 : 가용성이 보장되는 범위의 최대치
+ 
+ 	* 앞선 Latency의 내용을 참고하여 고객은 가능한 빠른 응답을 원하고 있음
+ 
+ 
+ 
 <div markdown="1">
 </div>
 </details> 
 
-
-## 개발환경
-![항해99 이노베이션 실전 프로젝트 1차 최종발표](https://user-images.githubusercontent.com/47559613/186055514-a4ec060e-1f00-4d25-bee2-5d3f04bc71a4.png)
-
-## 주요기능
-![이미지 003](https://user-images.githubusercontent.com/47559613/186055518-2e025cec-481f-419b-b875-d7d6bb4a4756.png)
-![이미지 004](https://user-images.githubusercontent.com/47559613/186055509-ee7331cd-845b-4969-879c-c9ff07ef3cdd.png)
+### 아키텍처
 
 ## API 리스트
 https://www.notion.so/grazinggoat/API-f628e62f892b4f41a464c22bdfc76f6b
@@ -53,157 +90,3 @@ https://www.notion.so/grazinggoat/API-f628e62f892b4f41a464c22bdfc76f6b
 ## Architecture
 ![이미지 002](https://user-images.githubusercontent.com/47559613/186055515-853f0ec1-ad69-432d-8d33-d910451216d8.png)
 
-# Github Flow
-
-```powershell
-main : 제품으로 출시될 수 있는 브랜치
-develop : 다음 출시 버전을 개발하는 브랜치
-feature/#notification_list : 기능을 개발하는 브랜치**
-release : 이번 출시 버전을 준비하는 브랜치
-hotfix/#notification_list : 출시 버전에서 발생한 버그를 수정 하는 브랜치
-----------------------------------------------------------------------------------------
-1. main 브랜치는 항상 안정된 빌드이자 사용자에게 서비스중인 빌드입니다.
-2. 모든 feature 브랜치는 develop 브랜치에서 클론한다.
-3. feature 브랜치는 기능 단위로 구분한다.
-4. feature 작업이 끝나면 develop branch로 pull request 한다.
-5. develop branch에서 모든 취합이 끝나면 main으로 pull request 한다.
-6. merge 후 브랜치는 삭제한다.
-```
-
-
-# Git Commit 메시지 컨벤션
-
-### **Commit 컨벤션**
-
-```powershell
-$ <type>(<scope>): <subject>    -- 헤더
-  <BLANK LINE>                  -- 빈 줄
-  <body>                        -- 본문
-  <BLANK LINE>                  -- 빈 줄
-  <footer>                      -- 바닥 글
-```
-
-```
-Feat : 새로운 기능에 대한 커밋
-Fix : 기능에 대한 버그 수정에 대한 커밋
-Build : 빌드 관련 파일 수정에 대한 커밋
-Chore : 그 외 자잘한 수정에 대한 커밋(기타 변경)**
-Ci : CI 관련 설정 수정에 대한 커밋
-Docs : 문서 수정에 대한 커밋
-Style : 코드 스타일 혹은 포맷 등에 관한 커밋
-Refactor : 코드 리팩토링에 대한 커밋
-Test : 테스트 코드 수정에 대한 커밋
-```
-
-### commit 메시지 규칙
-
-1. 제목과 본문을 빈 행으로 구분합니다.
-2. 제목을 50글자 이내로 제한합니다.
-3. 제목의 첫 글자는 대문자로 작성합니다.
-4. 제목의 끝에는 마침표를 넣지 않습니다.
-5. 제목은 명령문으로! 과거형을 사용하지 않습니다.
-6. 본문의 각 행은 72글자 내로 제한합니다.
-7. 어떻게 보다는 무엇과 왜를 설명합니다.
-
-
----
-
-## 최종 컨벤션
-
-### Controller
-
-```java
-//페이지관련 controller
-@Controller 
-class ????Controller(){
-    public String methodName(RequestDto requestDto){
-			...
-			return new ResponseEntity(responseDto, HttpStatus.OK);
-		}
-}
-
----------------------------------------------------------------------------------------
-
-//응답관련 controller
-@RestController 
-@RequiredArgsConstructor
-class ObjectApiController(){ // Object는 다루는 Model 이름으로	
-
-		// 의존성 주입은 무조건 final
-		private final ObjectService objectService;
-
-		/* DTO -> Model은 무조건 서비스에서 */
-    public ResponseEntity<ResponseDto> methodName(RequestDto requestDto){
-			...
-			return new ResponseEntity(responseDto, HttpStatus.OK);
-		}
-}
-```
-
-### Service
-
-```java
-@Service
-class ObjectService(){
-
-		// 리턴은 DTO로 변경해서
-    public ResponseDto methodName(RequestDto requestDto){
-			Model model = requestDto.toModel();
-			// toModel()의 내부 구현은 builder
-			// Model model = this.DtoToModel(requestDto)
-...
-			return new ResponseDto(model);
-		}
-}
-```
-
-### DTO
-
-```java
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-class DTO (){
-}
-
-/*
-dto naming -> ActionRequestDto & ActionResponseDto
-*
-```
-
-### Model
-
-```java
-//Lombok -> Setter 제외, 필용한 경우에는 직접 구현
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Builder
-class Model(){
-}
-```
-
-### Exception
-
-```java
-// 예외발생 시, if else, try catch
-// -> throw new RuntimeException()
-// 에러는 상속 받아서 케이스에 맞게 만들겁니다.
-// 만약 keyword가 중복이다,
-// -> throw new BookmarkDupl();
-```
-
----
-
-# **객체지향 생활체조 원칙**
-
-- [**규칙 1. 한 메서드에 오직 한 단계의 들여쓰기만 한다**](https://limdingdong.tistory.com/7)
-- ****[규칙 2. else 예약어를 쓰지 않는다](https://limdingdong.tistory.com/8)****
-- ****[규칙 3. 모든 원시값과 문자열을 포장한다](https://limdingdong.tistory.com/9)****
-- ****[규칙 4. 한 줄에 점을 하나만 찍는다](https://limdingdong.tistory.com/10)****
-- [~~규칙 5. 줄여쓰지 않는다~~](https://limdingdong.tistory.com/11)
-- [~~규칙 6. 모든 엔티티를 작게 유지한다~~](https://limdingdong.tistory.com/12)
-- [~~규칙 7. 2개 이상의 인스턴스 변수를 가진 클래스를 쓰지 않는다~~](https://limdingdong.tistory.com/13)
-- [~~규칙 8. 일급 컬렉션을 쓴다~~](https://limdingdong.tistory.com/14)
-- ****[규칙 9. getter/setter/property를 쓰지 않는다](https://limdingdong.tistory.com/15)****

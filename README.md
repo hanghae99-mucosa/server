@@ -1,6 +1,6 @@
 # [MUCOSA] 대규모 패션 플랫폼 사이트
 
-[![mocusa](http://img.youtube.com/vi/T2y4gs5TT-Y/0.jpg)](https://youtu.be/T2y4gs5TT-Y)
+[![mocusa](https://user-images.githubusercontent.com/47559613/190395847-58c23322-89a6-4e1a-a3dc-0295212b9995.png)](https://youtu.be/T2y4gs5TT-Y)
 
 ## 프로젝트 기획
 ### 프로젝트 설명

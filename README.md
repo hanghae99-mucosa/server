@@ -2,8 +2,10 @@
 
 무코사의 프로젝트는 무신사나 지그재그와 같이 패션카테고리의 제품들을 사용자가 보다 효율적으로 찾을 수 있는 서비스를 제공하는 것입니다.
 
+<iframe width="956" height="538" src="https://youtu.be/cmaeEvKl6xY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## 개발환경
-![이미지 001](https://user-images.githubusercontent.com/47559613/186055514-a4ec060e-1f00-4d25-bee2-5d3f04bc71a4.png)
+![항해99 이노베이션 실전 프로젝트 1차 최종발표](https://user-images.githubusercontent.com/47559613/186055514-a4ec060e-1f00-4d25-bee2-5d3f04bc71a4.png)
 
 ## 주요기능
 ![이미지 003](https://user-images.githubusercontent.com/47559613/186055518-2e025cec-481f-419b-b875-d7d6bb4a4756.png)

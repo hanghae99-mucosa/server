@@ -46,10 +46,26 @@
         </th:block>
     </nav>
 
-    <div class="form-wrap" th:if="${restockList} != null">
+    <div class="form-wrap" th:if="${restockList.size()} == 0">
         <h2 class="title" th:text="'재입고&nbsp;등록'"></h2>
 
-        <select id="selectedProductId" class="form-select form-select-lg mb-3" aria-label="재입고 상품">
+        <select disabled th:if="${restockList.size()} == 0" class="form-select form-select-lg mb-3" aria-label="재입고 상품">
+            <option selected th:value="0" th:text="'재입고&nbsp;가능한&nbsp;상품이&nbsp;없습니다.'"></option>
+        </select>
+
+        <div class="form-floating amount-input">
+            <input disabled type="number" min="1" class="form-control form-control-lg" id="inputAmount_noData" placeholder="재입고 수량 (개)" aria-describedby="amountHelp">
+            <label for="inputAmount">재입고 수량 (개)</label>
+            <small id="amountHelp_noData" class="form-text text-muted">재입고 등록 수량은 1개 이상부터 가능합니다.</small>
+        </div>
+
+        <button disabled type="button" onclick="restock()" class="btn btn-outline-dark btn-lg submit-button" th:text="등록"></button>
+    </div>
+
+    <div class="form-wrap" th:if="${restockList.size()} != 0">
+        <h2 class="title" th:text="'재입고&nbsp;등록'"></h2>
+
+        <select th:if="${restockList.size()} != 0" id="selectedProductId" class="form-select form-select-lg mb-3" aria-label="재입고 상품">
             <option th:value="0" th:text="'재입고&nbsp;상품명'" hidden></option>
             <option th:each="restockProduct : ${restockList}" th:value="${restockProduct.productId}" th:text="${restockProduct.productName}"></option>
         </select>

@@ -25,6 +25,10 @@
     margin-bottom: 50px;
 }
 
+.no-data {
+    text-align: center;
+}
+
 .order-list {
     margin-top: 10px;
     margin-bottom: 10px;

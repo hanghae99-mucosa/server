@@ -7,7 +7,7 @@
 }
 
 .order{
-    padding: 5px 85px;
+    padding: 5px 78px;
     margin-top: 30px;
     margin-left: 45px;
 }
@@ -19,4 +19,11 @@
 .order_amount{
     width: 300px;
     margin-left: 10px;
+}
+
+.restock {
+    height: 38px;
+    width: 300px;
+    margin-top: 30px;
+    margin-left: 45px;
 }

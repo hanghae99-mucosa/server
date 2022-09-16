@@ -29,9 +29,6 @@
         <th:block th:if="${email != null}">
             <button type="button" class="btn btn-dark position-relative" id="alarm-button">
                 알림 🔔
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          99+
-          <span class="visually-hidden">unread messages</span>
         </span>
             </button>
             <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">
@@ -52,7 +49,11 @@
     <div class="wrap">
         <h2 class="title" th:text="주문내역"></h2>
 
-        <div class="card border-dark mb-3 order-list" th:each="orderHistory : ${orderHistorys}">
+        <div th:if="${orderHistorys.totalElements} == 0">
+            <h4 class="no-data">주문 내역이 없습니다.</h4>
+        </div>
+
+        <div class="card border-dark mb-3 order-list" th:if="${orderHistorys.totalElements} != 0" th:each="orderHistory : ${orderHistorys}">
             <div class="card-header">
                 <div class="row">
                     <div class="col vertical-align">
@@ -84,10 +85,10 @@
         </div>
 
         <!--페이지네이션-->
-        <ul class="pagination" style="justify-content: center" th:with="total=${orderHistorys.totalPages},
-                                                                            current=${orderHistorys.pageable.pageNumber + 1},
-                                                                            start=${(orderHistorys.pageable.pageNumber / 10) * 10 + 1},
-                                                                            end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
+        <ul class="pagination" style="justify-content: center" th:if="${orderHistorys.totalPages} != 0" th:with="total=${orderHistorys.totalPages},
+                                                                                                                    current=${orderHistorys.pageable.pageNumber + 1},
+                                                                                                                    start=${(orderHistorys.pageable.pageNumber / 10) * 10 + 1},
+                                                                                                                    end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
 
             <li th:if="${current} == 1" class="page-item disabled">
                 <a class="page-link font-color" aria-label="First">

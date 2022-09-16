@@ -26,9 +26,6 @@
     <th:block th:if="${email != null}">
         <button type="button" class="btn btn-dark position-relative" id="alarm-button">
             알림 🔔
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          99+
-          <span class="visually-hidden">unread messages</span>
         </span>
         </button>
         <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">
@@ -81,13 +78,13 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="최저가" id="minPriceFilter">
+                        <input type="number" min="0" class="form-control" placeholder="최저가" id="minPriceFilter">
                     </div>
                     <div class="col filter-text">
                         ~
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="최고가" id="maxPriceFilter">
+                        <input type="number" min="0" class="form-control" placeholder="최고가" id="maxPriceFilter">
                     </div>
                     <div class="col-1">
                         <button type="button" class="btn btn-dark" onclick="filterByPrice()">검색</button>
@@ -103,7 +100,7 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="평균 리뷰 몇점 이상" id="reviewFilter">
+                        <input type="number" min="0" max="5" class="form-control" placeholder="평균 리뷰 몇점 이상" id="reviewFilter">
                     </div>
                     <div class="col-1">
                         <button type="button" class="btn btn-dark" onclick="filterByReviewAvg()">검색</button>
@@ -168,7 +165,16 @@
     </div>
 </header>
 <!-- Section-->
-<section class="py-1">
+<section th:if="${searchResponses.totalElements} == 0" class="py-1">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <h4>검색 결과가 없습니다.</h4>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section th:if="${searchResponses.totalElements} != 0" class="py-1">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             <div class="col mb-5" th:each="searchResponse : ${searchResponses}">
@@ -214,10 +220,10 @@
 </section>
 
 <!--페이지네이션-->
-<ul class="pagination" style="justify-content: center" th:with="total=${searchResponses.totalPages},
-                                            current=${searchResponses.pageable.pageNumber + 1},
-                                            start=${(searchResponses.pageable.pageNumber / 10) * 10 + 1},
-                                            end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
+<ul class="pagination" style="justify-content: center" th:if="${searchResponses.totalPages} != 0" th:with="total=${searchResponses.totalPages},
+                                                                                        current=${searchResponses.pageable.pageNumber + 1},
+                                                                                        start=${(searchResponses.pageable.pageNumber / 10) * 10 + 1},
+                                                                                        end=(${(total == 1) ? 1 : (start + 9 < total ? start + 9 : total)})">
 
     <li th:if="${current} == 1" class="page-item disabled">
         <a class="page-link font-color" aria-label="First">

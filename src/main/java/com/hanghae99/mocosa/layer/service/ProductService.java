@@ -106,13 +106,21 @@ public class ProductService {
             throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
         }
         Product product = productByProductId.orElseThrow(() -> new ProductException(ErrorCode.DETAIL_ETC));
+//
+//        Optional<RestockNotification> notification =
+//                restockNotificationRepository
+//                        .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
 
-        Optional<RestockNotification> notification =
-                restockNotificationRepository
-                        .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
+        boolean empty = false;
 
-        //true 면 작동하게 한다.
-        boolean empty = notification.isEmpty();
+        if(userDetails!= null) {
+            Optional<RestockNotification> notification =
+                    restockNotificationRepository
+                            .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
+
+            //true 면 작동하게 한다.
+            empty = notification.isEmpty();
+        }
 
         ProductDetailResponseDto productResponseDto;
         try {

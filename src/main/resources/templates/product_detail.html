@@ -66,13 +66,16 @@
 
                                 <div class="w-100 d-none d-md-block"></div>
 
-                                <input type="number" id="orderAmount" name="orderAmount" class="form-control order_amount"
-                                       placeholder="주문 수량"></div>
+                                <input type="number" th:if="${email} == null" name="orderAmount" class="form-control order_amount" placeholder="주문 수량" disabled>
+                                <input type="number" th:if="${email} != null" id="orderAmount" name="orderAmount" class="form-control order_amount" placeholder="주문 수량">
+                            </div>
                         </div>
-                        <button class="btn btn-outline-dark flex-shrink-0 order" type="button"
+                        <button th:if="${email} == null" class="btn btn-outline-dark flex-shrink-0 order" type="button" disabled>
+                            <i class="bi-cart-fill me-1 btn-lg">주문 하기</i>
+                        </button>
+                        <button th:if="${email} != null" class="btn btn-outline-dark flex-shrink-0 order" type="button"
                                 th:onclick="|sendOrder(${product.product_id})|">
-                            <i class="bi-cart-fill me-1 btn-lg"></i>주문 하기
-
+                            <i class="bi-cart-fill me-1 btn-lg">주문 하기</i>
                         </button>
                     </div>
                 </div>
@@ -93,10 +96,10 @@
                                 <input type="text" name="orderAmount" class="form-control order_amount" disabled placeholder="품절">
                             </div>
                         </div>
-                        <button th:if="${email} == null" class="btn btn-outline-dark flex-shrink-0 order toggle" type="button">
+                        <button th:if="${email} == null" class="btn btn-outline-dark flex-shrink-0 restock" type="button" disabled>
                             재입고 알람 신청
                         </button>
-                        <button th:if="${email} != null" class="btn btn-outline-dark flex-shrink-0 order toggle" type="button"
+                        <button th:if="${email} != null" class="btn btn-outline-dark flex-shrink-0 restock toggle" type="button"
                                 th:onclick="|toggling(${product.product_id})|">
                             재입고 알람 신청
                         </button>

@@ -6,7 +6,6 @@ import com.hanghae99.mocosa.config.exception.custom.MyPageException;
 import com.hanghae99.mocosa.config.exception.custom.OrderException;
 import com.hanghae99.mocosa.layer.dto.order.OrderCancelResponseDto;
 import com.hanghae99.mocosa.layer.dto.order.OrderHistoryResponseDto;
-import com.hanghae99.mocosa.layer.model.Order;
 import com.hanghae99.mocosa.layer.model.User;
 import com.hanghae99.mocosa.layer.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,19 +32,13 @@ public class OrderService {
 
         Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage = orderRepository.findByUser(user, pageable);
 
-        validateNoOrderHistory(orderHistoryResponseDtoPage);
+        if(orderHistoryResponseDtoPage.getTotalElements() == 0) {
+            return orderHistoryResponseDtoPage;
+        }
 
         validatePage(orderHistoryResponseDtoPage, page);
 
         return orderHistoryResponseDtoPage;
-    }
-
-    private void validateNoOrderHistory(Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage) {
-        long totalElements = orderHistoryResponseDtoPage.getTotalElements();
-
-        if(totalElements == 0) {
-            throw new MyPageException(ErrorCode.MYPAGE_NO_DATA);
-        }
     }
 
     private void validatePage(Page<OrderHistoryResponseDto> orderHistoryResponseDtoPage, int page) {

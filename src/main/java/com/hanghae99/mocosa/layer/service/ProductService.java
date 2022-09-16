@@ -52,11 +52,9 @@ public class ProductService {
         int totalPage = searchResponseDtos.getTotalPages();
         int requestPage = searchRequestDto.getPage();
 
-        validatePage(totalPage, requestPage);
-
-        long totalElements = searchResponseDtos.getTotalElements();
-
-        validateNoProduct(totalElements);
+        if(totalPage != 0) {
+            validatePage(totalPage, requestPage);
+        }
 
         return searchResponseDtos;
     }
@@ -108,13 +106,21 @@ public class ProductService {
             throw new ProductException(ErrorCode.DETAIL_NO_PRODUCT);
         }
         Product product = productByProductId.orElseThrow(() -> new ProductException(ErrorCode.DETAIL_ETC));
+//
+//        Optional<RestockNotification> notification =
+//                restockNotificationRepository
+//                        .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
 
-        Optional<RestockNotification> notification =
-                restockNotificationRepository
-                        .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
+        boolean empty = false;
 
-        //true 면 작동하게 한다.
-        boolean empty = notification.isEmpty();
+        if(userDetails!= null) {
+            Optional<RestockNotification> notification =
+                    restockNotificationRepository
+                            .findRestockNotificationByUserAndProduct(userDetails.getUser(), product);
+
+            //true 면 작동하게 한다.
+            empty = notification.isEmpty();
+        }
 
         ProductDetailResponseDto productResponseDto;
         try {
@@ -187,17 +193,10 @@ public class ProductService {
 
         List<RestockListResponseDto> restockList = productRepository.findBySeller(user);
 
-        validateNoRestockList(restockList);
-
         return restockList;
     }
 
-    private void validateNoRestockList(List<RestockListResponseDto> restockList) {
-        // 수량이 0개인 상품이 없는 경우
-        if(restockList.size() == 0){
-            throw new MyPageException(ErrorCode.MYPAGE_NO_DATA);
-        }
-    }
+//
 
     @Transactional
     public RestockResponseDto restock(RestockRequestDto restockRequestDto) {

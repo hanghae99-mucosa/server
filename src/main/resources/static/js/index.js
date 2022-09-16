@@ -2,9 +2,14 @@ function searchByKeyword(){
     const type = $('#searchType').val();
     const keyword = $('#searchKeyword').val();
 
-    let url = "?searchType=" + type + "&keyword=" + keyword;
+    if(keyword.trim() != "") {
+        let url = "?searchType=" + type + "&keyword=" + keyword;
+        window.location.href = url;
+    } else {
+        alert("검색어를 입력해주세요.");
 
-    window.location.href = url;
+        document.getElementById('searchKeyword').value = null;
+    }
 }
 
 function filterByPrice() {
@@ -16,16 +21,35 @@ function filterByPrice() {
     var minPriceFilter = document.getElementById('minPriceFilter').value;
     var maxPriceFilter = document.getElementById('maxPriceFilter').value;
 
-    if(minPriceFilter!="") {
-        url = createUrl("minPriceFilter", minPriceFilter, minChanged, url);
+    if(minPriceFilter<0 || maxPriceFilter<0) {
+        alert("0원 이상을 입력해주세요.");
+
+        document.getElementById('minPriceFilter').value = null;
+        document.getElementById('maxPriceFilter').value = null;
+    } else if(maxPriceFilter<minPriceFilter) {
+        alert("최고가는 최소가보다 작을 수 없습니다.");
+
+        document.getElementById('minPriceFilter').value = null;
+        document.getElementById('maxPriceFilter').value = null;
+    } else {
+        if(minPriceFilter!="") {
+            url = createUrl("minPriceFilter", minPriceFilter, minChanged, url);
+        }
+        if(maxPriceFilter!=""){
+            url = createUrl("maxPriceFilter", maxPriceFilter, maxChanged, url);
+        }
+
+        window.location.href = url;
     }
-    if(maxPriceFilter!=""){
-        url = createUrl("maxPriceFilter", maxPriceFilter, maxChanged, url);
-    }
 
-
-
-    window.location.href = url;
+    // if(minPriceFilter!="") {
+    //     url = createUrl("minPriceFilter", minPriceFilter, minChanged, url);
+    // }
+    // if(maxPriceFilter!=""){
+    //     url = createUrl("maxPriceFilter", maxPriceFilter, maxChanged, url);
+    // }
+    //
+    // window.location.href = url;
 }
 
 function filterByReviewAvg() {
@@ -34,9 +58,21 @@ function filterByReviewAvg() {
     var changed =  url.match(regex);
     var reviewFilter = document.getElementById('reviewFilter').value;
 
-    url = createUrl("reviewFilter", reviewFilter, changed, url);
+    if(reviewFilter<0 || reviewFilter>5) {
+        alert("0점 이상 5점 이하를 입력해주세요.");
 
-    window.location.href = url;
+        document.getElementById('reviewFilter').value = null;
+    } else {
+        if (reviewFilter != "") {
+            url = createUrl("reviewFilter", reviewFilter, changed, url);
+        }
+
+        window.location.href = url;
+    }
+
+    // url = createUrl("reviewFilter", reviewFilter, changed, url);
+    //
+    // window.location.href = url;
 }
 
 function filterByCategory(category) {

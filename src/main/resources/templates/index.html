@@ -26,9 +26,6 @@
     <th:block th:if="${email != null}">
         <button type="button" class="btn btn-dark position-relative" id="alarm-button">
             알림 🔔
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          99+
-          <span class="visually-hidden">unread messages</span>
         </span>
         </button>
         <button th:if="${admin} == true" onclick="location.href='/users/restock'" type="button" class="btn btn-dark">
@@ -81,13 +78,13 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="최저가" id="minPriceFilter">
+                        <input type="number" min="0" class="form-control" placeholder="최저가" id="minPriceFilter">
                     </div>
                     <div class="col filter-text">
                         ~
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="최고가" id="maxPriceFilter">
+                        <input type="number" min="0" class="form-control" placeholder="최고가" id="maxPriceFilter">
                     </div>
                     <div class="col-1">
                         <button type="button" class="btn btn-dark" onclick="filterByPrice()">검색</button>
@@ -103,7 +100,7 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="평균 리뷰 몇점 이상" id="reviewFilter">
+                        <input type="number" min="0" max="5" class="form-control" placeholder="평균 리뷰 몇점 이상" id="reviewFilter">
                     </div>
                     <div class="col-1">
                         <button type="button" class="btn btn-dark" onclick="filterByReviewAvg()">검색</button>
